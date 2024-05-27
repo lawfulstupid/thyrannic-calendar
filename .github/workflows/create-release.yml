@@ -1,0 +1,19 @@
+name: New Release
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Create Release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.PAT }}
+          generateReleaseNotes: true

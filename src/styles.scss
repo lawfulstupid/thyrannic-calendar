@@ -1,0 +1,52 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body {
+    @extend .no-scrollbar;
+    height: 100%;
+}
+body {
+    margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.separator {
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 8px;
+}
+
+mat-option.divider {
+    display: none;
+}
+mat-option.divider + * {
+    border-top: 1px solid gray;
+}
+
+.no-scrollbar {
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.fadein {
+    mask: linear-gradient(90deg, #0000 0, #000 8px);
+}
+
+.fadeout {
+    mask: linear-gradient(90deg, #000 calc(100% - 8px), #0000 100%);
+}
+
+.fadein.fadeout {
+    mask: linear-gradient(90deg, #0000 0, #000 8px, #000 calc(100% - 8px), #0000 100%);
+}
+
+button.mat-raised-button {
+    min-width: fit-content !important; // override mat-raised-button's default 64px
+}
+
+.centred {
+    text-align: center;
+    app-actionbar > div.actionbar {
+        justify-content: center;
+    }
+}

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# create hash
+hash=$(find src -type f -print0 | sort -z | xargs -0 sha1sum | sha1sum | cut -d ' ' -f 1)
+
+# write hash
+sed -i "s/\"versionHash\": *\".*\"/\"versionHash\": \"$hash\"/" package.json

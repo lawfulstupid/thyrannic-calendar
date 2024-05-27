@@ -26,8 +26,8 @@ newhash=$(find src -type f -print0 | sort -z | xargs -0 sha1sum | sha1sum | cut 
 
 while read local_ref local_oid remote_ref remote_oid
 do
-	# If pushing to master and code has changed since last push
-	if [ "$remote_ref" == 'refs/heads/master' ] && [ "$newhash" != "$oldhash" ]; then
+	# If pushing to main and code has changed since last push
+	if [ "$remote_ref" == 'refs/heads/main' ] && [ "$newhash" != "$oldhash" ]; then
 		HEAD_TAG=$(git describe --tags) 										# get HEAD tag
 		if [ -z $(git tag --list | grep $HEAD_TAG) ]; then						# check if HEAD tag is in list of real tags
 			echo 'Updating application version...'

@@ -1,13 +1,9 @@
-# UESRPG Combat Helper
-
-A tool to help keep track of NPCs in the [Unofficial Elder Scrolls RPG](https://discord.gg/p3CMn2P) 3rd Edition.
-
-Current ruleset implemented is a homebrew blend of V2 and V3.
+# Interactive Śyrannic Calendar
 
 ## Running
 
 1. Install [Node.js](nodejs.org).
-1. Download latest [tagged release](https://github.com/lawfulstupid/UESRPG-Combat-Helper/tags).
+1. Download latest [tagged release](https://github.com/lawfulstupid/Interactive-Thyrannic-Calendar/tags).
 1. Run `npm run prod` from the root directory or `scripts/runprod.bat` to build and launch the application in production mode.
 1. A new tab will open in your web browser, otherwise navigate to http://127.0.0.1:8247.
 

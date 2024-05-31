@@ -1,7 +1,7 @@
 {
   "name": "interactive-thryannic-calendar",
-  "version": "0.0.5",
-  "versionHash": "c3b2d47da9402b85d8cb01cc7246f1c14c341d9e",
+  "version": "0.0.6",
+  "versionHash": "f48e733e5d22f46b289ef08ba54565f03e49cd0d",
   "scripts": {
     "start": "ng serve",
     "build": "ng build",

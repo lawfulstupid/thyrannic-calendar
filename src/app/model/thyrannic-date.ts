@@ -1,38 +1,49 @@
-import { ThyrannicDay } from "./thyrannic-day";
-import { ThyrannicYear } from "./thyrannic-year";
+import { MathUtil } from "../util/math-util";
+import { TemporalUnit } from "./temporal-unit";
+import { TDay } from "./thyrannic-day";
+import { TYear } from "./thyrannic-year";
 
-export class ThyrannicDate {
+export class TDate {
   
   constructor(
-    readonly year: ThyrannicYear,
+    readonly year: TYear,
     readonly week: number,
-    readonly day: ThyrannicDay
+    readonly day: TDay
   ) {
     if (week < 1) throw new Error('week less than 1');
     if (week > year.getWeeks()) throw new Error('week greater than maximum');
   }
   
-  public static make(epoch: number, year: number, week: number, day: ThyrannicDay) {
-    return new ThyrannicDate(new ThyrannicYear(epoch, year), week, day);
+  public static make(epoch: number, year: number, week: number, day: TDay) {
+    return new TDate(new TYear(epoch, year), week, day);
+  }
+  
+  static fromValue(seq: number): TDate {
+    let e,p,y,w,d,r;
+    [e,r] = MathUtil.divMod(seq, TemporalUnit.EPOCH.as(TemporalUnit.DAY));
+    [p,r] = MathUtil.divMod(r, TemporalUnit.STD_PERIOD.as(TemporalUnit.DAY));
+    [y,r] = MathUtil.divMod(r, TemporalUnit.SHORT_YEAR.as(TemporalUnit.DAY));
+    [w,r] = MathUtil.divMod(r, TemporalUnit.WEEK.as(TemporalUnit.DAY));
+    d = TDay.fromValue(r);
+    return TDate.make(e+1, 20*p+y+1, w+1, d);
+  }
+  
+  public valueOf(): number {
+    const elapsedEpochs = this.year.epoch - 1;
+    const elapsedYearsSinceEpochStart = this.year.year - 1;
+    const elapsedPeriodsSinceEpochStart = Math.floor((elapsedYearsSinceEpochStart - 1) / 20);
+    const elapsedYearsSincePeriodStart = elapsedYearsSinceEpochStart % 20;
+    const elapsedWeeksSinceYearStart = this.week - 1;
+    const elapsedDaysSinceWeekStart = this.day.valueOf();
+    return elapsedDaysSinceWeekStart
+      + elapsedWeeksSinceYearStart * TemporalUnit.WEEK.as(TemporalUnit.DAY)
+      + elapsedYearsSincePeriodStart * TemporalUnit.SHORT_YEAR.as(TemporalUnit.DAY)
+      + elapsedPeriodsSinceEpochStart * TemporalUnit.STD_PERIOD.as(TemporalUnit.DAY)
+      + elapsedEpochs * TemporalUnit.EPOCH.as(TemporalUnit.DAY);
   }
   
   public toString(): string {
-    return "" + this.week + this.suffix + " " + this.day.name + " of " + this.year.toString();
-  }
-  
-  private get suffix(): string {
-    let n = this.week % 100;
-    if (n === 11 || n === 12 || n === 13) {
-      return "th";
-    }
-    
-    n = n % 10;
-    switch (n) {
-      case 1: return "st";
-      case 2: return "nd";
-      case 3: return "rd";
-      default: return "th";
-    }
+    return MathUtil.ordinal(this.week) + " " + this.day.name + " of " + this.year.toString();
   }
   
 }

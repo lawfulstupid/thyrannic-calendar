@@ -9,9 +9,13 @@ export class TDateTime {
     readonly hour: number
   ) {}
 
-  public static fromValue(seq: number) {
+  public static fromValue(seq: number): TDateTime {
     const [daySeq, hourSeq] = MathUtil.divMod(seq, TemporalUnit.DAY.as(TemporalUnit.HOUR));
     return new TDateTime(TDate.fromValue(daySeq), hourSeq);
+  }
+
+  public static fromDate(date: Date = new Date()): TDateTime {
+    return new TDateTime(TDate.fromDate(date), date.getUTCHours());
   }
 
   public valueOf(): number {

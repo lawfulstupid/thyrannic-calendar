@@ -1,3 +1,6 @@
+import { MathUtil } from "../util/math-util";
+import { TDate } from "./thyrannic-date";
+
 export class TYear {
 
   constructor(
@@ -9,10 +12,13 @@ export class TYear {
       if (year > 200) throw new Error('year greater than 200');
   }
 
-  static fromValue(seq: number): TYear {
-    const epoch = (seq - 1) / 200 + 1;
-    const year = (seq - 1) % 200 + 1;
-    return new TYear(epoch, year);
+  public static fromValue(seq: number): TYear {
+    const [epoch, year] = MathUtil.divMod(seq - 1, 200);
+    return new TYear(epoch + 1, year + 1);
+  }
+
+  public static fromDate(date: Date = new Date()): TYear {
+    return TDate.fromDate(date).year;
   }
 
   public valueOf(): number {

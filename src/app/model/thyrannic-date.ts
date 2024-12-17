@@ -18,7 +18,7 @@ export class TDate {
     return new TDate(new TYear(epoch, year), week, day);
   }
 
-  static fromValue(seq: number): TDate {
+  public static fromValue(seq: number): TDate {
     let e,p,y,w,d,r;
     [e,r] = MathUtil.divMod(seq, TemporalUnit.EPOCH.as(TemporalUnit.DAY));
     [p,r] = MathUtil.divMod(r, TemporalUnit.STD_PERIOD.as(TemporalUnit.DAY));
@@ -26,6 +26,11 @@ export class TDate {
     [w,r] = MathUtil.divMod(r, TemporalUnit.WEEK.as(TemporalUnit.DAY));
     d = TDay.fromValue(r);
     return TDate.make(e+1, 20*p+y+1, w+1, d);
+  }
+
+  public static fromDate(date: Date = new Date()): TDate {
+    // 16th Brogos 20,22 === 10th August 2022
+    return this.fromValue(Math.floor(date.valueOf() / 86400000) + 1280664);
   }
 
   public valueOf(): number {

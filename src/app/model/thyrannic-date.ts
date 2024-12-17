@@ -1,10 +1,10 @@
-import { MathUtil } from "../util/math-util";
-import { TemporalUnit } from "./temporal-unit";
-import { TDay } from "./thyrannic-day";
-import { TYear } from "./thyrannic-year";
+import { MathUtil } from '../util/math-util';
+import { TemporalUnit } from './temporal-unit';
+import { TDay } from './thyrannic-day';
+import { TYear } from './thyrannic-year';
 
 export class TDate {
-  
+
   constructor(
     readonly year: TYear,
     readonly week: number,
@@ -13,11 +13,11 @@ export class TDate {
     if (week < 1) throw new Error('week less than 1');
     if (week > year.getWeeks()) throw new Error('week greater than maximum');
   }
-  
+
   public static make(epoch: number, year: number, week: number, day: TDay) {
     return new TDate(new TYear(epoch, year), week, day);
   }
-  
+
   static fromValue(seq: number): TDate {
     let e,p,y,w,d,r;
     [e,r] = MathUtil.divMod(seq, TemporalUnit.EPOCH.as(TemporalUnit.DAY));
@@ -27,7 +27,7 @@ export class TDate {
     d = TDay.fromValue(r);
     return TDate.make(e+1, 20*p+y+1, w+1, d);
   }
-  
+
   public valueOf(): number {
     const elapsedEpochs = this.year.epoch - 1;
     const elapsedYearsSinceEpochStart = this.year.year - 1;
@@ -41,9 +41,9 @@ export class TDate {
       + elapsedPeriodsSinceEpochStart * TemporalUnit.STD_PERIOD.as(TemporalUnit.DAY)
       + elapsedEpochs * TemporalUnit.EPOCH.as(TemporalUnit.DAY);
   }
-  
+
   public toString(): string {
-    return MathUtil.ordinal(this.week) + " " + this.day.name + " of " + this.year.toString();
+    return MathUtil.ordinal(this.week) + ' ' + this.day.name + ' of ' + this.year.toString();
   }
-  
+
 }

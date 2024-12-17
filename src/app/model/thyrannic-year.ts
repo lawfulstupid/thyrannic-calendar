@@ -1,5 +1,7 @@
 import { MathUtil } from "../util/math-util";
+import { TemporalUnit } from "./temporal-unit";
 import { TDate } from "./thyrannic-date";
+import { TDateTime } from "./thyrannic-date-time";
 
 export class TYear {
 
@@ -13,6 +15,7 @@ export class TYear {
   }
 
   public static fromValue(seq: number): TYear {
+    seq = Math.floor(seq);
     const [epoch, year] = MathUtil.divMod(seq - 1, 200);
     return new TYear(epoch + 1, year + 1);
   }
@@ -37,6 +40,14 @@ export class TYear {
 
   public toString(): string {
     return '' + this.epoch + ',' + this.year;
+  }
+
+  public add(quantity: number, unit: TemporalUnit = TemporalUnit.YEAR): TYear | TDate | TDateTime {
+    if (TemporalUnit.YEAR.defines(unit)) {
+      return TYear.fromValue(this.valueOf() + quantity * unit.as(TemporalUnit.YEAR));
+    } else {
+      return new TDate(this).add(quantity, unit);
+    }
   }
 
 }

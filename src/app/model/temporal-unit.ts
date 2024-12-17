@@ -7,7 +7,10 @@ export class TemporalUnit {
   public static readonly SHORT_YEAR: TemporalUnit = new TemporalUnit('Short Year', [4, this.QUARTER]);
   public static readonly LONG_YEAR: TemporalUnit = new TemporalUnit('Long Year', [5, this.QUARTER]);
   public static readonly STD_PERIOD: TemporalUnit = new TemporalUnit('Period', [19, this.SHORT_YEAR], [1, this.LONG_YEAR]);
-  public static readonly EPOCH: TemporalUnit = new TemporalUnit('Epoch', [10, this.STD_PERIOD], [-1, this.WEEK]);
+  public static readonly STD_EPOCH: TemporalUnit = new TemporalUnit('Epoch', [10, this.STD_PERIOD], [-1, this.WEEK]);
+
+  public static readonly YEAR: TemporalUnit = new TemporalUnit('Year');
+  public static readonly EPOCH: TemporalUnit = new TemporalUnit('Epoch', [200, this.YEAR]);
 
   private readonly parts: Array<{
     baseUnit: TemporalUnit,
@@ -30,6 +33,14 @@ export class TemporalUnit {
       return 1.0 / unit.as(this);
     }
     return this.parts.map(part => part.baseUnit.as(unit) * part.length).reduce((a,b) => a+b, 0.0);
+  }
+
+  public defines(unit: TemporalUnit): boolean {
+    return this === unit || unit.parts.some(part => this.defines(part.baseUnit));
+  }
+
+  public toString(): string {
+    return this.name;
   }
 
 }

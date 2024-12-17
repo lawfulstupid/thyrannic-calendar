@@ -3,6 +3,7 @@ import { environment } from 'src/environments/environment';
 import { TemporalUnit } from './model/temporal-unit';
 import { TYear } from './model/thyrannic-year';
 import { TDateTime } from './model/thyrannic-date-time';
+import { TDate } from './model/thyrannic-date';
 
 @Component({
   selector: 'app-root',
@@ -13,10 +14,16 @@ export class AppComponent {
 
   readonly environment = environment;
 
-  year: TYear = TYear.fromDate();
-  date = TDateTime.fromDate();
-  daysInQuarter = TemporalUnit.EPOCH.as(TemporalUnit.DAY);
-  dateSeq: number = this.date.valueOf();
-  dateFromSeq = TDateTime.fromValue(31200930+7);
+  dates: Array<TYear | TDate | TDateTime> = [
+    TYear.fromDate(),
+    TDate.fromDate(),
+    TDateTime.fromDate(),
+    TYear.fromDate().add(1, TemporalUnit.YEAR),
+    TYear.fromDate().add(1, TemporalUnit.DAY),
+    TDate.fromDate().add(1, TemporalUnit.DAY),
+    TDate.fromDate().add(1, TemporalUnit.HOUR),
+    TDateTime.fromDate().add(1, TemporalUnit.HOUR),
+    TDateTime.fromDate().add(1, TemporalUnit.QUARTER),
+  ];
 
 }

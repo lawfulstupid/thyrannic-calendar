@@ -6,10 +6,11 @@ export class TDateTime {
 
   constructor (
     readonly date: TDate,
-    readonly hour: number
+    readonly hour: number = 0
   ) {}
 
   public static fromValue(seq: number): TDateTime {
+    seq = Math.floor(seq);
     const [daySeq, hourSeq] = MathUtil.divMod(seq, TemporalUnit.DAY.as(TemporalUnit.HOUR));
     return new TDateTime(TDate.fromValue(daySeq), hourSeq);
   }
@@ -26,6 +27,14 @@ export class TDateTime {
     const displayHour = MathUtil.mod(this.hour - 1, 12) + 1;
     const amPm = this.hour < 12 ? 'AM' : 'PM';
     return displayHour + ' ' + amPm + ', ' + this.date.toString();
+  }
+
+  public add(quantity: number, unit: TemporalUnit = TemporalUnit.HOUR): TDateTime {
+    if (TemporalUnit.HOUR.defines(unit)) {
+      return TDateTime.fromValue(this.valueOf() + quantity * unit.as(TemporalUnit.HOUR));
+    } else {
+      return new TDateTime(<TDate>this.date.add(quantity, unit), this.hour);
+    }
   }
 
 }

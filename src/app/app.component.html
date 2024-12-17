@@ -1,9 +1,4 @@
 Hello, World!
-<br>
-The year is {{year}}
-<br>
-The date is {{date}}
-<br>
-Seq: {{dateSeq}}
-<br>
-Rev: {{dateFromSeq}}
+<ng-container *ngFor="let date of dates">
+  <br>{{date}}
+</ng-container>

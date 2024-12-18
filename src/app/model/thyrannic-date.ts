@@ -15,10 +15,6 @@ export class TDate {
     if (week > year.getWeeks()) throw new Error('week greater than maximum');
   }
 
-  public static make(epoch: number, year: number, week: number, day: TDay) {
-    return new TDate(new TYear(epoch, year), week, day);
-  }
-
   public static fromValue(seq: number): TDate {
     seq = Math.floor(seq);
     let e,p,y,w,d,r;
@@ -27,7 +23,7 @@ export class TDate {
     [y,r] = MathUtil.divMod(r, TemporalUnit.SHORT_YEAR.as(TemporalUnit.DAY));
     [w,r] = MathUtil.divMod(r, TemporalUnit.WEEK.as(TemporalUnit.DAY));
     d = TDay.fromValue(r);
-    return TDate.make(e+1, 20*p+y+1, w+1, d);
+    return new TDate(new TYear(e+1, 20*p+y+1), w+1, d);
   }
 
   public static fromDate(date: Date = new Date()): TDate {

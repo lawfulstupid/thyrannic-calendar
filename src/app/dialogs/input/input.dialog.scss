@@ -1,0 +1,19 @@
+h1 {
+  text-align: center;
+}
+
+mat-dialog-content {
+  select {
+    width: 100%;
+  }
+}
+
+mat-dialog-actions {
+  width: 100%;
+  button {
+    margin: 0;
+    &:not(:first-child) {
+      margin-left: auto;
+    }
+  }
+}

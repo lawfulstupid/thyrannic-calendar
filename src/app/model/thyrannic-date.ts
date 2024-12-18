@@ -34,8 +34,7 @@ export class TDate {
   public valueOf(): number {
     const elapsedEpochs = this.year.epoch - 1;
     const elapsedYearsSinceEpochStart = this.year.year - 1;
-    const elapsedPeriodsSinceEpochStart = Math.floor((elapsedYearsSinceEpochStart - 1) / 20);
-    const elapsedYearsSincePeriodStart = elapsedYearsSinceEpochStart % 20;
+    const [elapsedPeriodsSinceEpochStart, elapsedYearsSincePeriodStart] = MathUtil.divMod(elapsedYearsSinceEpochStart, 20);
     const elapsedWeeksSinceYearStart = this.week - 1;
     const elapsedDaysSinceWeekStart = this.day.valueOf();
     return elapsedDaysSinceWeekStart

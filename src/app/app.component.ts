@@ -15,8 +15,8 @@ export class AppComponent {
 
   datetime: TDateTime = TDateTime.fromDate();
 
-  public changeDateTime(event: [number, TemporalUnit]) {
-    this.datetime = this.datetime.add(event[0], event[1]);
+  public changeDateTime([quantity, unit]: [number, TemporalUnit]) {
+    this.datetime = this.datetime.add(quantity, unit);
   }
 
 }

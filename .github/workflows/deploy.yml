@@ -1,0 +1,66 @@
+name: Page Deploy
+
+env:
+  NODE_VERSION: '16'
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: write
+  pages: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'branch'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+      - name: Set up Git user
+        uses: fregante/setup-git-user@v2
+      - name: Set up Node
+        uses: actions/setup-node@master
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Get tag
+        id: get-tag
+        run: |
+          TAG_LIST=($(git tag --contains))
+          TAG=${TAG_LIST[0]}
+          if [ -z $TAG ]; then
+            TAG=$(npm version patch)
+            git push --follow-tags
+          fi
+          echo "Tag: $TAG"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+      - name: Create release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.get-tag.outputs.tag }}
+          generateReleaseNotes: true
+      - name: Code build
+        run: |
+          npm install --production
+          npm run build
+      - name: Set up pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: 'dist/interactive-thyrannic-calendar'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2

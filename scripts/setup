@@ -1,3 +1,0 @@
-#!/bin/bash
-ln -f $(dirname $0)/pre-push $(realpath $(dirname $0)/../.git/hooks/pre-push)
-git config push.followTags true

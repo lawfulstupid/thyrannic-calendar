@@ -1,5 +1,7 @@
 # Interactive Śyrannic Calendar
 
+Hosted at lawfulstupid.github.io/Interactive-Thyrannic-Calendar.
+
 ## Running
 
 1. Install [Node.js](nodejs.org).

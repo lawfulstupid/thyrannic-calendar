@@ -1,6 +1,6 @@
 # Interactive Śyrannic Calendar
 
-Hosted at lawfulstupid.github.io/Interactive-Thyrannic-Calendar.
+Hosted at http://lawfulstupid.github.io/Interactive-Thyrannic-Calendar.
 
 ## Running
 

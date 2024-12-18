@@ -1,0 +1,32 @@
+.background {
+  background-color: skyblue;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  * {
+    position: absolute;
+  }
+}
+
+.earth {
+  width: 8000px;
+  height: 8000px;
+  background-color: green;
+  left: calc(50% - 4000px);
+  top: 80%;
+  border-radius: 100%;
+}
+
+.datetime {
+  position: absolute;
+  top: 20%;
+  width: 100%;
+  text-align: center;
+  color: whitesmoke;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-size: 500%;
+}

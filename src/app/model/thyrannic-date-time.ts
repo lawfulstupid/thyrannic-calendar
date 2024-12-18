@@ -23,10 +23,14 @@ export class TDateTime {
     return this.date.valueOf() * TemporalUnit.DAY.as(TemporalUnit.HOUR) + this.hour;
   }
 
-  public toString(): string {
+  public getTime(): string {
     const displayHour = MathUtil.mod(this.hour - 1, 12) + 1;
     const amPm = this.hour < 12 ? 'AM' : 'PM';
-    return displayHour + ' ' + amPm + ', ' + this.date.toString();
+    return displayHour + ' ' + amPm;
+  }
+
+  public toString(): string {
+    return this.getTime() + ', ' + this.date.toString();
   }
 
   public add(quantity: number, unit: TemporalUnit = TemporalUnit.HOUR): TDateTime {

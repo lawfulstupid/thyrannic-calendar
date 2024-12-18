@@ -1,0 +1,9 @@
+<span>
+  <ng-content></ng-content>
+  <button class="up" (click)="change.emit([1, unit])">
+    <i class="arrow"></i>
+  </button>
+  <button class="down" (click)="change.emit([-1, unit])">
+    <i class="arrow"></i>
+  </button>
+</span>

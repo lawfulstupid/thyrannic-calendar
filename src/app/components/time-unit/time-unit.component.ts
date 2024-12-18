@@ -30,15 +30,20 @@ export class TimeUnitComponent {
   public setValue() {
     const config = {
       data: {
-        title: 'Set the ' + this.unit.toString().toLowerCase(),
-        options: this.unit === TemporalUnit.DAY ? TDay.values : undefined
+        title: 'Set the ' + this.unit.toString().toLowerCase()
       }
     }
 
     this.dialogMgr.open(InputDialog, config).afterClosed()
       .pipe(filter(x => x !== undefined))
-      .subscribe(newValue => {
-        this.changeValue(newValue - this.value);
+      .subscribe((modifier: string) => {
+        if (modifier.match(/^[+-][0-9]+$/)) {
+          this.changeValue(Number(modifier));
+        } else if (modifier.match(/^[0-9]+$/)) {
+          this.changeValue(Number(modifier) - this.value);
+        } else {
+          console.error('Invalid value:', modifier);
+        }
       });
   }
 

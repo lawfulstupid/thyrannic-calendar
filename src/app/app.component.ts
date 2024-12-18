@@ -16,7 +16,11 @@ export class AppComponent {
   datetime: TDateTime = TDateTime.fromDate();
 
   public changeDateTime([quantity, unit]: [number, TemporalUnit]) {
-    this.datetime = this.datetime.add(quantity, unit);
+    try {
+      this.datetime = this.datetime.add(quantity, unit);
+    } catch (err) {
+      console.error('Illegal operation:', err);
+    }
   }
 
 }

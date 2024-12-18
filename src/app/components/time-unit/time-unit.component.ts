@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { filter } from "rxjs";
 import { InputDialog } from "src/app/dialogs/input/input.dialog";
 import { TemporalUnit } from "src/app/model/temporal-unit";
-import { TDay } from "src/app/model/thyrannic-day";
 
 @Component({
   selector: 'time-unit',

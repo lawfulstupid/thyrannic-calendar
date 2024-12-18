@@ -1,0 +1,17 @@
+<div #actionbar fxLayout="row" class="actionbar no-scrollbar">
+  <ng-container *ngFor="let action of actions">
+    <button mat-raised-button *ngIf="!action.plaintext"
+      (click)="doCallback(action)"
+      [disabled]="action.isDisabled && action.isDisabled()"
+      tabindex="-1"
+    >
+      {{action.label}}
+    </button>
+    <span *ngIf="action.plaintext"
+      class="text"
+    >
+      {{action.label}}
+    </span>
+    <div class="separator" *ngIf="action.separator"></div>
+  </ng-container>
+</div>

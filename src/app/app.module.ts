@@ -1,17 +1,27 @@
 import { NgModule } from '@angular/core';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
-import { OrdinalPipe } from './pipes/ordinal';
 import { TimeUnitComponent } from './components/time-unit/time-unit.component';
+import { InputDialog } from './dialogs/input/input.dialog';
+import { OrdinalPipe } from './pipes/ordinal';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     TimeUnitComponent,
-    OrdinalPipe
+    OrdinalPipe,
+    InputDialog
   ],
   imports: [
-    BrowserModule
+    BrowserAnimationsModule,
+    BrowserModule,
+    FormsModule,
+    MatDialogModule,
+    MatInputModule
   ],
   bootstrap: [AppComponent]
 })

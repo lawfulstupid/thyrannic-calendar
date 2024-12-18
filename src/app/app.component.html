@@ -2,13 +2,13 @@
   <div class="earth"></div>
 </div>
 <div class="datetime">
-  <time-unit [unit]="units.HOUR" (change)="changeDateTime($event)">{{datetime.getTime()}}</time-unit>
+  <time-unit [unit]="units.HOUR" [value]="datetime.hour" (change)="changeDateTime($event)">{{datetime.getTime()}}</time-unit>
   <span>, </span>
-  <time-unit [unit]="units.WEEK" (change)="changeDateTime($event)">{{datetime.date.week | ordinal}}</time-unit>
+  <time-unit [unit]="units.WEEK" [value]="datetime.date.week" (change)="changeDateTime($event)">{{datetime.date.week | ordinal}}</time-unit>
   <span>{{' '}}</span>
-  <time-unit [unit]="units.DAY" (change)="changeDateTime($event)">{{datetime.date.day.name}}</time-unit>
+  <time-unit [unit]="units.DAY" [value]="datetime.date.day.id" (change)="changeDateTime($event)">{{datetime.date.day.name}}</time-unit>
   <span>{{' of '}}</span>
-  <time-unit [unit]="units.EPOCH" (change)="changeDateTime($event)">{{datetime.date.year.epoch}}</time-unit>
+  <time-unit [unit]="units.EPOCH" [value]="datetime.date.year.epoch" (change)="changeDateTime($event)">{{datetime.date.year.epoch}}</time-unit>
   <span>,</span>
-  <time-unit [unit]="units.YEAR" (change)="changeDateTime($event)">{{datetime.date.year.year}}</time-unit>
+  <time-unit [unit]="units.YEAR" [value]="datetime.date.year.year" (change)="changeDateTime($event)">{{datetime.date.year.year}}</time-unit>
 </div>

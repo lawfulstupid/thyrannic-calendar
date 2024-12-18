@@ -1,0 +1,28 @@
+:host {
+  overflow: hidden;
+}
+
+.actionbar {
+  padding: 8px 0;
+  :not(.separator) {
+      margin-left: 8px;
+      &:first-child {
+          margin-left: 0px;
+      }
+  }
+  .separator {
+      border-right: 1px solid gray;
+  }
+  .text {
+      margin-top: auto;
+      margin-bottom: auto;
+      font-size: x-large;
+      color: #424242;
+  }
+  * {
+      flex: none;
+  }
+
+  width: 100%;
+  overflow-x: scroll;
+}

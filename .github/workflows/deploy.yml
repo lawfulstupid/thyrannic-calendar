@@ -53,7 +53,7 @@ jobs:
           generateReleaseNotes: true
       - name: Code build
         run: |
-          npm install --production
+          npm install
           npm run build
       - name: Set up pages
         uses: actions/configure-pages@v3

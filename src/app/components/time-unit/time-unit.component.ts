@@ -5,7 +5,8 @@ import { InputDialog } from "src/app/dialogs/input/input.dialog";
 import { TemporalUnit } from "src/app/model/temporal-unit";
 
 @Component({
-  selector: 'time-unit',
+  selector: 'app-time-unit',
+  standalone: true,
   templateUrl: './time-unit.component.html',
   styleUrls: ['./time-unit.component.scss']
 })

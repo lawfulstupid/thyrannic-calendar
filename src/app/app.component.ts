@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { TimeUnitComponent } from './components/time-unit/time-unit.component';
 import { TemporalUnit } from './model/temporal-unit';
 import { TDateTime } from './model/thyrannic-date-time';
+import { OrdinalPipe } from './pipes/ordinal';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [OrdinalPipe, TimeUnitComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

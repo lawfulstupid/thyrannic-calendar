@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from "@angular/core";
 import { MathUtil } from "../util/math-util";
 
 @Pipe({
-  name: 'ordinal'
+  name: 'ordinal',
+  standalone: true
 })
 export class OrdinalPipe implements PipeTransform {
 

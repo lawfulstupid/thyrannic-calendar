@@ -1,13 +1,6 @@
-# Interactive Śyrannic Calendar
+# Śyrannic Calendar
 
-Hosted at http://lawfulstupid.github.io/Interactive-Thyrannic-Calendar.
-
-## Running
-
-1. Install [Node.js](nodejs.org).
-1. Download latest [tagged release](https://github.com/lawfulstupid/Interactive-Thyrannic-Calendar/tags).
-1. Run `npm run prod` from the root directory or `scripts/runprod.bat` to build and launch the application in production mode.
-1. A new tab will open in your web browser, otherwise navigate to http://127.0.0.1:8247.
+Hosted at http://lawfulstupid.github.io/thyrannic-calendar.
 
 ## Development server
 

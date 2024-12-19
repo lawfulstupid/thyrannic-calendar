@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Interactive-Thyrannic-Calendar": {
+    "thyrannic-calendar": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/interactive-thyrannic-calendar",
+            "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -69,10 +69,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "Interactive-Thyrannic-Calendar:build:production"
+              "browserTarget": "thyrannic-calendar:build:production"
             },
             "development": {
-              "browserTarget": "Interactive-Thyrannic-Calendar:build:development"
+              "browserTarget": "thyrannic-calendar:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -80,7 +80,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Interactive-Thyrannic-Calendar:build"
+            "browserTarget": "thyrannic-calendar:build"
           }
         }
       }

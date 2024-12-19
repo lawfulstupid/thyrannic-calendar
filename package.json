@@ -1,10 +1,9 @@
 {
-  "name": "interactive-thryannic-calendar",
+  "name": "thryannic-calendar",
   "version": "0.1.12",
   "scripts": {
     "start": "ng serve",
-    "build": "ng build",
-    "prod": "scripts/runprod.bat"
+    "build": "ng build"
   },
   "private": true,
   "dependencies": {

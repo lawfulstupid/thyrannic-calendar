@@ -28,6 +28,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-tags: true
+          fetch-depth: 100
       - name: Set up Git user
         uses: fregante/setup-git-user@v2
       - name: Set up Node
@@ -43,7 +44,7 @@ jobs:
           if [ -z $TAG ]; then
             # Check if package version equal latest tag in main
             TAG=v$(npm pkg get version | tr -d '"')
-            LAST_TAG=$(git describe --tags --abbrev=0)
+            LAST_TAG=$(git describe --tags --abbrev=0 --always)
             if [ $TAG == $LAST_TAG ]; then
               # No change made to package version, do one now
               TAG=$(npm version patch)

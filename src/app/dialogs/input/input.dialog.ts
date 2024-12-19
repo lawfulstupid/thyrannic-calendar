@@ -10,7 +10,7 @@ export class InputDialog {
   value?: number;
 
   constructor(
-    private matDialogRef: MatDialogRef<InputDialog>,
+    public matDialogRef: MatDialogRef<InputDialog>,
     @Inject(MAT_DIALOG_DATA) public data: { title: string, options?: Array<any> }
   ) {
     document.querySelector('input')?.focus();

@@ -17,7 +17,7 @@ button {
     opacity: 50%;
   }
   &.up {
-    top: -15%;
+    bottom: 100%;
     .arrow {
       transform: rotate(-135deg);
       -webkit-transform: rotate(-135deg);
@@ -25,7 +25,7 @@ button {
     }
   }
   &.down {
-    bottom: -30%;
+    top: 100%;
     .arrow {
       transform: rotate(45deg);
       -webkit-transform: rotate(45deg);

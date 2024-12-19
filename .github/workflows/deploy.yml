@@ -45,12 +45,6 @@ jobs:
           fi
           echo "Tag: $TAG"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
-      - name: Create release
-        id: create_release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ steps.get-tag.outputs.tag }}
-          generateReleaseNotes: true
       - name: Code build
         run: |
           npm install
@@ -64,3 +58,9 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
+      - name: Create release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.get-tag.outputs.tag }}
+          generateReleaseNotes: true

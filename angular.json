@@ -69,10 +69,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "thyrannic-calendar:build:production"
+              "buildTarget": "thyrannic-calendar:build:production"
             },
             "development": {
-              "browserTarget": "thyrannic-calendar:build:development"
+              "buildTarget": "thyrannic-calendar:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -80,7 +80,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "thyrannic-calendar:build"
+            "buildTarget": "thyrannic-calendar:build"
           }
         }
       }

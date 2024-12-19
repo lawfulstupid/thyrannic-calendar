@@ -37,11 +37,22 @@ jobs:
       - name: Get tag
         id: get-tag
         run: |
+          # Check if head is not tagged
           TAG_LIST=($(git tag --contains))
           TAG=${TAG_LIST[0]}
           if [ -z $TAG ]; then
-            TAG=$(npm version patch)
-            git push --follow-tags
+            # Check if package version equal latest tag in main
+            TAG=v$(npm pkg get version | tr -d '"')
+            LAST_TAG=$(git describe --tags --abbrev=0)
+            if [ $TAG == $LAST_TAG ]; then
+              # No change made to package version, do one now
+              TAG=$(npm version patch)
+              git push --follow-tags
+            else
+              # Package version changed, tag it now
+              git tag -f $TAG
+              git push --tags
+            fi
           fi
           echo "Tag: $TAG"
           echo "tag=$TAG" >> $GITHUB_OUTPUT

@@ -1,13 +1,14 @@
-button {
-  display: block;
-  width: 100%;
-  height: 100%;
+:host {
   opacity: 50%;
-  border: none;
   &:hover {
     opacity: 75%;
   }
   &:active {
     opacity: 50%;
+  }
+  .clickable {
+    width: 100%;
+    height: 100%;
+    display: block;
   }
 }

@@ -1,7 +1,9 @@
+import { Directive, Input } from "@angular/core";
 import { TemporalUnit } from "src/app/model/temporal-unit";
 import { TDateTime } from "src/app/model/thyrannic-date-time";
 import { MathUtil } from "src/app/util/math-util";
 
+@Directive()
 export abstract class CelestialBody {
 
   private static readonly LATITUDE: number = 35.19; // can parameterise this later
@@ -56,7 +58,8 @@ export abstract class CelestialBody {
     return this.perihelionEpoch - (this.meanAnomaly(d) / 360) / this.orbitalPeriod;
   }
 
-  update(datetime: TDateTime) {
+  @Input('datetime')
+  set updatePosition(datetime: TDateTime) {
     this.computeDaRA(datetime);
     this.computeApparentPosition(datetime);
   }
@@ -86,8 +89,8 @@ export abstract class CelestialBody {
     this.declination = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ze, Math.sqrt(xe**2 + ye**2))));
   }
 
-  rightAscension: number = 0;
-  declination: number = 0;
+  private rightAscension: number = 0;
+  private declination: number = 0;
 
   private computeApparentPosition(datetime: TDateTime) {
     const centredHour = (datetime.hour + datetime.minute / 60 - 12) / 24;
@@ -101,10 +104,10 @@ export abstract class CelestialBody {
     // 0 degFromTop = top: 0vh
     // 90 degFromTop = top: 80vh
     this.top = (degFromTop * 8/9) + 'vh';
-    this.left = (50 + centredHour * 200) + 'vw';
+    this.left = `calc(50vw + ${hourAngle * 8/9}vh)`;
   }
 
-  top: string = '5vw';
-  left: string = '10vw';
+  top: string = '0';
+  left: string = '0';
 
 }

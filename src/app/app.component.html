@@ -1,6 +1,4 @@
-<div class="background">
-  <div class="earth"></div>
-</div>
+<app-celestial-bg [datetime]="datetime"></app-celestial-bg>
 <div class="datetime">
   <app-time-unit [unit]="units.HOUR" [value]="datetime.hour" (change)="changeDateTime($event)">{{datetime.getTime()}}</app-time-unit>
   <span>, </span>
@@ -12,6 +10,6 @@
   <span>,</span>
   <app-time-unit [unit]="units.YEAR" [value]="datetime.date.year.year" (change)="changeDateTime($event)">{{datetime.date.year.year}}</app-time-unit>
 </div>
-<div class="footer">
-  <span>v{{environment.appVersion}}</span>
-</div>
+<span class="footer">
+  <a href="http://github.com/lawfulstupid/thyrannic-calendar">v{{environment.appVersion}}</a>
+</span>

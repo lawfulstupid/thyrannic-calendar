@@ -1,0 +1,12 @@
+$diameter: 2000vw;
+
+* {
+  width: $diameter;
+  height: $diameter;
+  position: absolute;
+  left: calc(50vw - $diameter / 2);
+  top: 80vh;
+  background-color: green;
+  border-radius: 100%;
+  z-index: 4;
+}

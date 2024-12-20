@@ -10,7 +10,6 @@ export abstract class CelestialBody {
   // Earth parameters
   private static readonly LATITUDE: number = 35.19;
   private static readonly TILT: number = 24.12;
-  private static readonly ROTATION_ANGLE_OFFSET: number = 130;
 
   // Visual options
   abstract angularDiameter: number; // how many angles in the sky it takes up
@@ -29,10 +28,14 @@ export abstract class CelestialBody {
   abstract readonly eccentricity: number; // eccentricity (0=circle, 0-1=eclipse, 1=parabola)
   abstract readonly originAngle: number; // anomaly at epoch
   abstract readonly orbitalPeriod: number; // orbital period (fractional days)
+  
+  static synodicToSiderealPeriod(p: number): number {
+    return 1 / (1/p + 1/SunComponent.INSTANCE.orbitalPeriod);
+  }
 
   // mean anomaly (0 at periapsis; increases uniformly with time)
   meanAnomaly(d: number): number {
-    return MathUtil.fixAngle(this.originAngle + (360 / this.orbitalPeriod) * d);
+    return MathUtil.fixAngle(this.meanLongitude(d) - this.periapsisLongitude);
   }
 
   // longitude of periapsis
@@ -47,7 +50,7 @@ export abstract class CelestialBody {
 
   // mean longitude
   meanLongitude(d: number): number {
-    return MathUtil.fixAngle(this.meanAnomaly(d) + this.periapsisLongitude);
+    return MathUtil.fixAngle(this.originAngle + (360 / this.orbitalPeriod) * d);
   }
 
   // time of periapsis

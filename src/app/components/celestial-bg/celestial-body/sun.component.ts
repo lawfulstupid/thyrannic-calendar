@@ -20,7 +20,7 @@ export class SunComponent extends CelestialBody {
   override eccentricity = 0.0167;
   override originAngle = 11.2854;
   override orbitalPeriod = 340.16433;
-  override ascendingNodeLongitude = 0;
+  override ascendingNodeLongitude = 316.224;
 
   public static INSTANCE: SunComponent;
 

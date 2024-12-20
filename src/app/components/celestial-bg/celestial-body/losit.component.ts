@@ -11,7 +11,7 @@ import { SunComponent } from './sun.component';
 })
 export class LositComponent extends CelestialBody {
   
-  override angularDiameter = 0.44;
+  // override angularDiameter = 0.44;
   override color = 'rgb(63, 21, 16)';
   override brightness = 0.92;
   override zIndex = 2;
@@ -22,5 +22,7 @@ export class LositComponent extends CelestialBody {
   override originAngle = SunComponent.INSTANCE.originAngle + 321.7148;
   override orbitalPeriod = CelestialBody.synodicToSiderealPeriod(48.28098);
   override ascendingNodeLongitude = 329.915;
+  override meanDistance = 512655.038;
+  override radius = 1968.45;
 
 }

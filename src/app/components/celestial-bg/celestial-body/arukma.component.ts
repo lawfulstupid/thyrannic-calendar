@@ -11,7 +11,6 @@ import { SunComponent } from './sun.component';
 })
 export class ArukmaComponent extends CelestialBody {
 
-  override angularDiameter = 0.61;
   override color = 'rgb(32, 33, 35)';
   override brightness = 2.4;
   override zIndex = 3;
@@ -22,5 +21,7 @@ export class ArukmaComponent extends CelestialBody {
   override originAngle = SunComponent.INSTANCE.originAngle + 76.0417;
   override orbitalPeriod = CelestialBody.synodicToSiderealPeriod(17.79459);
   override ascendingNodeLongitude = 344.672;
+  override meanDistance = 278311.973;
+  override radius = 1481.52;
 
 }

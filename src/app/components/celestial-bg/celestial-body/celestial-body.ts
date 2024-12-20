@@ -10,9 +10,12 @@ export abstract class CelestialBody {
   // Earth parameters
   private static readonly LATITUDE: number = 35.19;
   private static readonly TILT: number = 24.12;
+  
+  static synodicToSiderealPeriod(p: number): number {
+    return 1 / (1/p + 1/SunComponent.INSTANCE.orbitalPeriod);
+  }
 
   // Visual options
-  abstract angularDiameter: number; // how many angles in the sky it takes up
   abstract color: string;
   abstract brightness: number;
   abstract zIndex: number;
@@ -28,9 +31,12 @@ export abstract class CelestialBody {
   abstract readonly eccentricity: number; // eccentricity (0=circle, 0-1=eclipse, 1=parabola)
   abstract readonly originAngle: number; // anomaly at epoch
   abstract readonly orbitalPeriod: number; // orbital period (fractional days)
+  abstract readonly meanDistance: number; // centre-to-centre distance (km) along semi-major axis of ellipse
+  abstract readonly radius: number; // radius of object (km)
   
-  static synodicToSiderealPeriod(p: number): number {
-    return 1 / (1/p + 1/SunComponent.INSTANCE.orbitalPeriod);
+  // how many degrees in the sky it takes up
+  get angularDiameter(): number {
+    return MathUtil.rad2deg(Math.acos(1 - 2 * (this.radius/this.distance) ** 2));
   }
 
   // mean anomaly (0 at periapsis; increases uniformly with time)
@@ -75,11 +81,11 @@ export abstract class CelestialBody {
     const xv = Math.cos(MathUtil.deg2rad(E)) - this.eccentricity;
     const yv = Math.sqrt(1.0 - this.eccentricity**2) * Math.sin(MathUtil.deg2rad(E));
     const v = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(yv, xv)));
-    const r = Math.sqrt(xv**2 + yv**2);
+    this.distance = Math.sqrt(xv**2 + yv**2) * this.meanDistance;
 
     const true_long = v + this.periapsisArgument;
-    const xs = r * Math.cos(MathUtil.deg2rad(true_long));
-    const ys = r * Math.sin(MathUtil.deg2rad(true_long));
+    const xs = this.distance * Math.cos(MathUtil.deg2rad(true_long));
+    const ys = this.distance * Math.sin(MathUtil.deg2rad(true_long));
 
     const xe = xs;
     const ye = ys * Math.cos(MathUtil.deg2rad(CelestialBody.TILT));
@@ -89,8 +95,10 @@ export abstract class CelestialBody {
     this.declination = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ze, Math.sqrt(xe**2 + ye**2))));
   }
 
+  // Variables based on time
   rightAscension: number = 0;
   declination: number = 0;
+  distance: number = 0;
 
   private computeApparentPosition(datetime: TDateTime) {
     const fractionalDay = (12 + datetime.hour + datetime.minute / 60) / 24;

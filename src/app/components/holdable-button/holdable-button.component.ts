@@ -34,7 +34,6 @@ export class HoldableButtonComponent {
 
   up() {
     clearInterval(this.timer);
-    this.output.emit();
   }
 
 }

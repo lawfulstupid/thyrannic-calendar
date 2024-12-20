@@ -51,8 +51,9 @@ jobs:
               git push --follow-tags
             else
               # Package version changed, tag it now
+              git push origin :refs/tags/$TAG
               git tag -f $TAG
-              git push --tags
+              git push origin --tags
             fi
           fi
           echo "Tag: $TAG"

@@ -2,11 +2,15 @@ import { Directive, Input } from "@angular/core";
 import { TemporalUnit } from "src/app/model/temporal-unit";
 import { TDateTime } from "src/app/model/thyrannic-date-time";
 import { MathUtil } from "src/app/util/math-util";
+import { SunComponent } from "./sun.component";
 
 @Directive()
 export abstract class CelestialBody {
 
-  private static readonly LATITUDE: number = 35.19; // can parameterise this later
+  // Earth parameters
+  private static readonly LATITUDE: number = 35.19;
+  private static readonly TILT: number = 24.12;
+  private static readonly ROTATION_ANGLE_OFFSET: number = 130;
 
   // Visual options
   abstract angularDiameter: number; // how many angles in the sky it takes up
@@ -14,48 +18,41 @@ export abstract class CelestialBody {
   abstract brightness: number;
   abstract zIndex: number;
 
-  abstract ascendingNodeLongitude(d: number): number; // longitude of the ascending node (where body appears on horizon)
-  abstract readonly inclination: number; // inclination to the ecliptic (plane of the Earth's orbit)
-  abstract readonly perihelionAngle: number; // sidereal argument of perihelion
-  abstract readonly meanDist: number; // semi-major axis, or mean distance from Sun
+  // ecliptic plane = plane in which Earth orbits sun
+  // orbital plane = plane in which object (sun/moon) orbits Earth
+  // longitude = sidereal angle
+  // argument = relative angle
+  // anomaly = angle from periapsis to object position
+  abstract readonly inclination: number; // angle from ecliptic plane to orbital plane
+  abstract readonly ascendingNodeLongitude: number; // longitude of intersection between ecliptic and orbital planes
+  abstract readonly periapsisArgument: number; // angle from longitude of ascending node to periapsis
   abstract readonly eccentricity: number; // eccentricity (0=circle, 0-1=eclipse, 1=parabola)
   abstract readonly originAngle: number; // anomaly at epoch
   abstract readonly orbitalPeriod: number; // orbital period (fractional days)
-  readonly ecl: number = 24.1; // obliquity of ecliptic (tilt of earth's axis of rotation)
 
-  // mean anomaly (0 at perihelion; increases uniformly with time)
+  // mean anomaly (0 at periapsis; increases uniformly with time)
   meanAnomaly(d: number): number {
     return MathUtil.fixAngle(this.originAngle + (360 / this.orbitalPeriod) * d);
   }
 
-  // longitude of perihelion
-  perihelionLongitude(d: number): number {
-    return MathUtil.fixAngle(this.ascendingNodeLongitude(d) + this.perihelionAngle);
+  // longitude of periapsis
+  get periapsisLongitude(): number {
+    return MathUtil.fixAngle(this.ascendingNodeLongitude + this.periapsisArgument);
   }
 
-  // epoch of perihelion (in fractional day)
-  get perihelionEpoch(): number {
-    return (this.perihelionAngle - this.originAngle) * (this.orbitalPeriod / 360);
+  // epoch of periapsis (in fractional days)
+  get periapsisEpoch(): number {
+    return (this.periapsisArgument - this.originAngle) * (this.orbitalPeriod / 360);
   }
 
   // mean longitude
   meanLongitude(d: number): number {
-    return MathUtil.fixAngle(this.meanAnomaly(d) + this.perihelionLongitude(d));
+    return MathUtil.fixAngle(this.meanAnomaly(d) + this.periapsisLongitude);
   }
 
-  // perihelion distance
-  get perihelionDist(): number {
-    return this.meanDist * (1 - this.eccentricity)
-  }
-
-  // aphelion distance
-  get aphelionDist(): number {
-    return this.meanDist * (1 + this.eccentricity);
-  }
-
-  // time of perihelion
-  perihelionTime(d: number): number {
-    return this.perihelionEpoch - (this.meanAnomaly(d) / 360) / this.orbitalPeriod;
+  // time of periapsis
+  periapsisTime(d: number): number {
+    return this.periapsisEpoch - (this.meanAnomaly(d) / 360) / this.orbitalPeriod;
   }
 
   @Input('datetime')
@@ -77,34 +74,39 @@ export abstract class CelestialBody {
     const v = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(yv, xv)));
     const r = Math.sqrt(xv**2 + yv**2);
 
-    const true_long = v + this.perihelionAngle;
+    const true_long = v + this.periapsisArgument;
     const xs = r * Math.cos(MathUtil.deg2rad(true_long));
     const ys = r * Math.sin(MathUtil.deg2rad(true_long));
 
     const xe = xs;
-    const ye = ys * Math.cos(MathUtil.deg2rad(this.ecl));
-    const ze = ys * Math.sin(MathUtil.deg2rad(this.ecl));
+    const ye = ys * Math.cos(MathUtil.deg2rad(CelestialBody.TILT));
+    const ze = ys * Math.sin(MathUtil.deg2rad(CelestialBody.TILT));
 
     this.rightAscension = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ye, xe)));
     this.declination = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ze, Math.sqrt(xe**2 + ye**2))));
   }
 
-  private rightAscension: number = 0;
-  private declination: number = 0;
+  rightAscension: number = 0;
+  declination: number = 0;
 
   private computeApparentPosition(datetime: TDateTime) {
-    const centredHour = (datetime.hour + datetime.minute / 60 - 12) / 24;
-    const hourAngle = centredHour * 360;
+    const fractionalDay = (12 + datetime.hour + datetime.minute / 60) / 24;
+
+    // 12PM -> solar right ascension
+    // 06PM -> SRA + 90
+    // 12AM -> SRA + 180
+    const lmst = MathUtil.fixAngle2(fractionalDay * 360 + SunComponent.INSTANCE.rightAscension);
+    const lha = MathUtil.fixAngle2(lmst - this.rightAscension);
 
     const degFromTop = MathUtil.rad2deg(Math.acos(
       Math.sin(MathUtil.deg2rad(CelestialBody.LATITUDE)) * Math.sin(MathUtil.deg2rad(this.declination)) +
-      Math.cos(MathUtil.deg2rad(CelestialBody.LATITUDE)) * Math.cos(MathUtil.deg2rad(this.declination)) * Math.cos(MathUtil.deg2rad(hourAngle))
+      Math.cos(MathUtil.deg2rad(CelestialBody.LATITUDE)) * Math.cos(MathUtil.deg2rad(this.declination)) * Math.cos(MathUtil.deg2rad(lha))
     ));
 
     // 0 degFromTop = top: 0vh
     // 90 degFromTop = top: 80vh
     this.top = (degFromTop * 8/9) + 'vh';
-    this.left = `calc(50vw + ${hourAngle * 8/9}vh)`;
+    this.left = `calc(50vw + ${lha * 8/9}vh)`;
   }
 
   top: string = '0';

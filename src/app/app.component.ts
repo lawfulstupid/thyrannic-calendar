@@ -18,7 +18,7 @@ export class AppComponent {
   readonly environment = environment;
   readonly units = TemporalUnit;
 
-  datetime: TDateTime = TDateTime.fromDate();
+  datetime: TDateTime = TDateTime.fromDate(new Date('2024-12-20T12:00'));
 
   public changeDateTime([quantity, unit]: [number, TemporalUnit]) {
     try {

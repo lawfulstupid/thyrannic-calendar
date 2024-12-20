@@ -16,6 +16,11 @@ export class MathUtil {
     return a;
   }
 
+  public static fixAngle2(a: number): number {
+    const fixed = MathUtil.fixAngle(a);
+    return fixed > 180 ? fixed - 360 : fixed;
+  }
+
   public static rad2deg(a: number): number {
     return a * 180 / Math.PI;
   }

@@ -11,6 +11,19 @@ export class MathUtil {
     return [Math.floor(a/b), MathUtil.mod(a, b)];
   }
 
+  public static fixAngle(a: number): number {
+    if (a < 0 || a >= 360) return this.fixAngle(a - 360 * Math.floor(a/360));
+    return a;
+  }
+
+  public static rad2deg(a: number): number {
+    return a * 180 / Math.PI;
+  }
+  
+  public static deg2rad(a: number): number {
+    return a * Math.PI / 180;
+  }
+
   public static ordinal(num: number): string {
     let n = num % 100;
     return num + (() => {

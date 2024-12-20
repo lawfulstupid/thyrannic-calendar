@@ -1,6 +1,4 @@
-<div class="background">
-  <div class="earth"></div>
-</div>
+<app-celestial-bg [datetime]="datetime"></app-celestial-bg>
 <div class="datetime">
   <app-time-unit [unit]="units.HOUR" [value]="datetime.hour" (change)="changeDateTime($event)">{{datetime.getTime()}}</app-time-unit>
   <span>, </span>

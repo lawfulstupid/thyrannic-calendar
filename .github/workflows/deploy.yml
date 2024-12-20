@@ -44,8 +44,8 @@ jobs:
           if [ -z $TAG ]; then
             # Check if package version equal latest tag in main
             TAG=v$(npm pkg get version | tr -d '"')
-            LAST_TAG=$(git describe --tags --abbrev=0 --always)
-            if [ $TAG == $LAST_TAG ]; then
+            LAST_TAG=$(git describe --tags --abbrev=0)
+            if [ "$TAG" == "$LAST_TAG" ]; then
               # No change made to package version, do one now
               TAG=$(npm version patch)
               git push --follow-tags

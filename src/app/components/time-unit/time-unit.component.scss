@@ -1,21 +1,16 @@
-span {
+.root {
   position: relative;
+}
+
+.clickable {
   cursor: pointer;
 }
 
-button {
+app-holdable-button {
   position: absolute;
   width: 100%;
+  height: 1vw;
   left: 0;
-  opacity: 50%;
-  border: none;
-  border-radius: 5px;
-  &:hover {
-    opacity: 75%;
-  }
-  &:active {
-    opacity: 50%;
-  }
   &.up {
     bottom: 105%;
     .arrow {

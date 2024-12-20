@@ -3,12 +3,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { filter } from "rxjs";
 import { InputDialog } from "src/app/dialogs/input/input.dialog";
 import { TemporalUnit } from "src/app/model/temporal-unit";
+import { HoldableButtonComponent } from "../holdable-button/holdable-button.component";
 
 @Component({
   selector: 'app-time-unit',
   standalone: true,
   templateUrl: './time-unit.component.html',
-  styleUrls: ['./time-unit.component.scss']
+  styleUrls: ['./time-unit.component.scss'],
+  imports: [HoldableButtonComponent]
 })
 export class TimeUnitComponent {
 

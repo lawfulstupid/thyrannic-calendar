@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { TDateTime } from 'src/app/model/thyrannic-date-time';
+import { Component } from '@angular/core';
 import { CelestialBody } from './celestial-body';
+import { SunComponent } from './sun.component';
 
 @Component({
   selector: 'app-arukma',
@@ -16,15 +16,11 @@ export class ArukmaComponent extends CelestialBody {
   override brightness = 2.4;
   override zIndex = 3;
 
-  override inclination = 0;
-  override perihelionAngle = 229.951;
-  override meanDist = 1;
-  override eccentricity = 0.0264;
-  override originAngle = 76.0417;
-  override orbitalPeriod = 17.79459;
-
-  override ascendingNodeLongitude(d: number): number {
-    throw new Error('Method not implemented.');
-  }
+  override inclination = 6.6541;
+  override periapsisArgument = 229.951;
+  override eccentricity = 0.0464;
+  override originAngle = SunComponent.INSTANCE.originAngle + 76.0417;
+  override orbitalPeriod = CelestialBody.synodicToSiderealPeriod(17.79459);
+  override ascendingNodeLongitude = 344.672;
 
 }

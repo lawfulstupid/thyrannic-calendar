@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { TDateTime } from 'src/app/model/thyrannic-date-time';
+import { Component } from '@angular/core';
 import { CelestialBody } from './celestial-body';
 
 @Component({
@@ -17,14 +16,17 @@ export class SunComponent extends CelestialBody {
   override zIndex = 1;
 
   override inclination = 0;
-  override perihelionAngle = 94.662;
-  override meanDist = 1;
+  override periapsisArgument = 94.662;
   override eccentricity = 0.0167;
   override originAngle = 11.2854;
   override orbitalPeriod = 340.16433;
+  override ascendingNodeLongitude = 316.224;
 
-  override ascendingNodeLongitude(d: number): number {
-    return 0;
+  public static INSTANCE: SunComponent;
+
+  constructor() {
+    super();
+    SunComponent.INSTANCE = this;
   }
 
 }

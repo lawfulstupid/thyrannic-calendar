@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { TDateTime } from 'src/app/model/thyrannic-date-time';
+import { Component } from '@angular/core';
+import { CelestialBody } from './celestial-body';
+import { SunComponent } from './sun.component';
 
 @Component({
   selector: 'app-losit',
@@ -8,18 +9,18 @@ import { TDateTime } from 'src/app/model/thyrannic-date-time';
   templateUrl: './celestial-body.html',
   styleUrl: './celestial-body.scss'
 })
-export class LositComponent {
+export class LositComponent extends CelestialBody {
   
-  angularDiameter = 0.44;
-  color = 'rgb(63, 21, 16)';
-  brightness = 0.92;
-  zIndex = 2;
-  
-  top = ''; left = '';
+  override angularDiameter = 0.44;
+  override color = 'rgb(63, 21, 16)';
+  override brightness = 0.92;
+  override zIndex = 2;
 
-  @Input('datetime')
-  set updatePosition(datetime: TDateTime) {
-
-  }
+  override inclination = 10.1134;
+  override periapsisArgument = 265.951;
+  override eccentricity = 0.1361;
+  override originAngle = SunComponent.INSTANCE.originAngle + 321.7148;
+  override orbitalPeriod = CelestialBody.synodicToSiderealPeriod(48.28098);
+  override ascendingNodeLongitude = 329.915;
 
 }

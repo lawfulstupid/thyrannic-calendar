@@ -19,7 +19,7 @@ export class MathUtil {
   public static rad2deg(a: number): number {
     return a * 180 / Math.PI;
   }
-  
+
   public static deg2rad(a: number): number {
     return a * Math.PI / 180;
   }
@@ -39,6 +39,10 @@ export class MathUtil {
         default: return 'th';
       }
     })();
+  }
+
+  public static lpad(n: number, digits: number): string {
+    return ('0'.repeat(digits) + n).substr(-digits);
   }
 
 }

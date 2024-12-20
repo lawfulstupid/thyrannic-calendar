@@ -8,14 +8,19 @@ app-celestial-bg {
   z-index: -1;
 }
 
-.datetime {
+.date {
   position: absolute;
-  top: 20%;
+  top: 20vh;
   width: 100%;
   text-align: center;
   color: whitesmoke;
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   font-size: 6.5vmin;
+}
+
+.time {
+  @extend .date;
+  top: 40vh;
 }
 
 .footer {

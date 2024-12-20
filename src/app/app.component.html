@@ -1,7 +1,5 @@
 <app-celestial-bg [datetime]="datetime"></app-celestial-bg>
-<div class="datetime">
-  <app-time-unit [unit]="units.HOUR" [value]="datetime.hour" (change)="changeDateTime($event)">{{datetime.getTime()}}</app-time-unit>
-  <span>, </span>
+<div class="date">
   <app-time-unit [unit]="units.WEEK" [value]="datetime.date.week" (change)="changeDateTime($event)">{{datetime.date.week | ordinal}}</app-time-unit>
   <span>{{' '}}</span>
   <app-time-unit [unit]="units.DAY" [value]="datetime.date.day.id" (change)="changeDateTime($event)">{{datetime.date.day.name}}</app-time-unit>
@@ -9,6 +7,13 @@
   <app-time-unit [unit]="units.EPOCH" [value]="datetime.date.year.epoch" (change)="changeDateTime($event)">{{datetime.date.year.epoch}}</app-time-unit>
   <span>,</span>
   <app-time-unit [unit]="units.YEAR" [value]="datetime.date.year.year" (change)="changeDateTime($event)">{{datetime.date.year.year}}</app-time-unit>
+</div>
+<div class="time">
+  <app-time-unit [unit]="units.HOUR" [value]="datetime.hour" (change)="changeDateTime($event)">{{datetime.getDisplayHour()}}</app-time-unit>
+  <span>{{':'}}</span>
+  <app-time-unit [unit]="units.MINUTE" [value]="datetime.minute" (change)="changeDateTime($event)">{{datetime.getDisplayMinute()}}</app-time-unit>
+  <span>{{' '}}</span>
+  <app-time-unit [unit]="units.HALF_DAY" [value]="datetime.isAfternoon() ? 1 : 0" (change)="changeDateTime($event)">{{datetime.getAmPm()}}</app-time-unit>
 </div>
 <span class="footer">
   <a href="http://github.com/lawfulstupid/thyrannic-calendar">v{{environment.appVersion}}</a>

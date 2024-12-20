@@ -1,10 +1,11 @@
+import { TemporalUnit } from "src/app/model/temporal-unit";
 import { TDateTime } from "src/app/model/thyrannic-date-time";
 import { MathUtil } from "src/app/util/math-util";
 
 export abstract class CelestialBody {
-  
+
   private static readonly LATITUDE: number = 35.19; // can parameterise this later
-  
+
   // Visual options
   abstract angularDiameter: number; // how many angles in the sky it takes up
   abstract color: string;
@@ -29,7 +30,7 @@ export abstract class CelestialBody {
   perihelionLongitude(d: number): number {
     return MathUtil.fixAngle(this.ascendingNodeLongitude(d) + this.perihelionAngle);
   }
-  
+
   // epoch of perihelion (in fractional day)
   get perihelionEpoch(): number {
     return (this.perihelionAngle - this.originAngle) * (this.orbitalPeriod / 360);
@@ -54,14 +55,14 @@ export abstract class CelestialBody {
   perihelionTime(d: number): number {
     return this.perihelionEpoch - (this.meanAnomaly(d) / 360) / this.orbitalPeriod;
   }
-  
+
   update(datetime: TDateTime) {
     this.computeDaRA(datetime);
     this.computeApparentPosition(datetime);
   }
 
   private computeDaRA(datetime: TDateTime) {
-    const d = datetime.date.valueOf() + datetime.hour / 24;
+    const d = datetime.valueOf() * TemporalUnit.MINUTE.as(TemporalUnit.DAY);
     const E = MathUtil.fixAngle(this.meanAnomaly(d) + MathUtil.rad2deg(
       this.eccentricity * Math.sin(MathUtil.deg2rad(this.meanAnomaly(d))) * (
         1 + this.eccentricity * Math.cos(MathUtil.deg2rad(this.meanAnomaly(d)))
@@ -84,25 +85,25 @@ export abstract class CelestialBody {
     this.rightAscension = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ye, xe)));
     this.declination = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ze, Math.sqrt(xe**2 + ye**2))));
   }
-  
+
   rightAscension: number = 0;
   declination: number = 0;
-  
+
   private computeApparentPosition(datetime: TDateTime) {
-    const centredHour = (datetime.hour - 12) / 24;
+    const centredHour = (datetime.hour + datetime.minute / 60 - 12) / 24;
     const hourAngle = centredHour * 360;
-    
+
     const degFromTop = MathUtil.rad2deg(Math.acos(
       Math.sin(MathUtil.deg2rad(CelestialBody.LATITUDE)) * Math.sin(MathUtil.deg2rad(this.declination)) +
       Math.cos(MathUtil.deg2rad(CelestialBody.LATITUDE)) * Math.cos(MathUtil.deg2rad(this.declination)) * Math.cos(MathUtil.deg2rad(hourAngle))
     ));
-    
+
     // 0 degFromTop = top: 0vh
     // 90 degFromTop = top: 80vh
     this.top = (degFromTop * 8/9) + 'vh';
     this.left = (50 + centredHour * 200) + 'vw';
   }
-  
+
   top: string = '5vw';
   left: string = '10vw';
 

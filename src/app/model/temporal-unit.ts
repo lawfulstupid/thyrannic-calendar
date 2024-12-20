@@ -1,6 +1,8 @@
 export class TemporalUnit {
 
-  public static readonly HOUR: TemporalUnit = new TemporalUnit('Hour');
+  public static readonly MINUTE: TemporalUnit = new TemporalUnit('Minute');
+  public static readonly HOUR: TemporalUnit = new TemporalUnit('Hour', [60, this.MINUTE]);
+  public static readonly HALF_DAY: TemporalUnit = new TemporalUnit('Half Day', [12, this.HOUR]);
   public static readonly DAY: TemporalUnit = new TemporalUnit('Day', [24, this.HOUR]);
   public static readonly WEEK: TemporalUnit = new TemporalUnit('Week', [6, this.DAY]);
   public static readonly QUARTER: TemporalUnit = new TemporalUnit('Quarter', [14, this.WEEK]);

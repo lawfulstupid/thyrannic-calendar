@@ -1,6 +1,6 @@
 $diameter: 2000vw;
 
-* {
+.ground {
   width: $diameter;
   height: $diameter;
   position: absolute;
@@ -9,4 +9,13 @@ $diameter: 2000vw;
   background-color: green;
   border-radius: 100%;
   z-index: 4;
+}
+
+.sky {
+  background-color: skyblue;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: 0;
 }

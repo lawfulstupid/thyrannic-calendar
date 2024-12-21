@@ -24,11 +24,9 @@ export class SunComponent extends CelestialBody {
   override meanDistance = 149_600_000;
   override radius = 695700;
 
-  public static INSTANCE: SunComponent;
-
   constructor() {
     super();
-    SunComponent.INSTANCE = this;
+    CelestialBody.sun = this;
   }
 
 }

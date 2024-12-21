@@ -1,18 +1,27 @@
-import { Directive, Input } from "@angular/core";
 import { TemporalUnit } from "src/app/model/temporal-unit";
 import { TDateTime } from "src/app/model/thyrannic-date-time";
 import { MathUtil } from "src/app/util/math-util";
+import { EarthComponent } from "../earth/earth.component";
+import { ArukmaComponent } from "./arukma.component";
+import { LositComponent } from "./losit.component";
 import { SunComponent } from "./sun.component";
 
-@Directive()
 export abstract class CelestialBody {
-
-  // Earth parameters
-  private static readonly LATITUDE: number = 35.19;
-  private static readonly TILT: number = 24.12;
   
+  public static sun: SunComponent;
+  public static arukma: ArukmaComponent;
+  public static losit: LositComponent;
+  public static earth: EarthComponent;
+  
+  public static update(datetime: TDateTime) {
+    this.sun.update(datetime);
+    this.arukma.update(datetime);
+    this.losit.update(datetime);
+    this.earth.update(datetime);
+  }
+
   static synodicToSiderealPeriod(p: number): number {
-    return 1 / (1/p + 1/SunComponent.INSTANCE.orbitalPeriod);
+    return 1 / (1/p + 1/CelestialBody.sun.orbitalPeriod);
   }
 
   // Visual options
@@ -64,8 +73,7 @@ export abstract class CelestialBody {
     return this.periapsisEpoch - (this.meanAnomaly(d) / 360) / this.orbitalPeriod;
   }
 
-  @Input('datetime')
-  set updatePosition(datetime: TDateTime) {
+  private update(datetime: TDateTime) {
     this.computeDaRA(datetime);
     this.computeApparentPosition(datetime);
   }
@@ -88,8 +96,8 @@ export abstract class CelestialBody {
     const ys = this.distance * Math.sin(MathUtil.deg2rad(true_long));
 
     const xe = xs;
-    const ye = ys * Math.cos(MathUtil.deg2rad(CelestialBody.TILT));
-    const ze = ys * Math.sin(MathUtil.deg2rad(CelestialBody.TILT));
+    const ye = ys * Math.cos(MathUtil.deg2rad(CelestialBody.earth.tilt));
+    const ze = ys * Math.sin(MathUtil.deg2rad(CelestialBody.earth.tilt));
 
     this.rightAscension = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ye, xe)));
     this.declination = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ze, Math.sqrt(xe**2 + ye**2))));
@@ -106,12 +114,12 @@ export abstract class CelestialBody {
     // 12PM -> solar right ascension
     // 06PM -> SRA + 90
     // 12AM -> SRA + 180
-    const lmst = MathUtil.fixAngle2(fractionalDay * 360 + SunComponent.INSTANCE.rightAscension);
+    const lmst = MathUtil.fixAngle2(fractionalDay * 360 + CelestialBody.sun.rightAscension);
     const lha = MathUtil.fixAngle2(lmst - this.rightAscension);
 
     const degFromTop = MathUtil.rad2deg(Math.acos(
-      Math.sin(MathUtil.deg2rad(CelestialBody.LATITUDE)) * Math.sin(MathUtil.deg2rad(this.declination)) +
-      Math.cos(MathUtil.deg2rad(CelestialBody.LATITUDE)) * Math.cos(MathUtil.deg2rad(this.declination)) * Math.cos(MathUtil.deg2rad(lha))
+      Math.sin(MathUtil.deg2rad(CelestialBody.earth.latitude)) * Math.sin(MathUtil.deg2rad(this.declination)) +
+      Math.cos(MathUtil.deg2rad(CelestialBody.earth.latitude)) * Math.cos(MathUtil.deg2rad(this.declination)) * Math.cos(MathUtil.deg2rad(lha))
     ));
 
     // 0 degFromTop = top: 0vh

@@ -1,13 +1,11 @@
 .anchor {
     position: absolute;
-    left: 1vw;
-    top: 1vw;
     width: 0;
     height: 0;
 }
 
 $angular-diameter: var(--angularDiameter);
-$diameter: calc($angular-diameter * 4vw);
+$diameter: calc($angular-diameter * 5vmin); // enlarged for visual effect
 
 .body {
   width: $diameter;
@@ -17,5 +15,4 @@ $diameter: calc($angular-diameter * 4vw);
   top: calc( $diameter / -2 );
   filter: brightness(calc(var(--brightness) * 3));
   border-radius: 100%;
-  z-index: 1;
 }

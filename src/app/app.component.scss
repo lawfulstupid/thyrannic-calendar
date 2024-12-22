@@ -20,7 +20,7 @@ app-celestial-bg {
 
 .time {
   @extend .date;
-  top: 40vh;
+  top: calc(20vh + 20vmin);
 }
 
 .footer {

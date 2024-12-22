@@ -122,10 +122,13 @@ export abstract class CelestialBody {
       Math.cos(MathUtil.deg2rad(CelestialBody.earth.latitude)) * Math.cos(MathUtil.deg2rad(this.declination)) * Math.cos(MathUtil.deg2rad(lha))
     ));
 
-    // 0 degFromTop = top: 0vh
-    // 90 degFromTop = top: 80vh
-    this.top = (degFromTop * 8/9) + 'vh';
-    this.left = `calc(50vw + ${lha * 8/9}vh)`;
+    // degFromTop = 0 => top = 90vmin above horizon
+    // degFromTop = 90 => top = 0 above horizon
+    // horizon = 90vh
+    this.top = `calc(90vh + ${degFromTop - 90}vmin)`;
+    // lha = 0 => left = 50vw
+    // lha = 20 => left = 50vw + 20vmin
+    this.left = `calc(50vw + ${lha}vmin)`;
   }
 
   top: string = '0';

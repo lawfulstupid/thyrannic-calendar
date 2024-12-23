@@ -28,6 +28,18 @@ export class MathUtil {
   public static deg2rad(a: number): number {
     return a * Math.PI / 180;
   }
+  
+  public static sin(a: number): number {
+    return Math.sin(this.deg2rad(a));
+  }
+  
+  public static cos(a: number): number {
+    return Math.cos(this.deg2rad(a));
+  }
+  
+  public static tan(a: number): number {
+    return Math.tan(this.deg2rad(a));
+  }
 
   public static ordinal(num: number): string {
     let n = num % 100;
@@ -48,6 +60,10 @@ export class MathUtil {
 
   public static lpad(n: number, digits: number): string {
     return ('0'.repeat(digits) + n).substr(-digits);
+  }
+  
+  public static tween(a: number, c: number, b: number): number {
+    return (c - a) / (b - a);
   }
 
 }

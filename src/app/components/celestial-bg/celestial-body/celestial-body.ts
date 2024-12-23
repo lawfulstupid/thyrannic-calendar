@@ -81,23 +81,23 @@ export abstract class CelestialBody {
   private computeDaRA(datetime: TDateTime) {
     const d = datetime.valueOf() * TemporalUnit.MINUTE.as(TemporalUnit.DAY);
     const E = MathUtil.fixAngle(this.meanAnomaly(d) + MathUtil.rad2deg(
-      this.eccentricity * Math.sin(MathUtil.deg2rad(this.meanAnomaly(d))) * (
-        1 + this.eccentricity * Math.cos(MathUtil.deg2rad(this.meanAnomaly(d)))
+      this.eccentricity * MathUtil.sin(this.meanAnomaly(d)) * (
+        1 + this.eccentricity * MathUtil.cos(this.meanAnomaly(d))
       )
     ));
 
-    const xv = Math.cos(MathUtil.deg2rad(E)) - this.eccentricity;
-    const yv = Math.sqrt(1.0 - this.eccentricity**2) * Math.sin(MathUtil.deg2rad(E));
+    const xv = MathUtil.cos(E) - this.eccentricity;
+    const yv = Math.sqrt(1.0 - this.eccentricity**2) * MathUtil.sin(E);
     const v = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(yv, xv)));
     this.distance = Math.sqrt(xv**2 + yv**2) * this.meanDistance;
 
     const true_long = v + this.periapsisArgument;
-    const xs = this.distance * Math.cos(MathUtil.deg2rad(true_long));
-    const ys = this.distance * Math.sin(MathUtil.deg2rad(true_long));
+    const xs = this.distance * MathUtil.cos(true_long);
+    const ys = this.distance * MathUtil.sin(true_long);
 
     const xe = xs;
-    const ye = ys * Math.cos(MathUtil.deg2rad(CelestialBody.earth.tilt));
-    const ze = ys * Math.sin(MathUtil.deg2rad(CelestialBody.earth.tilt));
+    const ye = ys * MathUtil.cos(CelestialBody.earth.tilt);
+    const ze = ys * MathUtil.sin(CelestialBody.earth.tilt);
 
     this.rightAscension = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ye, xe)));
     this.declination = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ze, Math.sqrt(xe**2 + ye**2))));
@@ -107,6 +107,8 @@ export abstract class CelestialBody {
   rightAscension: number = 0;
   declination: number = 0;
   distance: number = 0;
+  zenithAngle: number = 0;
+  get altitude(): number { return 90 - this.zenithAngle; }
 
   private computeApparentPosition(datetime: TDateTime) {
     const fractionalDay = (12 + datetime.hour + datetime.minute / 60) / 24;
@@ -117,15 +119,15 @@ export abstract class CelestialBody {
     const lmst = MathUtil.fixAngle2(fractionalDay * 360 + CelestialBody.sun.rightAscension);
     const lha = MathUtil.fixAngle2(lmst - this.rightAscension);
 
-    const degFromTop = MathUtil.rad2deg(Math.acos(
-      Math.sin(MathUtil.deg2rad(CelestialBody.earth.latitude)) * Math.sin(MathUtil.deg2rad(this.declination)) +
-      Math.cos(MathUtil.deg2rad(CelestialBody.earth.latitude)) * Math.cos(MathUtil.deg2rad(this.declination)) * Math.cos(MathUtil.deg2rad(lha))
+    this.zenithAngle = MathUtil.rad2deg(Math.acos(
+      MathUtil.sin(CelestialBody.earth.latitude) * MathUtil.sin(this.declination) +
+      MathUtil.cos(CelestialBody.earth.latitude) * MathUtil.cos(this.declination) * MathUtil.cos(lha)
     ));
 
     // degFromTop = 0 => top = 90vmin above horizon
     // degFromTop = 90 => top = 0 above horizon
     // horizon = 90vh
-    this.top = `calc(90vh + ${degFromTop - 90}vmin)`;
+    this.top = `calc(90vh + ${this.zenithAngle - 90}vmin)`;
     // lha = 0 => left = 50vw
     // lha = 20 => left = 50vw + 20vmin
     this.left = `calc(50vw + ${lha}vmin)`;

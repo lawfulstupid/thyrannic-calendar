@@ -10,7 +10,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class HoldableButtonComponent {
 
   private static readonly MAX_INTERVAL: number = 100;
-  private static readonly MIN_INTERVAL: number = 15;
+  private static readonly MIN_INTERVAL: number = 20;
 
   @Output()
   output: EventEmitter<void> = new EventEmitter();

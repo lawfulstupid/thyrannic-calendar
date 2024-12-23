@@ -15,4 +15,5 @@ $diameter: calc($angular-diameter * 5vmin); // enlarged for visual effect
   top: calc( $diameter / -2 );
   filter: brightness(calc(var(--brightness) * 3));
   border-radius: 100%;
+  clip-path: circle(var(--mask-size) at var(--mask-x) var(--mask-y))
 }

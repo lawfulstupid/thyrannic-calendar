@@ -5,6 +5,7 @@ import { EarthComponent } from "../earth/earth.component";
 import { ArukmaComponent } from "./arukma.component";
 import { LositComponent } from "./losit.component";
 import { SunComponent } from "./sun.component";
+import { Vector } from "src/app/util/vector";
 
 export abstract class CelestialBody {
   
@@ -28,6 +29,7 @@ export abstract class CelestialBody {
   abstract color: string;
   abstract brightness: number;
   abstract zIndex: number;
+  abstract occlude: boolean;
 
   // ecliptic plane = plane in which Earth orbits sun
   // orbital plane = plane in which object (sun/moon) orbits Earth
@@ -72,13 +74,15 @@ export abstract class CelestialBody {
   periapsisTime(d: number): number {
     return this.periapsisEpoch - (this.meanAnomaly(d) / 360) / this.orbitalPeriod;
   }
+  
 
   private update(datetime: TDateTime) {
-    this.computeDaRA(datetime);
+    this.computeRAD(datetime);
     this.computeApparentPosition(datetime);
+    if (this.occlude) this.computeOcclusion(datetime);
   }
 
-  private computeDaRA(datetime: TDateTime) {
+  private computeRAD(datetime: TDateTime) {
     const d = datetime.valueOf() * TemporalUnit.MINUTE.as(TemporalUnit.DAY);
     const E = MathUtil.fixAngle(this.meanAnomaly(d) + MathUtil.rad2deg(
       this.eccentricity * MathUtil.sin(this.meanAnomaly(d)) * (
@@ -102,6 +106,7 @@ export abstract class CelestialBody {
     this.rightAscension = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ye, xe)));
     this.declination = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ze, Math.sqrt(xe**2 + ye**2))));
   }
+  
 
   // Variables based on time
   rightAscension: number = 0;
@@ -109,20 +114,32 @@ export abstract class CelestialBody {
   distance: number = 0;
   zenithAngle: number = 0;
   get altitude(): number { return 90 - this.zenithAngle; }
-
-  private computeApparentPosition(datetime: TDateTime) {
+  localHourAngle: number = 0;
+  
+  public vectorFromEarth(): Vector {
+    return Vector.fromRAD(this.rightAscension, this.declination, this.distance);
+  }
+  
+  public vectorFromLocal(): Vector {
+    return Vector.fromRAD(this.localHourAngle, this.altitude);
+  }
+  
+  public static RAD2LHAZA(datetime: TDateTime, rightAscension: number, declination: number): [number, number] {
     const fractionalDay = (12 + datetime.hour + datetime.minute / 60) / 24;
-
     // 12PM -> solar right ascension
     // 06PM -> SRA + 90
     // 12AM -> SRA + 180
     const lmst = MathUtil.fixAngle2(fractionalDay * 360 + CelestialBody.sun.rightAscension);
-    const lha = MathUtil.fixAngle2(lmst - this.rightAscension);
-
-    this.zenithAngle = MathUtil.rad2deg(Math.acos(
-      MathUtil.sin(CelestialBody.earth.latitude) * MathUtil.sin(this.declination) +
-      MathUtil.cos(CelestialBody.earth.latitude) * MathUtil.cos(this.declination) * MathUtil.cos(lha)
+    const localHourAngle = MathUtil.fixAngle2(lmst - rightAscension);
+    const zenithAngle = MathUtil.rad2deg(Math.acos(
+      MathUtil.sin(CelestialBody.earth.latitude) * MathUtil.sin(declination) +
+      MathUtil.cos(CelestialBody.earth.latitude) * MathUtil.cos(declination) * MathUtil.cos(localHourAngle)
     ));
+    return [localHourAngle, zenithAngle];
+  }
+
+  private computeApparentPosition(datetime: TDateTime) {
+    [this.localHourAngle, this.zenithAngle] = CelestialBody.RAD2LHAZA(datetime, this.rightAscension, this.declination);
 
     // degFromTop = 0 => top = 90vmin above horizon
     // degFromTop = 90 => top = 0 above horizon
@@ -130,10 +147,60 @@ export abstract class CelestialBody {
     this.top = `calc(90vh + ${this.zenithAngle - 90}vmin)`;
     // lha = 0 => left = 50vw
     // lha = 20 => left = 50vw + 20vmin
-    this.left = `calc(50vw + ${lha}vmin)`;
+    this.left = `calc(50vw + ${this.localHourAngle}vmin)`;
   }
 
   top: string = '0';
   left: string = '0';
+  
+  
+  private computeOcclusion(datetime: TDateTime) {
+    const earthToMoon = this.vectorFromEarth();
+    const earthToSun = CelestialBody.sun.vectorFromEarth();
+    const moonToSun = earthToSun.minus(earthToMoon);
+    const moonToEarth = earthToMoon.times(-1);
+    
+    
+    // 0.0 = new moon
+    // 0.5 = half moon
+    // 1.0 = full moon
+    const illumination = 1 - moonToEarth.angleTo(moonToSun) / 180;
+    
+    // Direction of illumination
+    // 0 = 
+    const moonToSunFlatDir = moonToSun.cross(moonToEarth).cross(moonToEarth).normal();
+    const k1 = (earthToSun.x * earthToMoon.y - earthToSun.y * earthToMoon.x)
+      / (moonToSunFlatDir.x * earthToSun.y - moonToSunFlatDir.y * earthToSun.x);
+    const earthToSunFlat = earthToMoon.plus(moonToSunFlatDir.times(k1));
+    const sunFlatRAD = earthToSunFlat.toRAD();
+    const sunFlatLHAZA = CelestialBody.RAD2LHAZA(datetime, ...sunFlatRAD);
+    // console.log(sunFlatLHAZA);
+    
+    const moonLocal = this.vectorFromLocal();
+    const sunLocal = Vector.fromRAD(...sunFlatLHAZA);
+    const moonToSunLocal = sunLocal.minus(moonLocal);
+    const moonToSunLocalFlat = moonToSunLocal.cross(moonLocal.times(-1)).cross(moonLocal.times(-1)).normal();
+    console.log(moonToSunLocalFlat);
+    
+    // const earthToSunFlat = moonToSunFlat.plus(earthToMoon);
+    const illumDir = MathUtil.rad2deg(Math.atan2(moonToSunFlatDir.y, moonToSunFlatDir.z));
+    // console.log(moonToSunFlatDir);
+    
+    this.maskSize = 0.7;
+    // this.maskX = 0.5 * (1 + MathUtil.cos(illumDir)); // 1 => 100%, 0 => 50%, -1 => 0%
+    // this.maskY = 0.5 * (1 - MathUtil.sin(illumDir)); // 1 => 0%, 0 => 50%, -1 => 100%
+    
+    // const normalSun = Vector.fromRAD(
+    //   CelestialBody.sun.rightAscension - this.rightAscension,
+    //   CelestialBody.sun.declination - this.declination,
+    //   CelestialBody.sun.distance
+    // );
+    // const normalMoon = Vector.fromRAD(0, 0, this.distance);
+    // console.log(normalSun.minus(normalMoon).cross(normalMoon).cross(normalMoon));
+  }
+  
+  maskSize: number = 100;
+  maskX: number = 0;
+  maskY: number = 0;
 
 }

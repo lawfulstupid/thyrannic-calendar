@@ -13,6 +13,7 @@ export class ArukmaComponent extends CelestialBody {
   override color = 'rgb(32, 33, 35)';
   override brightness = 2.4;
   override zIndex = 3;
+  override occlude = true;
 
   override inclination = 6.6541;
   override periapsisArgument = 229.951;

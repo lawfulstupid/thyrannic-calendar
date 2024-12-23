@@ -10,10 +10,10 @@ import { CelestialBody } from './celestial-body';
 })
 export class SunComponent extends CelestialBody {
 
-  // override angularDiameter = 0.53;
   override color = 'yellow';
   override brightness = 1;
   override zIndex = 1;
+  override occlude = false;
 
   override inclination = 0;
   override periapsisArgument = 94.662;

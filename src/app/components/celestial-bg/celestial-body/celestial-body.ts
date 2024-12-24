@@ -164,7 +164,8 @@ export abstract class CelestialBody {
     // 0.0 = new moon
     // 0.5 = half moon
     // 1.0 = full moon
-    const illumination = 1 - moonToEarth.angleTo(moonToSun) / 180;
+    // Precisely: proportion of equatorial diameter that is visible from earth
+    const illumination = 0.5 + 0.5 * MathUtil.cos(moonToEarth.angleTo(moonToSun));
     
     // Direction of illumination
     // 0 = 

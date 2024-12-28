@@ -59,9 +59,9 @@ export class Vector {
   
   public cross(that: Vector): Vector {
     return new Vector(
-      this.y*that.z + this.z*that.y,
-      this.x*that.z + this.z*that.x,
-      this.x*that.y + this.y*that.x
+      this.y*that.z - this.z*that.y,
+      this.z*that.x - this.x*that.z,
+      this.x*that.y - this.y*that.x
     );
   }
   

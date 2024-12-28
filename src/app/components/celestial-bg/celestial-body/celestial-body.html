@@ -5,6 +5,7 @@
     [style.--brightness]="brightness"
     [style.--sky-color]="celestialBodies.earth.skyColor"
     [style.--eclipse-width]="equatorialIllumination - 0.5 | abs | percent"
+    [style.transform]="'rotate(' + illuminationDirection + 'deg)'"
   >
     <div class="lit-half"></div>
     <div class="meridean" [class.lit]="equatorialIllumination > 0.5"></div>

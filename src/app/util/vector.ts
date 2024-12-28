@@ -70,6 +70,12 @@ export class Vector {
     return MathUtil.fixAngle(MathUtil.rad2deg(Math.acos(cos)));
   }
   
+  public signedAngleTo(that: Vector, normal: Vector): number {
+    const y = that.cross(this).dot(normal.normal());
+    const x = this.dot(that);
+    return MathUtil.rad2deg(Math.atan2(y, x));
+  }
+  
   public toString(): string {
     return `[${this.x}, ${this.y}, ${this.z}]`;
   }

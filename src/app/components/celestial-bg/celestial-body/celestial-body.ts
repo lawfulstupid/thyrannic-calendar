@@ -122,10 +122,6 @@ export abstract class CelestialBody {
     return Vector.fromRAD(this.rightAscension, this.declination, this.distance);
   }
   
-  public vectorFromLocal(): Vector {
-    return Vector.fromRAD(this.localHourAngle, this.altitude);
-  }
-  
   public static RAD2LHAZA(datetime: TDateTime, rightAscension: number, declination: number): [number, number] {
     const fractionalDay = (12 + datetime.hour + datetime.minute / 60) / 24;
     // 12PM -> solar right ascension
@@ -170,38 +166,17 @@ export abstract class CelestialBody {
     this.equatorialIllumination = 0.5 + 0.5 * MathUtil.cos(moonToEarth.angleTo(moonToSun));
     
     // Direction of illumination
-    // 0 = 
-    // const moonToSunFlatDir = moonToSun.cross(moonToEarth).cross(moonToEarth).normal();
-    // const k1 = (earthToSun.x * earthToMoon.y - earthToSun.y * earthToMoon.x)
-    //   / (moonToSunFlatDir.x * earthToSun.y - moonToSunFlatDir.y * earthToSun.x);
-    // const earthToSunFlat = earthToMoon.plus(moonToSunFlatDir.times(k1));
-    // const sunFlatRAD = earthToSunFlat.toRAD();
-    // const sunFlatLHAZA = CelestialBody.RAD2LHAZA(datetime, ...sunFlatRAD);
-    // console.log(sunFlatLHAZA);
-    
-    // const moonLocal = this.vectorFromLocal();
-    // const sunLocal = Vector.fromRAD(...sunFlatLHAZA);
-    // const moonToSunLocal = sunLocal.minus(moonLocal);
-    // const moonToSunLocalFlat = moonToSunLocal.cross(moonLocal.times(-1)).cross(moonLocal.times(-1)).normal();
-    // console.log(moonToSunLocalFlat);
-    
-    // const earthToSunFlat = moonToSunFlat.plus(earthToMoon);
-    // const illumDir = MathUtil.rad2deg(Math.atan2(moonToSunFlatDir.y, moonToSunFlatDir.z));
-    // console.log(moonToSunFlatDir);
-    
-    // this.maskSize = 0.7;
-    // this.maskX = 0.5 * (1 + MathUtil.cos(illumDir)); // 1 => 100%, 0 => 50%, -1 => 0%
-    // this.maskY = 0.5 * (1 - MathUtil.sin(illumDir)); // 1 => 0%, 0 => 50%, -1 => 100%
-    
-    // const normalSun = Vector.fromRAD(
-    //   CelestialBody.sun.rightAscension - this.rightAscension,
-    //   CelestialBody.sun.declination - this.declination,
-    //   CelestialBody.sun.distance
-    // );
-    // const normalMoon = Vector.fromRAD(0, 0, this.distance);
-    // console.log(normalSun.minus(normalMoon).cross(normalMoon).cross(normalMoon));
+    // 0 = illuminated from the right
+    // 90 = illuminated from below
+    // 180 = illuminated from the left
+    const moonToSunFlat = moonToSun.cross(earthToMoon).cross(earthToMoon);
+    const northFlat = new Vector(0,1,0).cross(earthToMoon).cross(earthToMoon);
+    const sunDirection = northFlat.signedAngleTo(moonToSunFlat, earthToMoon) - 90;
+    const latitudeAngle = 90 - CelestialBody.earth.latitude;
+    this.illuminationDirection = MathUtil.fixAngle(sunDirection + latitudeAngle);
   }
   
   equatorialIllumination: number = 1;
+  illuminationDirection: number = 0;
 
 }

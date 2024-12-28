@@ -19,7 +19,7 @@ export class EarthComponent {
   readonly tilt: number = 24.12;
   readonly latitude: number = 35.19;
   
-  color: string = 'skyblue';
+  skyColor: string = 'skyblue';
 
   public update(datetime: TDateTime) {
     const daylight = 5 * CelestialBody.sun.angularDiameter;
@@ -29,18 +29,18 @@ export class EarthComponent {
     
     const altitude = CelestialBody.sun.altitude;
     if (altitude > daylight) {
-      this.color = 'skyblue';
+      this.skyColor = 'skyblue';
     } else if (altitude > dawnDusk) {
       const progress = MathUtil.tween(daylight, altitude, dawnDusk);
-      this.color = `color-mix(in xyz, ${100 * (1-progress)}% skyblue, ${100 * progress}% orangered)`;
+      this.skyColor = `color-mix(in xyz, ${100 * (1-progress)}% skyblue, ${100 * progress}% orangered)`;
     } else if (altitude > twilight) {
       const progress = MathUtil.tween(dawnDusk, altitude, twilight);
-      this.color = `color-mix(in xyz, ${100 * (1-progress)}% orangered, ${100 * progress}% midnightblue)`;
+      this.skyColor = `color-mix(in xyz, ${100 * (1-progress)}% orangered, ${100 * progress}% midnightblue)`;
     } else if (altitude > night) {
       const progress = MathUtil.tween(twilight, altitude, night);
-      this.color = `color-mix(in xyz, ${100 * (1-progress)}% midnightblue, ${100 * progress}% #1f252d)`;
+      this.skyColor = `color-mix(in xyz, ${100 * (1-progress)}% midnightblue, ${100 * progress}% #1f252d)`;
     } else {
-      this.color = '#1f252d';
+      this.skyColor = '#1f252d';
     }
   }
 

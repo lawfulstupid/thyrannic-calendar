@@ -2,6 +2,7 @@ import { MathUtil } from "../util/math-util";
 import { TemporalUnit } from "./temporal-unit";
 import { TDate } from "./thyrannic-date";
 import { TDateTime } from "./thyrannic-date-time";
+import { TDay } from "./thyrannic-day";
 
 export class TYear {
 
@@ -22,6 +23,10 @@ export class TYear {
 
   public static fromDate(date: Date = new Date()): TYear {
     return TDate.fromDate(date).year;
+  }
+  
+  public on(week: number, day: TDay): TDate {
+    return new TDate(this, week, day);
   }
 
   public valueOf(): number {

@@ -13,6 +13,24 @@ $diameter: calc($angular-diameter * 5vmin); // enlarged for visual effect
   position: absolute;
   left: calc( $diameter / -2 );
   top: calc( $diameter / -2 );
-  filter: brightness(calc(var(--brightness) * 3));
   border-radius: 100%;
+  background-color: var(--sky-color);
+  * {
+    position: inherit;
+    height: 100%;
+    width: 100%;
+    border-radius: inherit;
+  }
+  .lit-half {
+    @extend .lit;
+    clip-path: inset(0 0 0 50%);
+  }
+  .meridean {
+    clip-path: ellipse(var(--eclipse-width) 50% at 50% 50%);
+    background-color: inherit;
+  }
+  .lit {
+    background-color: var(--body-color);
+    filter: brightness(calc(var(--brightness) * 3));
+  }
 }

@@ -1,19 +1,21 @@
+import { PercentPipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { AbsPipe } from 'src/app/pipes/abs.pipe';
 import { CelestialBody } from './celestial-body';
 
 @Component({
   selector: 'app-sun',
   standalone: true,
-  imports: [],
+  imports: [AbsPipe, PercentPipe],
   templateUrl: './celestial-body.html',
   styleUrl: './celestial-body.scss'
 })
 export class SunComponent extends CelestialBody {
 
-  // override angularDiameter = 0.53;
   override color = 'yellow';
   override brightness = 1;
   override zIndex = 1;
+  override occlude = false;
 
   override inclination = 0;
   override periapsisArgument = 94.662;

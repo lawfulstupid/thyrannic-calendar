@@ -1,19 +1,21 @@
+import { PercentPipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { AbsPipe } from 'src/app/pipes/abs.pipe';
 import { CelestialBody } from './celestial-body';
 
 @Component({
   selector: 'app-losit',
   standalone: true,
-  imports: [],
+  imports: [AbsPipe, PercentPipe],
   templateUrl: '../celestial-body/celestial-body.html',
   styleUrl: '../celestial-body/celestial-body.scss'
 })
 export class LositComponent extends CelestialBody {
   
-  // override angularDiameter = 0.44;
   override color = 'rgb(63, 21, 16)';
   override brightness = 0.92;
   override zIndex = 2;
+  override occlude = true;
 
   override inclination = 10.1134;
   override periapsisArgument = 265.951;

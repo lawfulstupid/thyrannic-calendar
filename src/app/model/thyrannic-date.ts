@@ -30,6 +30,10 @@ export class TDate {
     // 16th Brogos 20,22 === 10th August 2022
     return this.fromValue(Math.floor(date.valueOf() / 86400000) + 1280664);
   }
+  
+  public at(hour: number, minute: number): TDateTime {
+    return new TDateTime(this, hour, minute);
+  }
 
   public valueOf(): number {
     const elapsedEpochs = this.year.epoch - 1;

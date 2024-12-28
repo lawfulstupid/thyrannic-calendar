@@ -1,13 +1,15 @@
 import { TemporalUnit } from "src/app/model/temporal-unit";
 import { TDateTime } from "src/app/model/thyrannic-date-time";
 import { MathUtil } from "src/app/util/math-util";
+import { Vector } from "src/app/util/vector";
 import { EarthComponent } from "../earth/earth.component";
 import { ArukmaComponent } from "./arukma.component";
 import { LositComponent } from "./losit.component";
 import { SunComponent } from "./sun.component";
-import { Vector } from "src/app/util/vector";
 
 export abstract class CelestialBody {
+  
+  readonly celestialBodies = CelestialBody;
   
   public static sun: SunComponent;
   public static arukma: ArukmaComponent;
@@ -165,29 +167,29 @@ export abstract class CelestialBody {
     // 0.5 = half moon
     // 1.0 = full moon
     // Precisely: proportion of equatorial diameter that is visible from earth
-    const illumination = 0.5 + 0.5 * MathUtil.cos(moonToEarth.angleTo(moonToSun));
+    this.equatorialIllumination = 0.5 + 0.5 * MathUtil.cos(moonToEarth.angleTo(moonToSun));
     
     // Direction of illumination
     // 0 = 
-    const moonToSunFlatDir = moonToSun.cross(moonToEarth).cross(moonToEarth).normal();
-    const k1 = (earthToSun.x * earthToMoon.y - earthToSun.y * earthToMoon.x)
-      / (moonToSunFlatDir.x * earthToSun.y - moonToSunFlatDir.y * earthToSun.x);
-    const earthToSunFlat = earthToMoon.plus(moonToSunFlatDir.times(k1));
-    const sunFlatRAD = earthToSunFlat.toRAD();
-    const sunFlatLHAZA = CelestialBody.RAD2LHAZA(datetime, ...sunFlatRAD);
+    // const moonToSunFlatDir = moonToSun.cross(moonToEarth).cross(moonToEarth).normal();
+    // const k1 = (earthToSun.x * earthToMoon.y - earthToSun.y * earthToMoon.x)
+    //   / (moonToSunFlatDir.x * earthToSun.y - moonToSunFlatDir.y * earthToSun.x);
+    // const earthToSunFlat = earthToMoon.plus(moonToSunFlatDir.times(k1));
+    // const sunFlatRAD = earthToSunFlat.toRAD();
+    // const sunFlatLHAZA = CelestialBody.RAD2LHAZA(datetime, ...sunFlatRAD);
     // console.log(sunFlatLHAZA);
     
-    const moonLocal = this.vectorFromLocal();
-    const sunLocal = Vector.fromRAD(...sunFlatLHAZA);
-    const moonToSunLocal = sunLocal.minus(moonLocal);
-    const moonToSunLocalFlat = moonToSunLocal.cross(moonLocal.times(-1)).cross(moonLocal.times(-1)).normal();
-    console.log(moonToSunLocalFlat);
+    // const moonLocal = this.vectorFromLocal();
+    // const sunLocal = Vector.fromRAD(...sunFlatLHAZA);
+    // const moonToSunLocal = sunLocal.minus(moonLocal);
+    // const moonToSunLocalFlat = moonToSunLocal.cross(moonLocal.times(-1)).cross(moonLocal.times(-1)).normal();
+    // console.log(moonToSunLocalFlat);
     
     // const earthToSunFlat = moonToSunFlat.plus(earthToMoon);
-    const illumDir = MathUtil.rad2deg(Math.atan2(moonToSunFlatDir.y, moonToSunFlatDir.z));
+    // const illumDir = MathUtil.rad2deg(Math.atan2(moonToSunFlatDir.y, moonToSunFlatDir.z));
     // console.log(moonToSunFlatDir);
     
-    this.maskSize = 0.7;
+    // this.maskSize = 0.7;
     // this.maskX = 0.5 * (1 + MathUtil.cos(illumDir)); // 1 => 100%, 0 => 50%, -1 => 0%
     // this.maskY = 0.5 * (1 - MathUtil.sin(illumDir)); // 1 => 0%, 0 => 50%, -1 => 100%
     
@@ -200,8 +202,6 @@ export abstract class CelestialBody {
     // console.log(normalSun.minus(normalMoon).cross(normalMoon).cross(normalMoon));
   }
   
-  maskSize: number = 100;
-  maskX: number = 0;
-  maskY: number = 0;
+  equatorialIllumination: number = 1;
 
 }

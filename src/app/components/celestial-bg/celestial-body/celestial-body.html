@@ -1,10 +1,26 @@
 <div class="anchor" [style.top]="top" [style.left]="left" [style.z-index]="zIndex">
-  <div class="body"
+  <div class="body" *ngIf="!occlude"
     [style.--angularDiameter]="angularDiameter"
     [style.background-color]="color"
     [style.--brightness]="brightness"
-    [style.--mask-size]="(maskSize * 100) + '%'"
-    [style.--mask-x]="(maskX * 100) + '%'"
-    [style.--mask-y]="(maskY * 100) + '%'"
   ></div>
+  <ng-container>
+    <div class="body"
+      [style.--angularDiameter]="angularDiameter"
+      [style.background-color]="celestialBodies.earth.skyColor"
+    ></div>
+    <div class="body-lit"
+      [style.--angularDiameter]="angularDiameter"
+      [style.background-color]="color"
+      [style.--brightness]="brightness"
+    ></div>
+    <div class="meridean"
+      [style.--angularDiameter]="angularDiameter"
+      [style.background-color]="equatorialIllumination < 0.5 ? celestialBodies.earth.skyColor : color"
+      [style.filter]="equatorialIllumination < 0.5 ? 'none' : ''"
+      [style.--brightness]="brightness"
+      [style.--illumination]="equatorialIllumination"
+      [style.--eclipse-width]="equatorialIllumination - 0.5 | abs | percent"
+    ></div>
+  </ng-container>
 </div>

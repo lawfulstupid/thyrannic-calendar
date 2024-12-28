@@ -1,4 +1,4 @@
-import { NgIf, PercentPipe } from '@angular/common';
+import { PercentPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { AbsPipe } from 'src/app/pipes/abs.pipe';
 import { CelestialBody } from './celestial-body';
@@ -6,7 +6,7 @@ import { CelestialBody } from './celestial-body';
 @Component({
   selector: 'app-losit',
   standalone: true,
-  imports: [NgIf, AbsPipe, PercentPipe],
+  imports: [AbsPipe, PercentPipe],
   templateUrl: '../celestial-body/celestial-body.html',
   styleUrl: '../celestial-body/celestial-body.scss'
 })

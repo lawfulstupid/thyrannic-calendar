@@ -4,6 +4,8 @@ import { CelestialBgComponent } from './components/celestial-bg/celestial-bg.com
 import { TimeUnitComponent } from './components/time-unit/time-unit.component';
 import { TemporalUnit } from './model/temporal-unit';
 import { TDateTime } from './model/thyrannic-date-time';
+import { TDay } from './model/thyrannic-day';
+import { TYear } from './model/thyrannic-year';
 import { OrdinalPipe } from './pipes/ordinal';
 
 @Component({
@@ -18,7 +20,7 @@ export class AppComponent {
   readonly environment = environment;
   readonly units = TemporalUnit;
 
-  datetime: TDateTime = TDateTime.fromDate();
+  datetime: TDateTime = new TYear(20, 24).on(49, TDay.BROGOS).at(10, 30);
 
   public changeDateTime([quantity, unit]: [number, TemporalUnit]) {
     try {

@@ -1,3 +1,4 @@
+import { AppComponent } from "src/app/app.component";
 import { TemporalUnit } from "src/app/model/temporal-unit";
 import { TDateTime } from "src/app/model/thyrannic-date-time";
 import { MathUtil } from "src/app/util/math-util";
@@ -16,7 +17,7 @@ export abstract class CelestialBody {
   public static losit: LositComponent;
   public static earth: EarthComponent;
   
-  public static update(datetime: TDateTime) {
+  public static update(datetime: TDateTime = AppComponent.instance.datetime) {
     this.sun.update(datetime);
     this.arukma.update(datetime);
     this.losit.update(datetime);
@@ -130,8 +131,8 @@ export abstract class CelestialBody {
     const lmst = MathUtil.fixAngle2(fractionalDay * 360 + CelestialBody.sun.rightAscension);
     const localHourAngle = MathUtil.fixAngle2(lmst - rightAscension);
     const zenithAngle = MathUtil.rad2deg(Math.acos(
-      MathUtil.sin(CelestialBody.earth.latitude) * MathUtil.sin(declination) +
-      MathUtil.cos(CelestialBody.earth.latitude) * MathUtil.cos(declination) * MathUtil.cos(localHourAngle)
+      MathUtil.sin(AppComponent.instance.city.latitude) * MathUtil.sin(declination) +
+      MathUtil.cos(AppComponent.instance.city.latitude) * MathUtil.cos(declination) * MathUtil.cos(localHourAngle)
     ));
     return [localHourAngle, zenithAngle];
   }
@@ -172,7 +173,7 @@ export abstract class CelestialBody {
     const moonToSunFlat = moonToSun.cross(earthToMoon).cross(earthToMoon);
     const northFlat = new Vector(0,1,0).cross(earthToMoon).cross(earthToMoon);
     const sunDirection = northFlat.signedAngleTo(moonToSunFlat, earthToMoon) - 90;
-    const latitudeAngle = 90 - CelestialBody.earth.latitude;
+    const latitudeAngle = 90 - AppComponent.instance.city.latitude;
     this.illuminationDirection = MathUtil.fixAngle(sunDirection + latitudeAngle);
   }
   

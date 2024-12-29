@@ -15,6 +15,11 @@
   <span>{{' '}}</span>
   <app-time-unit [unit]="units.HALF_DAY" [value]="datetime.isAfternoon() ? 1 : 0" (change)="changeDateTime($event)">{{datetime.getAmPm()}}</app-time-unit>
 </div>
+<div class="menu">
+  <select [(ngModel)]="_city" (ngModelChange)="changeCity()">
+    <option *ngFor="let city of cities" [ngValue]="city">{{city.name}}</option>
+  </select>
+</div>
 <span class="footer">
   <a href="http://github.com/lawfulstupid/thyrannic-calendar">v{{environment.appVersion}}</a>
 </span>

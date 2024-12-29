@@ -23,6 +23,22 @@ app-celestial-bg {
   top: calc(20vh + 20vmin);
 }
 
+.menu {
+  padding: 1vmin;
+  padding-right: 0;
+  text-align: right;
+  * {
+    margin-right: 1vmin;
+    opacity: 50%;
+    &:hover {
+      opacity: 75%;
+    }
+  }
+  select {
+    height: 3vmin;
+  }
+}
+
 .footer {
   position: absolute;
   bottom: 0;

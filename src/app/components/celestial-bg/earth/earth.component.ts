@@ -17,7 +17,6 @@ export class EarthComponent {
   }
   
   readonly tilt: number = 24.12;
-  readonly latitude: number = 35.19;
   
   skyColor: string = 'skyblue';
 

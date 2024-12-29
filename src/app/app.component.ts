@@ -1,34 +1,51 @@
+import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { CelestialBgComponent } from './components/celestial-bg/celestial-bg.component';
+import { CelestialBody } from './components/celestial-bg/celestial-body/celestial-body';
 import { TimeUnitComponent } from './components/time-unit/time-unit.component';
+import { City } from './model/city';
 import { TemporalUnit } from './model/temporal-unit';
-import { TDateTime } from './model/thyrannic-date-time';
-import { TDay } from './model/thyrannic-day';
-import { TYear } from './model/thyrannic-year';
-import { OrdinalPipe } from './pipes/ordinal';
 import { TDate } from './model/thyrannic-date';
+import { TDateTime } from './model/thyrannic-date-time';
+import { OrdinalPipe } from './pipes/ordinal';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CelestialBgComponent, OrdinalPipe, TimeUnitComponent],
+  imports: [CelestialBgComponent, OrdinalPipe, TimeUnitComponent, FormsModule, NgFor],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
 
-  readonly environment = environment;
-  readonly units = TemporalUnit;
+  public static instance: AppComponent;
+  
+  protected readonly environment = environment;
+  protected readonly units = TemporalUnit;
+  protected readonly cities: Array<City> = City.values;
 
-  datetime: TDateTime = TDate.fromDate().at(12, 0);
-
+  protected _datetime: TDateTime = TDate.fromDate().at(12, 0);
+  public get datetime(): TDateTime { return this._datetime; }
+  
+  protected _city: City = City.THYRANNOS;
+  public get city(): City { return this._city; }
+  
+  constructor() {
+    AppComponent.instance = this;
+  }
+  
   public changeDateTime([quantity, unit]: [number, TemporalUnit]) {
     try {
-      this.datetime = this.datetime.add(quantity, unit);
+      this._datetime = this.datetime.add(quantity, unit);
     } catch (err) {
       console.error('Illegal operation:', err);
     }
+  }
+  
+  public changeCity() {
+    CelestialBody.update();
   }
 
 }

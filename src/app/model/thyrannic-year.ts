@@ -54,5 +54,13 @@ export class TYear {
       return new TDate(this).add(quantity, unit);
     }
   }
+  
+  public diff(that: TYear, unit: TemporalUnit = TemporalUnit.YEAR): number {
+    if (TemporalUnit.YEAR.defines(unit)) {
+      return Math.trunc((this.valueOf() - that.valueOf()) / unit.as(TemporalUnit.YEAR));
+    } else {
+      return new TDate(this).diff(new TDate(that), unit);
+    }
+  }
 
 }

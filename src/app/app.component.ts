@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { CelestialBgComponent } from './components/celestial-bg/celestial-bg.component';
 import { CelestialBody } from './components/celestial-bg/celestial-body/celestial-body';
+import { PinnedDateComponent } from "./components/pinned-date/pinned-date.component";
 import { TimeUnitComponent } from './components/time-unit/time-unit.component';
 import { City } from './model/city';
 import { TemporalUnit } from './model/temporal-unit';
@@ -14,7 +15,7 @@ import { OrdinalPipe } from './pipes/ordinal';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CelestialBgComponent, OrdinalPipe, TimeUnitComponent, FormsModule, NgFor],
+  imports: [CelestialBgComponent, OrdinalPipe, TimeUnitComponent, FormsModule, NgFor, PinnedDateComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
@@ -42,6 +43,10 @@ export class AppComponent {
     } catch (err) {
       console.error('Illegal operation:', err);
     }
+  }
+  
+  public setDateTime(datetime: TDateTime) {
+    this._datetime = datetime;
   }
   
   public changeCity() {

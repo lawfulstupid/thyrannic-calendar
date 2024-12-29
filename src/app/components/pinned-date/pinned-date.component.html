@@ -1,0 +1,14 @@
+<ng-container *ngIf="!pinnedDate">
+  <fa-icon class="clickable" [icon]="faBookmarkOpen" (click)="pin()"></fa-icon>
+</ng-container>
+<ng-container *ngIf="pinnedDate">
+  <fa-icon class="clickable" [icon]="faBookmarkClosed" (click)="unpin()"></fa-icon>
+  <span class="clickable" (click)="resetDate()">{{pinnedDate}}</span>
+  <span>({{comparisonDist}}</span>
+  <select class="clickable" [(ngModel)]="comparisonUnit" (ngModelChange)="update()">
+    <option *ngFor="let unit of units" [ngValue]="unit">
+      {{unit.toString().toLowerCase()}}{{(comparisonDist || 0) === 1 ? '' : 's'}}
+    </option>
+  </select>
+  <span>{{comparisonDir}})</span>
+</ng-container>

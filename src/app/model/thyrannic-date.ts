@@ -61,5 +61,13 @@ export class TDate {
       return new TDateTime(this).add(quantity, unit);
     }
   }
+  
+  public diff(that: TDate, unit: TemporalUnit = TemporalUnit.DAY): number {
+    if (TemporalUnit.YEAR.defines(unit)) {
+      return this.year.diff(that.year, unit);
+    } else {
+      return new TDateTime(this).diff(new TDateTime(that), unit);
+    }
+  }
 
 }

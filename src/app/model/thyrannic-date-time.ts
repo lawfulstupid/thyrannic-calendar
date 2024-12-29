@@ -54,5 +54,13 @@ export class TDateTime {
       return new TDateTime(<TDate>this.date.add(quantity, unit), this.hour);
     }
   }
+  
+  public diff(that: TDateTime, unit: TemporalUnit = TemporalUnit.DAY): number {
+    if (TemporalUnit.MINUTE.defines(unit)) {
+      return Math.trunc((this.valueOf() - that.valueOf()) / unit.as(TemporalUnit.MINUTE));
+    } else {
+      return this.date.diff(that.date, unit);
+    }
+  }
 
 }

@@ -20,7 +20,7 @@ export class TemporalUnit {
   }>;
 
   private constructor(
-    private name: string,
+    readonly name: string,
     ...baseUnits: Array<[number, TemporalUnit]>
   ) {
     this.parts = baseUnits.map(([n,u]) => ({

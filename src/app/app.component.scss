@@ -24,18 +24,25 @@ app-celestial-bg {
 }
 
 .menu {
-  padding: 1vmin;
+  padding: 1ch;
   padding-right: 0;
   text-align: right;
+  height: 4ch;
+  display: flex;
+  flex-direction: row;
   * {
-    margin-right: 1vmin;
+    margin-right: 1ch;
+    height: 100%;
+  }
+  .separator {
+    width: 0;
+    margin: 0 auto;
+  }
+  select {
     opacity: 50%;
     &:hover {
       opacity: 75%;
     }
-  }
-  select {
-    height: 4ch;
   }
 }
 

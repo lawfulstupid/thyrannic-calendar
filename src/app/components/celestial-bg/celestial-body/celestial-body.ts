@@ -140,7 +140,8 @@ export abstract class CelestialBody {
       MathUtil.cos(latitude) * MathUtil.cos(declination) * MathUtil.cos(localHourAngle)
     )));
     
-    const azimuth = MathUtil.fixAngle2(180 - MathUtil.rad2deg(Math.acos(
+    const hemisphere = latitude >= 0 ? 180 : 0;
+    const azimuth = MathUtil.fixAngle2(hemisphere - MathUtil.rad2deg(Math.acos(
       (MathUtil.sin(declination) - MathUtil.sin(altitude) * MathUtil.sin(latitude))
       / (MathUtil.cos(altitude) * MathUtil.cos(latitude))
     ))) * Math.sign(MathUtil.sin(localHourAngle));

@@ -4,6 +4,7 @@ import { TDateTime } from "src/app/model/thyrannic-date-time";
 import { MathUtil } from "src/app/util/math-util";
 import { Vector } from "src/app/util/vector";
 import { EarthComponent } from "../earth/earth.component";
+import { StarsComponent } from "../stars/stars.component";
 import { ArukmaComponent } from "./arukma.component";
 import { LositComponent } from "./losit.component";
 import { SunComponent } from "./sun.component";
@@ -16,12 +17,14 @@ export abstract class CelestialBody {
   public static arukma: ArukmaComponent;
   public static losit: LositComponent;
   public static earth: EarthComponent;
+  public static stars: StarsComponent;
   
   public static update(datetime: TDateTime = AppComponent.instance.datetime) {
     this.sun.update(datetime);
     this.arukma.update(datetime);
     this.losit.update(datetime);
     this.earth.update(datetime);
+    this.stars.update(datetime);
   }
 
   static synodicToSiderealPeriod(p: number): number {
@@ -115,38 +118,46 @@ export abstract class CelestialBody {
   rightAscension: number = 0;
   declination: number = 0;
   distance: number = 0;
-  zenithAngle: number = 0;
-  get altitude(): number { return 90 - this.zenithAngle; }
-  localHourAngle: number = 0;
+  azimuth: number = 0;
+  altitude: number = 0;
+  get zenithAngle(): number { return 90 - this.altitude; }
   
   public vectorFromEarth(): Vector {
     return Vector.fromRAD(this.rightAscension, this.declination, this.distance);
   }
   
-  public static RAD2LHAZA(datetime: TDateTime, rightAscension: number, declination: number): [number, number] {
+  public static RaDec2AzAlt(datetime: TDateTime, rightAscension: number, declination: number): [number, number] {
     const fractionalDay = (12 + datetime.hour + datetime.minute / 60) / 24;
     // 12PM -> solar right ascension
     // 06PM -> SRA + 90
     // 12AM -> SRA + 180
     const lmst = MathUtil.fixAngle2(fractionalDay * 360 + CelestialBody.sun.rightAscension);
     const localHourAngle = MathUtil.fixAngle2(lmst - rightAscension);
-    const zenithAngle = MathUtil.rad2deg(Math.acos(
-      MathUtil.sin(AppComponent.instance.city.latitude) * MathUtil.sin(declination) +
-      MathUtil.cos(AppComponent.instance.city.latitude) * MathUtil.cos(declination) * MathUtil.cos(localHourAngle)
-    ));
-    return [localHourAngle, zenithAngle];
+    const latitude = AppComponent.instance.city.latitude;
+    
+    const altitude = MathUtil.fixAngle2(MathUtil.rad2deg(Math.asin(
+      MathUtil.sin(latitude) * MathUtil.sin(declination) +
+      MathUtil.cos(latitude) * MathUtil.cos(declination) * MathUtil.cos(localHourAngle)
+    )));
+    
+    const azimuth = MathUtil.fixAngle2(180 - MathUtil.rad2deg(Math.acos(
+      (MathUtil.sin(declination) - MathUtil.sin(altitude) * MathUtil.sin(latitude))
+      / (MathUtil.cos(altitude) * MathUtil.cos(latitude))
+    ))) * Math.sign(MathUtil.sin(localHourAngle));
+    
+    return [azimuth, altitude];
+  }
+  
+  public static onScreenPosition(azimuth: number, altitude: number): [string, string] {
+    const sf = 1;
+    const top = `calc(90vh - ${altitude*sf}vmin)`;
+    const left = `calc(50vw + ${azimuth*sf}vmin)`;
+    return [top, left];
   }
 
   private computeApparentPosition(datetime: TDateTime) {
-    [this.localHourAngle, this.zenithAngle] = CelestialBody.RAD2LHAZA(datetime, this.rightAscension, this.declination);
-
-    // degFromTop = 0 => top = 90vmin above horizon
-    // degFromTop = 90 => top = 0 above horizon
-    // horizon = 90vh
-    this.top = `calc(90vh + ${this.zenithAngle - 90}vmin)`;
-    // lha = 0 => left = 50vw
-    // lha = 20 => left = 50vw + 20vmin
-    this.left = `calc(50vw + ${this.localHourAngle}vmin)`;
+    [this.azimuth, this.altitude] = CelestialBody.RaDec2AzAlt(datetime, this.rightAscension, this.declination);
+    [this.top, this.left] = CelestialBody.onScreenPosition(this.azimuth, this.altitude);
   }
 
   top: string = '0';

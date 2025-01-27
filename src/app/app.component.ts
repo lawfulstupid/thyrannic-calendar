@@ -11,7 +11,7 @@ import { TemporalUnit } from './model/temporal-unit';
 import { TDate } from './model/thyrannic-date';
 import { TDateTime } from './model/thyrannic-date-time';
 import { OrdinalPipe } from './pipes/ordinal';
-import { LocalStorage } from './util/local-storage';
+import { LocalValue } from './util/local-value';
 
 @Component({
   selector: 'app-root',
@@ -35,7 +35,7 @@ export class AppComponent {
   // Update datetime and set in local storage
   protected set datetime(datetime: TDateTime) {
     this._datetime = datetime;
-    LocalStorage.CURRENT_DATETIME.put(datetime.valueOf().toString());
+    LocalValue.CURRENT_DATETIME.put(datetime);
   }
   
   protected _city: City = City.THYRANNOS;
@@ -45,13 +45,7 @@ export class AppComponent {
     AppComponent.instance = this;
     
     // Load last datetime from storage
-    const storedValue = LocalStorage.CURRENT_DATETIME.get();
-    if (storedValue !== null) {
-      this._datetime = TDateTime.fromValue(Number(storedValue));
-    } else {
-      // Default value
-      this._datetime = TDate.fromDate().at(12, 0);
-    }
+    this._datetime = LocalValue.CURRENT_DATETIME.get() || TDate.fromDate().at(12, 0);
   }
   
   public changeDateTime([quantity, unit]: [number, TemporalUnit]) {

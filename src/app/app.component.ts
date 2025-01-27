@@ -28,7 +28,8 @@ export class AppComponent {
   protected readonly units = TemporalUnit;
   protected readonly cities: Array<City> = City.values;
 
-  private _datetime: TDateTime;
+  // Load datetime from local storage
+  private _datetime: TDateTime = LocalValue.CURRENT_DATETIME.get() || TDate.fromDate().at(12, 0);
   public get datetime(): TDateTime {
     return this._datetime;
   }
@@ -43,9 +44,6 @@ export class AppComponent {
   
   constructor() {
     AppComponent.instance = this;
-    
-    // Load last datetime from storage
-    this._datetime = LocalValue.CURRENT_DATETIME.get() || TDate.fromDate().at(12, 0);
   }
   
   public changeDateTime([quantity, unit]: [number, TemporalUnit]) {

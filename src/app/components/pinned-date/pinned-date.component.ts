@@ -7,6 +7,7 @@ import { faBookmark as faBookmarkClosed } from "@fortawesome/free-solid-svg-icon
 import { AppComponent } from 'src/app/app.component';
 import { TemporalUnit } from 'src/app/model/temporal-unit';
 import { TDateTime } from 'src/app/model/thyrannic-date-time';
+import { LocalValue } from 'src/app/util/local-value';
 
 @Component({
   selector: 'app-pinned-date',
@@ -21,7 +22,7 @@ export class PinnedDateComponent {
   readonly faBookmarkClosed = faBookmarkClosed;
   readonly units = [TemporalUnit.MINUTE, TemporalUnit.HOUR, TemporalUnit.DAY, TemporalUnit.WEEK, TemporalUnit.QUARTER, TemporalUnit.YEAR, TemporalUnit.EPOCH];
   
-  protected pinnedDate?: TDateTime;
+  protected pinnedDate?: TDateTime = LocalValue.PINNED_DATETIME.get() || undefined;
   protected comparisonUnit: TemporalUnit = TemporalUnit.DAY;
   protected comparisonDist?: number;
   protected comparisonDir?: 'ago' | 'ahead';
@@ -37,10 +38,12 @@ export class PinnedDateComponent {
   public pin() {
     this.pinnedDate = AppComponent.instance.datetime;
     this.update();
+    LocalValue.PINNED_DATETIME.put(this.pinnedDate);
   }
   
   public unpin() {
     this.pinnedDate = undefined;
+    LocalValue.PINNED_DATETIME.clear();
   }
   
   public update(datetime: TDateTime = AppComponent.instance.datetime) {

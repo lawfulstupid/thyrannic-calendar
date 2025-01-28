@@ -39,7 +39,7 @@ export class AppComponent {
     LocalValue.CURRENT_DATETIME.put(datetime);
   }
   
-  protected _city: City = City.THYRANNOS;
+  protected _city: City = LocalValue.CITY.get() || City.THYRANNOS;
   public get city(): City { return this._city; }
   
   constructor() {
@@ -56,6 +56,7 @@ export class AppComponent {
   
   public changeCity() {
     CelestialBody.update();
+    LocalValue.CITY.put(this._city);
   }
 
 }

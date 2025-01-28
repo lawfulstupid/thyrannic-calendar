@@ -1,5 +1,8 @@
 export class City {
   
+  private static entries: number = 0;
+  public readonly id: number = ++City.entries;
+  
   private constructor(
     readonly name: string,
     readonly latitude: number,
@@ -32,5 +35,9 @@ export class City {
     this.MAZOKHODRAK,
     this.DEDKA
   ].sort((a,b) => a.name.localeCompare(b.name));
+  
+  public static fromId(id: number): City | undefined {
+    return this.values.find(city => city.id === id);
+  }
   
 }

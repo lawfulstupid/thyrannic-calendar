@@ -42,15 +42,17 @@ export class MathUtil {
   }
 
   public static asin(x: number): number {
-    return MathUtil.rad2deg(Math.asin(MathUtil.clamp(x)));
+    return MathUtil.rad2deg(Math.asin(MathUtil.clamp(-1, x, 1)));
   }
 
   public static acos(x: number): number {
-    return MathUtil.rad2deg(Math.acos(MathUtil.clamp(x)));
+    return MathUtil.rad2deg(Math.acos(MathUtil.clamp(-1, x, 1)));
   }
 
-  private static clamp(x: number): number {
-    return Math.abs(x) > 1 ? Math.sign(x) : x;
+  public static clamp(min: number, x: number, max: number): number {
+    if (x > max) return max;
+    if (x < min) return min;
+    return x;
   }
 
   public static ordinal(num: number): string {
@@ -75,7 +77,7 @@ export class MathUtil {
   }
 
   public static tween(a: number, c: number, b: number): number {
-    return (c - a) / (b - a);
+    return this.clamp(0, (c - a) / (b - a), 1);
   }
 
   public static random(min: number, max: number): number {

@@ -121,6 +121,7 @@ export abstract class CelestialBody {
   azimuth: number = 0;
   altitude: number = 0;
   get zenithAngle(): number { return 90 - this.altitude; }
+  get maxAltitude(): number { return 90 - AppComponent.instance.city.latitude + this.declination; }
 
   public vectorFromEarth(): Vector {
     return Vector.fromRAD(this.rightAscension, this.declination, this.distance);

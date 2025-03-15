@@ -19,6 +19,7 @@ export class EarthComponent {
   readonly tilt: number = 24.12;
 
   skyColor: string = EarthComponent.SKY_COLORS.DAYLIGHT;
+  groundColor: string = 'green';
   groundBrightness: number = 1;
 
   private static get DAYLIGHT() { return 5 * CelestialBody.sun.angularDiameter; }
@@ -53,12 +54,19 @@ export class EarthComponent {
   }
 
   private updateGround() {
+    // Update brightness
     const altitude = CelestialBody.sun.altitude;
     if (altitude > EarthComponent.TWILIGHT) {
       this.groundBrightness = 1 - MathUtil.clamp(0, MathUtil.tween(EarthComponent.DAYLIGHT, altitude, EarthComponent.TWILIGHT), 0.80);
     } else {
       this.groundBrightness = 1 - MathUtil.clamp(0.80, MathUtil.tween(EarthComponent.TWILIGHT, altitude, EarthComponent.NIGHT), 0.90);
     }
+
+    // Update color
+    const dayLength = CelestialBody.sun.getDayLength();
+    // const temp =
+    // this.groundColor = `color-mix(in xyz, ${100 * (1-progress)}% ${EarthComponent.SKY_COLORS.TWILIGHT}, ${100 * progress}% ${EarthComponent.SKY_COLORS.NIGHT})`
+    // console.log(CelestialBody.sun.maxAltitude, CelestialBody.sun.altitude);
   }
 
 }

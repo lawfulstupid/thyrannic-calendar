@@ -25,12 +25,12 @@ jobs:
     if: github.ref_type == 'branch'
     steps:
       - name: Checkout code
-        uses: actions/checkout
+        uses: actions/checkout@v4
         with:
           fetch-tags: true
           fetch-depth: 0
       - name: Set up Git user
-        uses: fregante/setup-git-user
+        uses: fregante/setup-git-user@v2
       - name: Set up Node
         uses: actions/setup-node@master
         with:
@@ -63,17 +63,17 @@ jobs:
           npm install
           npm run build
       - name: Set up pages
-        uses: actions/configure-pages
+        uses: actions/configure-pages@v5
       - name: Upload artifact
-        uses: actions/upload-pages-artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: 'dist'
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages
+        uses: actions/deploy-pages@v4
       - name: Create release
         id: create_release
-        uses: ncipollo/release-action
+        uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.get-tag.outputs.tag }}
           generateReleaseNotes: true

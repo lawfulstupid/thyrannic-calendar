@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { TemporalUnit } from 'src/app/model/temporal-unit';
 import { TDateTime } from 'src/app/model/thyrannic-date-time';
+import { CelestialMechanics } from 'src/app/util/celestial-mechanics';
 import { MathUtil } from 'src/app/util/math-util';
 import { CelestialBody } from '../celestial-body/celestial-body';
 
@@ -34,9 +36,9 @@ export class EarthComponent {
     NIGHT: '#1f252d'
   }
 
-  public update(_: TDateTime) {
+  public update(datetime: TDateTime) {
     this.updateSky();
-    this.updateGround();
+    this.updateGround(datetime);
   }
 
   private updateSky() {
@@ -53,7 +55,7 @@ export class EarthComponent {
     }
   }
 
-  private updateGround() {
+  private updateGround(datetime: TDateTime) {
     // Update brightness
     const altitude = CelestialBody.sun.altitude;
     if (altitude > EarthComponent.TWILIGHT) {
@@ -63,10 +65,11 @@ export class EarthComponent {
     }
 
     // Update color
-    const dayLength = CelestialBody.sun.getDayLength();
-    // const temp =
-    // this.groundColor = `color-mix(in xyz, ${100 * (1-progress)}% ${EarthComponent.SKY_COLORS.TWILIGHT}, ${100 * progress}% ${EarthComponent.SKY_COLORS.NIGHT})`
-    // console.log(CelestialBody.sun.maxAltitude, CelestialBody.sun.altitude);
+    // It takes time for change in daylight hours to affect temperature
+    const { declination } = CelestialMechanics.computeRADD(CelestialBody.sun, datetime.add(-6, TemporalUnit.WEEK));
+    const dayLength = CelestialMechanics.getDayLength(declination);
+    const progress = MathUtil.tween(10, dayLength, 8);
+    this.groundColor = `color-mix(in xyz, ${100 * (1-progress)}% green, ${100 * progress}% snow)`
   }
 
 }

@@ -93,4 +93,12 @@ export class CelestialMechanics {
     body.illuminationDirection = MathUtil.fixAngle(sunDirection + latitudeAngle);
   }
 
+  public static getDayLength(solarDeclination: number): number {
+    const latitude = AppComponent.instance.city.latitude;
+    const cos = MathUtil.tan(latitude) * MathUtil.tan(solarDeclination);
+    const sunrise = MathUtil.acos(cos); // this only works because acos is clamped
+    const sunset = 360 - sunrise;
+    return (sunset - sunrise) / 15;
+  }
+
 }

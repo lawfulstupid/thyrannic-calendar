@@ -1,8 +1,6 @@
 import { PercentPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { AppComponent } from 'src/app/app.component';
 import { AbsPipe } from 'src/app/pipes/abs.pipe';
-import { MathUtil } from 'src/app/util/math-util';
 import { CelestialBody, VisibleCelestialBody } from './celestial-body';
 
 @Component({
@@ -31,14 +29,6 @@ export class SunComponent extends VisibleCelestialBody {
   constructor() {
     super();
     CelestialBody.sun = this;
-  }
-
-  getDayLength(): number {
-    const latitude = AppComponent.instance.city.latitude;
-    const cos = MathUtil.tan(latitude) * MathUtil.tan(this.declination);
-    const sunrise = MathUtil.acos(cos); // this only works because acos is clamped
-    const sunset = 360 - sunrise;
-    return (sunset - sunrise) / 15;
   }
 
 }

@@ -10,15 +10,15 @@ import { LositComponent } from "./losit.component";
 import { SunComponent } from "./sun.component";
 
 export abstract class CelestialBody {
-  
+
   readonly celestialBodies = CelestialBody;
-  
+
   public static sun: SunComponent;
   public static arukma: ArukmaComponent;
   public static losit: LositComponent;
   public static earth: EarthComponent;
   public static stars: StarsComponent;
-  
+
   public static update(datetime: TDateTime = AppComponent.instance.datetime) {
     this.sun.update(datetime);
     this.arukma.update(datetime);
@@ -50,7 +50,7 @@ export abstract class CelestialBody {
   abstract readonly orbitalPeriod: number; // orbital period (fractional days)
   abstract readonly meanDistance: number; // centre-to-centre distance (km) along semi-major axis of ellipse
   abstract readonly radius: number; // radius of object (km)
-  
+
   // how many degrees in the sky it takes up
   get angularDiameter(): number {
     return MathUtil.rad2deg(Math.acos(1 - 2 * (this.radius/this.distance) ** 2));
@@ -80,7 +80,7 @@ export abstract class CelestialBody {
   periapsisTime(d: number): number {
     return this.periapsisEpoch - (this.meanAnomaly(d) / 360) / this.orbitalPeriod;
   }
-  
+
 
   private update(datetime: TDateTime) {
     this.computeRAD(datetime);
@@ -112,7 +112,7 @@ export abstract class CelestialBody {
     this.rightAscension = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ye, xe)));
     this.declination = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ze, Math.sqrt(xe**2 + ye**2))));
   }
-  
+
 
   // Variables based on time
   rightAscension: number = 0;
@@ -121,11 +121,11 @@ export abstract class CelestialBody {
   azimuth: number = 0;
   altitude: number = 0;
   get zenithAngle(): number { return 90 - this.altitude; }
-  
+
   public vectorFromEarth(): Vector {
     return Vector.fromRAD(this.rightAscension, this.declination, this.distance);
   }
-  
+
   public static RaDec2AzAlt(datetime: TDateTime, rightAscension: number, declination: number): [number, number] {
     const fractionalDay = (12 + datetime.hour + datetime.minute / 60) / 24;
     // 12PM -> solar right ascension
@@ -134,21 +134,21 @@ export abstract class CelestialBody {
     const lmst = MathUtil.fixAngle2(fractionalDay * 360 + CelestialBody.sun.rightAscension);
     const localHourAngle = MathUtil.fixAngle2(lmst - rightAscension);
     const latitude = AppComponent.instance.city.latitude;
-    
-    const altitude = MathUtil.fixAngle2(MathUtil.rad2deg(Math.asin(
+
+    const altitude = MathUtil.fixAngle2(MathUtil.asin(
       MathUtil.sin(latitude) * MathUtil.sin(declination) +
       MathUtil.cos(latitude) * MathUtil.cos(declination) * MathUtil.cos(localHourAngle)
-    )));
-    
+    ));
+
     const hemisphere = latitude >= 0 ? 180 : 0;
-    const azimuth = MathUtil.fixAngle2(hemisphere - MathUtil.rad2deg(Math.acos(
+    const azimuth = MathUtil.fixAngle2(hemisphere - MathUtil.acos(
       (MathUtil.sin(declination) - MathUtil.sin(altitude) * MathUtil.sin(latitude))
       / (MathUtil.cos(altitude) * MathUtil.cos(latitude))
-    ))) * Math.sign(MathUtil.sin(localHourAngle));
-    
+    )) * Math.sign(MathUtil.sin(localHourAngle));
+
     return [azimuth, altitude];
   }
-  
+
   public static onScreenPosition(azimuth: number, altitude: number): [string, string] {
     const sf = 1;
     const top = `calc(90vh - ${altitude*sf}vmin)`;
@@ -163,21 +163,21 @@ export abstract class CelestialBody {
 
   top: string = '0';
   left: string = '0';
-  
-  
+
+
   private computeOcclusion(datetime: TDateTime) {
     const earthToMoon = this.vectorFromEarth();
     const earthToSun = CelestialBody.sun.vectorFromEarth();
     const moonToSun = earthToSun.minus(earthToMoon);
     const moonToEarth = earthToMoon.times(-1);
-    
-    
+
+
     // 0.0 = new moon
     // 0.5 = half moon
     // 1.0 = full moon
     // Precisely: proportion of equatorial diameter that is visible from earth
     this.equatorialIllumination = 0.5 + 0.5 * MathUtil.cos(moonToEarth.angleTo(moonToSun));
-    
+
     // Direction of illumination
     // 0 = illuminated from the right
     // 90 = illuminated from below
@@ -188,7 +188,7 @@ export abstract class CelestialBody {
     const latitudeAngle = 90 - AppComponent.instance.city.latitude;
     this.illuminationDirection = MathUtil.fixAngle(sunDirection + latitudeAngle);
   }
-  
+
   equatorialIllumination: number = 1;
   illuminationDirection: number = 0;
 

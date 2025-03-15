@@ -75,6 +75,15 @@ export abstract class VisibleCelestialBody extends CelestialBody {
   override declination: number = 0;
   distance: number = 0;
 
+  public override update(datetime: TDateTime) {
+    const radd = CelestialMechanics.computeRADD(this, datetime);
+    this.rightAscension = radd.rightAscension;
+    this.declination = radd.declination;
+    this.distance = radd.distance;
+    super.update(datetime);
+    if (this.occlude) CelestialMechanics.updateOcclusion(this);
+  }
+
   // how many degrees in the sky it takes up
   get angularDiameter(): number {
     return MathUtil.rad2deg(Math.acos(1 - 2 * (this.radius/this.distance) ** 2));
@@ -107,15 +116,6 @@ export abstract class VisibleCelestialBody extends CelestialBody {
 
   public vectorFromEarth(): Vector {
     return Vector.fromRAD(this.rightAscension, this.declination, this.distance);
-  }
-
-  public override update(datetime: TDateTime) {
-    const radd = CelestialMechanics.computeRADD(this, datetime);
-    this.rightAscension = radd.rightAscension;
-    this.declination = radd.declination;
-    this.distance = radd.distance;
-    super.update(datetime);
-    if (this.occlude) CelestialMechanics.updateOcclusion(this);
   }
 
 }

@@ -110,7 +110,10 @@ export abstract class VisibleCelestialBody extends CelestialBody {
   }
 
   public override update(datetime: TDateTime) {
-    [this.rightAscension, this.declination] = CelestialMechanics.computeRAD(this, datetime);
+    const radd = CelestialMechanics.computeRADD(this, datetime);
+    this.rightAscension = radd.rightAscension;
+    this.declination = radd.declination;
+    this.distance = radd.distance;
     super.update(datetime);
     if (this.occlude) CelestialMechanics.updateOcclusion(this);
   }

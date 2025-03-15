@@ -13,7 +13,7 @@ export class CelestialMechanics {
     return 1 / (1/p + 1/CelestialBody.sun.orbitalPeriod);
   }
 
-  public static computeRAD(body: VisibleCelestialBody, datetime: TDateTime): [number, number] {
+  public static computeRADD(body: VisibleCelestialBody, datetime: TDateTime): { rightAscension: number, declination: number, distance: number } {
     const d = datetime.valueOf() * TemporalUnit.MINUTE.as(TemporalUnit.DAY);
     const meanAnomaly = body.meanAnomaly(d);
     const E = MathUtil.fixAngle(meanAnomaly + MathUtil.rad2deg(
@@ -25,11 +25,11 @@ export class CelestialMechanics {
     const xv = MathUtil.cos(E) - body.eccentricity;
     const yv = Math.sqrt(1.0 - body.eccentricity**2) * MathUtil.sin(E);
     const v = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(yv, xv)));
-    body.distance = Math.sqrt(xv**2 + yv**2) * body.meanDistance;
+    const distance = Math.sqrt(xv**2 + yv**2) * body.meanDistance;
 
     const true_long = v + body.periapsisArgument;
-    const xs = body.distance * MathUtil.cos(true_long);
-    const ys = body.distance * MathUtil.sin(true_long);
+    const xs = distance * MathUtil.cos(true_long);
+    const ys = distance * MathUtil.sin(true_long);
 
     const xe = xs;
     const ye = ys * MathUtil.cos(CelestialBody.earth.tilt);
@@ -37,7 +37,7 @@ export class CelestialMechanics {
 
     const rightAscension = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ye, xe)));
     const declination = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ze, Math.sqrt(xe**2 + ye**2))));
-    return [rightAscension, declination];
+    return { rightAscension, declination, distance };
   }
 
   public static RaDec2AzAlt(body: CelestialBody, datetime: TDateTime): [number, number] {

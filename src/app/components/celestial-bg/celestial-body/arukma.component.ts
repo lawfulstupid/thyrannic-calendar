@@ -1,7 +1,8 @@
 import { PercentPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { AbsPipe } from 'src/app/pipes/abs.pipe';
-import { CelestialBody } from './celestial-body';
+import { CelestialMechanics } from 'src/app/util/celestial-mechanics';
+import { CelestialBody, VisibleCelestialBody } from './celestial-body';
 
 @Component({
   selector: 'app-arukma',
@@ -10,7 +11,7 @@ import { CelestialBody } from './celestial-body';
   templateUrl: './celestial-body.html',
   styleUrl: './celestial-body.scss'
 })
-export class ArukmaComponent extends CelestialBody {
+export class ArukmaComponent extends VisibleCelestialBody {
 
   override color = 'rgb(32, 33, 35)';
   override brightness = 2.4;
@@ -21,11 +22,11 @@ export class ArukmaComponent extends CelestialBody {
   override periapsisArgument = 229.951;
   override eccentricity = 0.0464;
   override originAngle = CelestialBody.sun.originAngle + 76.0417;
-  override orbitalPeriod = CelestialBody.synodicToSiderealPeriod(17.79459);
+  override orbitalPeriod = CelestialMechanics.synodicToSiderealPeriod(17.79459);
   override ascendingNodeLongitude = 344.672;
   override meanDistance = 278311.973;
   override radius = 1481.52;
-  
+
   constructor() {
     super();
     CelestialBody.arukma = this;

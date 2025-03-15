@@ -1,9 +1,9 @@
 import { PercentPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { AbsPipe } from 'src/app/pipes/abs.pipe';
-import { CelestialBody } from './celestial-body';
-import { MathUtil } from 'src/app/util/math-util';
 import { AppComponent } from 'src/app/app.component';
+import { AbsPipe } from 'src/app/pipes/abs.pipe';
+import { MathUtil } from 'src/app/util/math-util';
+import { CelestialBody, VisibleCelestialBody } from './celestial-body';
 
 @Component({
   selector: 'app-sun',
@@ -12,7 +12,7 @@ import { AppComponent } from 'src/app/app.component';
   templateUrl: './celestial-body.html',
   styleUrl: './celestial-body.scss'
 })
-export class SunComponent extends CelestialBody {
+export class SunComponent extends VisibleCelestialBody {
 
   override color = 'yellow';
   override brightness = 1;

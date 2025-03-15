@@ -22,20 +22,24 @@ export class CelestialMechanics {
       )
     ));
 
+    // Compute distance, true anomaly, true longitude
     const xv = MathUtil.cos(eccentricAnomaly) - body.eccentricity;
     const yv = Math.sqrt(1.0 - body.eccentricity**2) * MathUtil.sin(eccentricAnomaly);
     const trueAnomaly = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(yv, xv)));
     const distance = Math.sqrt(xv**2 + yv**2) * body.meanDistance;
-
     const trueLongitude = trueAnomaly + body.periapsisArgument;
-    const xs = distance * MathUtil.cos(trueLongitude);
-    const ys = distance * MathUtil.sin(trueLongitude);
-    const zs = 0; // since the Sun always is in the ecliptic plane, zs is of course zero
 
+    // Compute ecliptic rectangular geocentric coordinates
+    const xs = distance * MathUtil.cos(body.inclination) * MathUtil.cos(trueLongitude);
+    const ys = distance * MathUtil.cos(body.inclination) * MathUtil.sin(trueLongitude);
+    const zs = distance * MathUtil.sin(body.inclination);
+
+    // Compute equatorial rectangular geocentric coordinates
     const xe = xs;
-    const ye = ys * MathUtil.cos(CelestialBody.earth.tilt);
-    const ze = ys * MathUtil.sin(CelestialBody.earth.tilt);
+    const ye = ys * MathUtil.cos(CelestialBody.earth.tilt) - zs * MathUtil.sin(CelestialBody.earth.tilt);
+    const ze = ys * MathUtil.sin(CelestialBody.earth.tilt) + zs * MathUtil.cos(CelestialBody.earth.tilt);
 
+    // Compute right ascension and declination
     return {
       rightAscension: MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ye, xe))),
       declination: MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ze, Math.sqrt(xe**2 + ye**2)))),

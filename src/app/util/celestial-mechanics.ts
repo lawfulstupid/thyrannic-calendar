@@ -16,28 +16,31 @@ export class CelestialMechanics {
   public static computeRADD(body: VisibleCelestialBody, datetime: TDateTime): { rightAscension: number, declination: number, distance: number } {
     const d = datetime.valueOf() * TemporalUnit.MINUTE.as(TemporalUnit.DAY);
     const meanAnomaly = body.meanAnomaly(d);
-    const E = MathUtil.fixAngle(meanAnomaly + MathUtil.rad2deg(
+    const eccentricAnomaly = MathUtil.fixAngle(meanAnomaly + MathUtil.rad2deg(
       body.eccentricity * MathUtil.sin(meanAnomaly) * (
         1 + body.eccentricity * MathUtil.cos(meanAnomaly)
       )
     ));
 
-    const xv = MathUtil.cos(E) - body.eccentricity;
-    const yv = Math.sqrt(1.0 - body.eccentricity**2) * MathUtil.sin(E);
-    const v = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(yv, xv)));
+    const xv = MathUtil.cos(eccentricAnomaly) - body.eccentricity;
+    const yv = Math.sqrt(1.0 - body.eccentricity**2) * MathUtil.sin(eccentricAnomaly);
+    const trueAnomaly = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(yv, xv)));
     const distance = Math.sqrt(xv**2 + yv**2) * body.meanDistance;
 
-    const true_long = v + body.periapsisArgument;
-    const xs = distance * MathUtil.cos(true_long);
-    const ys = distance * MathUtil.sin(true_long);
+    const trueLongitude = trueAnomaly + body.periapsisArgument;
+    const xs = distance * MathUtil.cos(trueLongitude);
+    const ys = distance * MathUtil.sin(trueLongitude);
+    const zs = 0; // since the Sun always is in the ecliptic plane, zs is of course zero
 
     const xe = xs;
     const ye = ys * MathUtil.cos(CelestialBody.earth.tilt);
     const ze = ys * MathUtil.sin(CelestialBody.earth.tilt);
 
-    const rightAscension = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ye, xe)));
-    const declination = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ze, Math.sqrt(xe**2 + ye**2))));
-    return { rightAscension, declination, distance };
+    return {
+      rightAscension: MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ye, xe))),
+      declination: MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ze, Math.sqrt(xe**2 + ye**2)))),
+      distance
+    };
   }
 
   public static RaDec2AzAlt(body: CelestialBody, datetime: TDateTime): [number, number] {

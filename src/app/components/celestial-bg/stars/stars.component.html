@@ -1,11 +1,13 @@
-<div *ngFor="let star of stars"
-  class="star"
-  [style.top]="star.top"
-  [style.left]="star.left"
-  [style.--diameter]="star.diameter + 'px'"
-  [style.--rotation]="star.rotation + 'deg'"
-  [style.--brightness]="star.brightnessMax + '%'"
-  [style.--min-brightness]="star.brightnessMin + '%'"
-  [style.animation-duration]="star.animationDuration + 's'"
-  [style.animation-delay]="star.animationDelay + 's'"
-></div>
+<div [style.opacity]="opacity">
+  <div *ngFor="let star of stars"
+    class="star"
+    [style.top]="star.top"
+    [style.left]="star.left"
+    [style.--diameter]="star.diameter + 'px'"
+    [style.--rotation]="star.rotation + 'deg'"
+    [style.--brightness]="star.brightnessMax + '%'"
+    [style.--min-brightness]="star.brightnessMin + '%'"
+    [style.animation-duration]="star.animationDuration + 's'"
+    [style.animation-delay]="star.animationDelay + 's'"
+  ></div>
+</div>

@@ -20,21 +20,14 @@ export class EarthComponent {
 
   readonly tilt: number = 24.12;
 
-  skyColor: string = EarthComponent.SKY_COLORS.DAYLIGHT;
+  skyColor: string = 'skyblue';
   groundColor: string = 'green';
   groundBrightness: number = 1;
 
-  private static get DAYLIGHT() { return 5 * CelestialBody.sun.angularDiameter; }
-  private static readonly DAWN_DUSK = 0;
-  private static get TWILIGHT() { return -5 * CelestialBody.sun.angularDiameter / 2; }
-  private static readonly NIGHT = -18;
-
-  private static SKY_COLORS = {
-    DAYLIGHT: 'skyblue',
-    DAWN_DUSK: 'orangered',
-    TWILIGHT: 'midnightblue',
-    NIGHT: '#1f252d'
-  }
+  public static get SUNRISE_SUNSET_START() { return 5 * CelestialBody.sun.angularDiameter; }
+  public static get HORIZON() { return 0; }
+  public static get SUNRISE_SUNSET() { return -5 * CelestialBody.sun.angularDiameter / 2; }
+  public static get ASTRONOMICAL_DAWN_DUSK() { return -18; }
 
   public update(datetime: TDateTime) {
     this.updateSky();
@@ -42,26 +35,26 @@ export class EarthComponent {
   }
 
   private updateSky() {
-    const altitude = CelestialBody.sun.altitude;
-    if (altitude > EarthComponent.DAWN_DUSK) {
-      const progress = MathUtil.tween(EarthComponent.DAYLIGHT, altitude, EarthComponent.DAWN_DUSK);
-      this.skyColor = `color-mix(in xyz, ${100 * (1-progress)}% ${EarthComponent.SKY_COLORS.DAYLIGHT}, ${100 * progress}% ${EarthComponent.SKY_COLORS.DAWN_DUSK})`;
-    } else if (altitude > EarthComponent.TWILIGHT) {
-      const progress = MathUtil.tween(EarthComponent.DAWN_DUSK, altitude, EarthComponent.TWILIGHT);
-      this.skyColor = `color-mix(in xyz, ${100 * (1-progress)}% ${EarthComponent.SKY_COLORS.DAWN_DUSK}, ${100 * progress}% ${EarthComponent.SKY_COLORS.TWILIGHT})`;
+    const solarAltitude = CelestialBody.sun.altitude;
+    if (solarAltitude > EarthComponent.HORIZON) {
+      const progress = MathUtil.tween(EarthComponent.SUNRISE_SUNSET_START, solarAltitude, EarthComponent.HORIZON);
+      this.skyColor = `color-mix(in xyz, ${100 * (1-progress)}% skyblue, ${100 * progress}% orangered)`;
+    } else if (solarAltitude > EarthComponent.SUNRISE_SUNSET) {
+      const progress = MathUtil.tween(EarthComponent.HORIZON, solarAltitude, EarthComponent.SUNRISE_SUNSET);
+      this.skyColor = `color-mix(in xyz, ${100 * (1-progress)}% orangered, ${100 * progress}% midnightblue)`;
     } else {
-      const progress = MathUtil.tween(EarthComponent.TWILIGHT, altitude, EarthComponent.NIGHT);
-      this.skyColor = `color-mix(in xyz, ${100 * (1-progress)}% ${EarthComponent.SKY_COLORS.TWILIGHT}, ${100 * progress}% ${EarthComponent.SKY_COLORS.NIGHT})`;
+      const progress = MathUtil.tween(EarthComponent.SUNRISE_SUNSET, solarAltitude, EarthComponent.ASTRONOMICAL_DAWN_DUSK);
+      this.skyColor = `color-mix(in xyz, ${100 * (1-progress)}% midnightblue, ${100 * progress}% #1f252d)`;
     }
   }
 
   private updateGround(datetime: TDateTime) {
     // Update brightness
     const altitude = CelestialBody.sun.altitude;
-    if (altitude > EarthComponent.TWILIGHT) {
-      this.groundBrightness = 1 - MathUtil.clamp(0, MathUtil.tween(EarthComponent.DAYLIGHT, altitude, EarthComponent.TWILIGHT), 0.80);
+    if (altitude > EarthComponent.SUNRISE_SUNSET) {
+      this.groundBrightness = 1 - MathUtil.clamp(0, MathUtil.tween(EarthComponent.SUNRISE_SUNSET_START, altitude, EarthComponent.SUNRISE_SUNSET), 0.80);
     } else {
-      this.groundBrightness = 1 - MathUtil.clamp(0.80, MathUtil.tween(EarthComponent.TWILIGHT, altitude, EarthComponent.NIGHT), 0.90);
+      this.groundBrightness = 1 - MathUtil.clamp(0.80, MathUtil.tween(EarthComponent.SUNRISE_SUNSET, altitude, EarthComponent.ASTRONOMICAL_DAWN_DUSK), 0.90);
     }
 
     // Update color

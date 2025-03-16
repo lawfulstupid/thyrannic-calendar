@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { TDateTime } from 'src/app/model/thyrannic-date-time';
 import { MathUtil } from 'src/app/util/math-util';
 import { CelestialBody } from '../celestial-body/celestial-body';
+import { EarthComponent } from '../earth/earth.component';
 
 @Component({
   selector: 'app-stars',
@@ -16,6 +17,10 @@ export class StarsComponent {
   private static readonly MAX_STARS: number = 1000;
 
   protected stars: Array<Star> = [];
+
+  protected get opacity() {
+    return MathUtil.tween(EarthComponent.SUNRISE_SUNSET_START, CelestialBody.sun.altitude, EarthComponent.SUNRISE_SUNSET);
+  }
 
   constructor() {
     CelestialBody.stars = this;

@@ -4,6 +4,7 @@ import { TemporalUnit } from "../model/temporal-unit";
 import { TDateTime } from "../model/thyrannic-date-time";
 import { MathUtil } from "./math-util";
 import { Vector } from "./vector";
+import * as uuid from "uuid";
 
 export class CelestialMechanics {
 
@@ -127,6 +128,7 @@ export class CelestialMechanics {
 }
 
 class Dummy extends CelestialBody {
+  public readonly id: string = 'path-' + uuid.v4();
   override azimuth: number;
   override altitude: number;
   override top: string;

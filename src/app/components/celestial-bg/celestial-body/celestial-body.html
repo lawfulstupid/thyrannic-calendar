@@ -12,7 +12,7 @@
   </div>
 </div>
 <div class="anchor" [style.z-index]="zIndex" *ngIf="pathMode !== 'none'">
-  <div class="pathPoint" *ngFor="let pos of path"
+  <div id="{{pos.id}}" class="pathPoint" *ngFor="let pos of path"
     [style.top]="pos.top"
     [style.left]="pos.left"
     [style.--body-color]="color"

@@ -46,7 +46,7 @@ export abstract class CelestialBody {
 
 }
 
-export type Path = Array<{ top: string, left: string }>;
+export type Path = Array<{ id: string, top: string, left: string }>;
 
 export abstract class VisibleCelestialBody extends CelestialBody {
 
@@ -141,6 +141,23 @@ export abstract class VisibleCelestialBody extends CelestialBody {
         this.path = CelestialMechanics.fullPath(...this.declinationMinMax());
         break;
     }
+
+    // Run after rendering
+    setTimeout(() => {
+      const bounds = document.getElementById('earth')!.getBoundingClientRect();
+      this.path = this.path.filter(pos => {
+        const point = document.getElementById(pos.id)!.getBoundingClientRect();
+        if (point.top > bounds.top || point.right > bounds.right || point.left < bounds.left) {
+          // Remove points that are out of bounds
+          return false;
+        } else {
+          // Attempt to reduce lag by removing calc() calls
+          pos.top = `${point.top}px`;
+          pos.left = `${point.left}px`;
+          return true;
+        }
+      });
+    }, 0);
   }
 
 }

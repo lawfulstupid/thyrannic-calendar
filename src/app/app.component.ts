@@ -23,10 +23,11 @@ import { LocalValue } from './util/local-value';
 export class AppComponent {
 
   public static instance: AppComponent;
-  
+
   protected readonly environment = environment;
   protected readonly units = TemporalUnit;
   protected readonly cities: Array<City> = City.values;
+  protected get sunPathMode() { return CelestialBody.sun.pathMode; }
 
   // Load datetime from local storage
   private _datetime: TDateTime = LocalValue.CURRENT_DATETIME.get() || TDate.fromDate().at(12, 0);
@@ -38,14 +39,14 @@ export class AppComponent {
     this._datetime = datetime;
     LocalValue.CURRENT_DATETIME.put(datetime);
   }
-  
+
   protected _city: City = LocalValue.CITY.get() || City.THYRANNOS;
   public get city(): City { return this._city; }
-  
+
   constructor() {
     AppComponent.instance = this;
   }
-  
+
   public changeDateTime([quantity, unit]: [number, TemporalUnit]) {
     try {
       this.datetime = this.datetime.add(quantity, unit);
@@ -53,10 +54,25 @@ export class AppComponent {
       console.error('Illegal operation:', err);
     }
   }
-  
+
   public changeCity() {
     CelestialBody.update();
     LocalValue.CITY.put(this._city);
+  }
+
+  public updateSunPathMode() {
+    switch (CelestialBody.sun.pathMode) {
+      case 'none':
+        CelestialBody.sun.pathMode = 'day';
+        break;
+      case 'day':
+        CelestialBody.sun.pathMode = 'full';
+        break;
+      case 'full':
+        CelestialBody.sun.pathMode = 'none';
+        break;
+    }
+    CelestialBody.sun.updatePath();
   }
 
 }

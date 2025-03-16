@@ -87,6 +87,7 @@ export abstract class VisibleCelestialBody extends CelestialBody {
     this.distance = radd.distance;
     super.update(datetime);
     if (this.occlude) CelestialMechanics.updateOcclusion(this);
+    if (this.pathMode === 'day') this.updatePath();
   }
 
   // how many degrees in the sky it takes up

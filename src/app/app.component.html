@@ -18,6 +18,7 @@
 <div class="menu">
   <app-pinned-date [datetime]="datetime" (setDate)="datetime = $event"></app-pinned-date>
   <span class="separator"></span>
+  <button class="clickable" (click)="updateSunPathMode()">Sun path: {{sunPathMode}}</button>
   <select class="clickable" [(ngModel)]="_city" (ngModelChange)="changeCity()">
     <option *ngFor="let city of cities" [ngValue]="city">{{city.name}}</option>
   </select>

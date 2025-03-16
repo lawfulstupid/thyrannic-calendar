@@ -1,5 +1,5 @@
 import { AppComponent } from "../app.component";
-import { CelestialBody, VisibleCelestialBody } from "../components/celestial-bg/celestial-body/celestial-body";
+import { CelestialBody, Path, VisibleCelestialBody } from "../components/celestial-bg/celestial-body/celestial-body";
 import { TemporalUnit } from "../model/temporal-unit";
 import { TDateTime } from "../model/thyrannic-date-time";
 import { MathUtil } from "./math-util";
@@ -108,4 +108,35 @@ export class CelestialMechanics {
     return (sunset - sunrise) / 15;
   }
 
+  public static fullPath(decMin: number, decMax: number): Path {
+    const resolution = 50;
+    const unit = (decMax - decMin) / (resolution - 1);
+    return Array.from({ length: resolution }, (_,k) => decMin + k * unit).flatMap(this.singlePath);
+  }
+
+  public static singlePath(declination: number): Path {
+    const pathPoints = [];
+    for (let ra = 0; ra < 360; ra++) {
+      const dummy = new Dummy(ra, declination);
+      CelestialMechanics.RaDec2AzAlt(dummy, TDateTime.fromDate());
+      pathPoints.push(dummy);
+    }
+    return pathPoints;
+  }
+
+}
+
+class Dummy extends CelestialBody {
+  override azimuth: number;
+  override altitude: number;
+  override top: string;
+  override left: string;
+  constructor(
+    override readonly rightAscension: number,
+    override readonly declination: number
+  ) {
+    super();
+    [this.azimuth, this.altitude] = CelestialMechanics.RaDec2AzAlt(this, TDateTime.fromDate());
+    [this.top, this.left] = CelestialMechanics.onScreenPosition(this);
+  }
 }

@@ -11,3 +11,11 @@
     <div class="meridean" [class.lit]="equatorialIllumination > 0.5"></div>
   </div>
 </div>
+<div class="anchor" [style.z-index]="zIndex" *ngIf="pathMode !== 'none'">
+  <div class="pathPoint" *ngFor="let pos of path"
+    [style.top]="pos.top"
+    [style.left]="pos.left"
+    [style.--body-color]="color"
+    [style.--brightness]="brightness"
+  ></div>
+</div>

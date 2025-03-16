@@ -34,3 +34,12 @@ $diameter: calc($angular-diameter * 5vmin); // enlarged for visual effect
     filter: brightness(calc(var(--brightness) * 3));
   }
 }
+
+.pathPoint {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  border-radius: 100%;
+  background-color: var(--body-color);
+  filter: brightness(calc(var(--brightness) * 3));
+}

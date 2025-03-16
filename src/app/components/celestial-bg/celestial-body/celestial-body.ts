@@ -46,6 +46,8 @@ export abstract class CelestialBody {
 
 }
 
+export type Path = Array<{ top: string, left: string }>;
+
 export abstract class VisibleCelestialBody extends CelestialBody {
 
   // Visual options
@@ -53,6 +55,9 @@ export abstract class VisibleCelestialBody extends CelestialBody {
   abstract brightness: number;
   abstract zIndex: number;
   abstract occlude: boolean;
+
+  pathMode: 'none' | 'day' | 'full' = 'none';
+  path: Path = [];
 
   // Occlusion variables
   equatorialIllumination: number = 1;
@@ -114,8 +119,27 @@ export abstract class VisibleCelestialBody extends CelestialBody {
     return this.periapsisEpoch - (this.meanAnomaly(d) / 360) / this.orbitalPeriod;
   }
 
+  // min and max declination
+  declinationMinMax(): [number, number] {
+    return [this.inclination - CelestialBody.earth.tilt, this.inclination + CelestialBody.earth.tilt];
+  }
+
   public vectorFromEarth(): Vector {
     return Vector.fromRAD(this.rightAscension, this.declination, this.distance);
+  }
+
+  updatePath() {
+    switch (this.pathMode) {
+      case 'none':
+        this.path = [];
+        break;
+      case 'day':
+        this.path = CelestialMechanics.singlePath(this.declination);
+        break;
+      case 'full':
+        this.path = CelestialMechanics.fullPath(...this.declinationMinMax());
+        break;
+    }
   }
 
 }

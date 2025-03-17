@@ -11,11 +11,8 @@
     <div class="meridean" [class.lit]="equatorialIllumination > 0.5"></div>
   </div>
 </div>
-<div class="anchor" [style.z-index]="zIndex" *ngIf="pathMode !== 'none'">
-  <div id="{{pos.id}}" class="pathPoint" *ngFor="let pos of path"
-    [style.top]="pos.top"
-    [style.left]="pos.left"
-    [style.--body-color]="color"
-    [style.--brightness]="brightness"
-  ></div>
-</div>
+<svg *ngIf="path.enabled" viewBox="-50 0 100 100" [style.z-index]="zIndex">
+  <polyline [attr.points]="path.max" [attr.stroke]="color"/>
+  <polyline [attr.points]="path.day" [attr.stroke]="color"/>
+  <polyline [attr.points]="path.min" [attr.stroke]="color"/>
+</svg>

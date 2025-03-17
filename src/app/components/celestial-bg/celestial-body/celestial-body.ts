@@ -46,8 +46,6 @@ export abstract class CelestialBody {
 
 }
 
-export type Path = Array<{ id: string, top: string, left: string }>;
-
 export abstract class VisibleCelestialBody extends CelestialBody {
 
   // Visual options
@@ -56,8 +54,7 @@ export abstract class VisibleCelestialBody extends CelestialBody {
   abstract zIndex: number;
   abstract occlude: boolean;
 
-  pathMode: 'none' | 'day' | 'full' = 'none';
-  path: Path = [];
+  path: { enabled: boolean, min?: string, max?: string, day?: string } = { enabled: false };
 
   // Occlusion variables
   equatorialIllumination: number = 1;
@@ -87,7 +84,7 @@ export abstract class VisibleCelestialBody extends CelestialBody {
     this.distance = radd.distance;
     super.update(datetime);
     if (this.occlude) CelestialMechanics.updateOcclusion(this);
-    if (this.pathMode === 'day') this.updatePath();
+    this.updatePath();
   }
 
   // how many degrees in the sky it takes up
@@ -130,34 +127,14 @@ export abstract class VisibleCelestialBody extends CelestialBody {
   }
 
   updatePath() {
-    switch (this.pathMode) {
-      case 'none':
-        this.path = [];
-        break;
-      case 'day':
-        this.path = CelestialMechanics.singlePath(this.declination);
-        break;
-      case 'full':
-        this.path = CelestialMechanics.fullPath(...this.declinationMinMax());
-        break;
+    if (!this.path.enabled) return;
+    const [decMin, decMax] = this.declinationMinMax();
+    this.path = {
+      enabled: true,
+      max: CelestialMechanics.skyPath(decMax),
+      min: CelestialMechanics.skyPath(decMin),
+      day: CelestialMechanics.skyPath(CelestialBody.sun.declination)
     }
-
-    // Run after rendering
-    setTimeout(() => {
-      const bounds = document.getElementById('earth')!.getBoundingClientRect();
-      this.path = this.path.filter(pos => {
-        const point = document.getElementById(pos.id)!.getBoundingClientRect();
-        if (point.top > bounds.top || point.right > bounds.right || point.left < bounds.left) {
-          // Remove points that are out of bounds
-          return false;
-        } else {
-          // Attempt to reduce lag by removing calc() calls
-          pos.top = `${point.top}px`;
-          pos.left = `${point.left}px`;
-          return true;
-        }
-      });
-    }, 0);
   }
 
 }

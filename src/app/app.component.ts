@@ -27,7 +27,7 @@ export class AppComponent {
   protected readonly environment = environment;
   protected readonly units = TemporalUnit;
   protected readonly cities: Array<City> = City.values;
-  protected get sunPathMode() { return CelestialBody.sun.pathMode; }
+  protected get sunPathEnabled() { return CelestialBody.sun.path.enabled; }
 
   // Load datetime from local storage
   private _datetime: TDateTime = LocalValue.CURRENT_DATETIME.get() || TDate.fromDate().at(12, 0);
@@ -62,17 +62,7 @@ export class AppComponent {
   }
 
   public updateSunPathMode() {
-    switch (CelestialBody.sun.pathMode) {
-      case 'none':
-        CelestialBody.sun.pathMode = 'day';
-        break;
-      case 'day':
-        CelestialBody.sun.pathMode = 'full';
-        break;
-      case 'full':
-        CelestialBody.sun.pathMode = 'none';
-        break;
-    }
+    CelestialBody.sun.path.enabled = !CelestialBody.sun.path.enabled;
     CelestialBody.sun.updatePath();
   }
 

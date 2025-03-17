@@ -71,9 +71,8 @@ export class CelestialMechanics {
   }
 
   public static onScreenPosition(body: CelestialBody): [string, string] {
-    const sf = 1;
-    const top = `calc(90vh - ${body.altitude*sf}vmin)`;
-    const left = `calc(50vw + ${body.azimuth*sf}vmin)`;
+    const top = `calc(90vh - ${body.altitude}vmin)`;
+    const left = `calc(50vw + ${body.azimuth}vmin)`;
     return [top, left];
   }
 

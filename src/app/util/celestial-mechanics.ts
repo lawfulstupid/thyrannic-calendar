@@ -48,7 +48,7 @@ export class CelestialMechanics {
     };
   }
 
-  public static RaDec2AzAlt(body: CelestialBody, datetime: TDateTime): [number, number] {
+  public static RaDec2AzAlt(body: { rightAscension: number, declination: number }, datetime: TDateTime): { altitude: number, azimuth: number } {
     const fractionalDay = (12 + datetime.hour + datetime.minute / 60) / 24;
     // 12PM -> solar right ascension
     // 06PM -> SRA + 90
@@ -68,13 +68,14 @@ export class CelestialMechanics {
       MathUtil.cos(localHourAngle) * MathUtil.sin(latitude) - MathUtil.tan(body.declination) * MathUtil.cos(latitude)
     ) - hemisphere);
 
-    return [azimuth, altitude];
+    return { azimuth, altitude };
   }
 
-  public static onScreenPosition(body: CelestialBody): [string, string] {
-    const top = `calc(90vh - ${body.altitude}vmin)`;
-    const left = `calc(50vw + ${body.azimuth}vmin)`;
-    return [top, left];
+  public static onScreenPosition(body: { altitude: number, azimuth: number }): { top: string, left: string } {
+    return {
+      top: `calc(90vh - ${body.altitude}vmin)`,
+      left:`calc(50vw + ${body.azimuth}vmin)`
+    }
   }
 
   public static updateOcclusion(body: VisibleCelestialBody) {
@@ -112,26 +113,16 @@ export class CelestialMechanics {
     const pathPoints = [];
     const dt = TDate.fromDate().at(12, 0);
     const minutesPerDay = TemporalUnit.DAY.as(TemporalUnit.MINUTE);
-    const dummy = new Dummy(rightAscension, declination);
 
     let lastAz = 0;
     for (let u = 0; u <= minutesPerDay; u++) {
-      const [az, alt] = CelestialMechanics.RaDec2AzAlt(dummy, dt.add(u, TemporalUnit.MINUTE));
-      if (Math.abs(az-lastAz) <= 90) { // avoids lines across asymptotes
-        pathPoints.push(`${az},${90-alt}`);
+      const { azimuth, altitude } = CelestialMechanics.RaDec2AzAlt({ rightAscension, declination }, dt.add(u, TemporalUnit.MINUTE));
+      if (Math.abs(azimuth - lastAz) <= 90) { // avoids lines across asymptotes
+        pathPoints.push(`${azimuth},${90-altitude}`);
       }
-      lastAz = az;
+      lastAz = azimuth;
     }
     return pathPoints.join(' ');
   }
 
-}
-
-class Dummy extends CelestialBody {
-  constructor(
-    override readonly rightAscension: number,
-    override readonly declination: number
-  ) {
-    super();
-  }
 }

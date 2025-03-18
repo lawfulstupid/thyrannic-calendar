@@ -40,8 +40,8 @@ export abstract class CelestialBody {
   left: string = '0';
 
   public update(datetime: TDateTime) {
-    [this.azimuth, this.altitude] = CelestialMechanics.RaDec2AzAlt(this, datetime);
-    [this.top, this.left] = CelestialMechanics.onScreenPosition(this);
+    ({ azimuth: this.azimuth, altitude: this.altitude } = CelestialMechanics.RaDec2AzAlt(this, datetime));
+    ({ top: this.top, left: this.left } = CelestialMechanics.onScreenPosition(this));
   }
 
 }

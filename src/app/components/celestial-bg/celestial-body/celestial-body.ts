@@ -131,9 +131,9 @@ export abstract class VisibleCelestialBody extends CelestialBody {
     const [decMin, decMax] = this.declinationMinMax();
     this.path = {
       enabled: true,
-      max: CelestialMechanics.skyPath(decMax),
-      min: CelestialMechanics.skyPath(decMin),
-      day: CelestialMechanics.skyPath(CelestialBody.sun.declination)
+      max: CelestialMechanics.skyPath(CelestialBody.sun.rightAscension, decMax),
+      min: CelestialMechanics.skyPath(CelestialBody.sun.rightAscension, decMin),
+      day: CelestialMechanics.skyPath(CelestialBody.sun.rightAscension, CelestialBody.sun.declination)
     }
   }
 

@@ -1,6 +1,7 @@
 import { AppComponent } from "../app.component";
 import { CelestialBody, VisibleCelestialBody } from "../components/celestial-bg/celestial-body/celestial-body";
 import { TemporalUnit } from "../model/temporal-unit";
+import { TDate } from "../model/thyrannic-date";
 import { TDateTime } from "../model/thyrannic-date-time";
 import { MathUtil } from "./math-util";
 import { Vector } from "./vector";
@@ -107,30 +108,30 @@ export class CelestialMechanics {
     return (sunset - sunrise) / 15;
   }
 
-  public static skyPath(declination: number): string {
+  public static skyPath(rightAscension: number, declination: number): string {
     const pathPoints = [];
-    for (let ra = 0; ra <= 360; ra++) {
-      const dummy = new Dummy(ra, declination);
-      CelestialMechanics.RaDec2AzAlt(dummy, TDateTime.fromDate());
-      pathPoints.push(dummy);
+    const dt = TDate.fromDate().at(12, 0);
+    const minutesPerDay = TemporalUnit.DAY.as(TemporalUnit.MINUTE);
+    const dummy = new Dummy(rightAscension, declination);
+
+    let lastAz = 0;
+    for (let u = 0; u <= minutesPerDay; u++) {
+      const [az, alt] = CelestialMechanics.RaDec2AzAlt(dummy, dt.add(u, TemporalUnit.MINUTE));
+      if (Math.abs(az-lastAz) <= 90) { // avoids lines across asymptotes
+        pathPoints.push(`${az},${90-alt}`);
+      }
+      lastAz = az;
     }
-    return pathPoints.map(p => `${p.x},${p.y}`).join(' ');
+    return pathPoints.join(' ');
   }
 
 }
 
 class Dummy extends CelestialBody {
-  override azimuth: number;
-  override altitude: number;
-  x: number;
-  y: number;
   constructor(
     override readonly rightAscension: number,
     override readonly declination: number
   ) {
     super();
-    [this.azimuth, this.altitude] = CelestialMechanics.RaDec2AzAlt(this, TDateTime.fromDate());
-    this.x = this.azimuth;
-    this.y = 90 - this.altitude;
   }
 }

@@ -49,6 +49,10 @@ export class MathUtil {
     return MathUtil.rad2deg(Math.acos(MathUtil.clamp(-1, x, 1)));
   }
 
+  public static atan2(y: number, x: number): number {
+    return MathUtil.rad2deg(Math.atan2(y, x));
+  }
+
   public static clamp(min: number, x: number, max: number): number {
     if (x > max) return max;
     if (x < min) return min;

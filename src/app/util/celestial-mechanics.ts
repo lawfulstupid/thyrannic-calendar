@@ -61,11 +61,11 @@ export class CelestialMechanics {
       MathUtil.cos(latitude) * MathUtil.cos(body.declination) * MathUtil.cos(localHourAngle)
     ));
 
-    const hemisphere = latitude >= 0 ? 180 : 0;
-    const azimuth = MathUtil.fixAngle2(hemisphere - MathUtil.acos(
-      (MathUtil.sin(body.declination) - MathUtil.sin(altitude) * MathUtil.sin(latitude))
-      / (MathUtil.cos(altitude) * MathUtil.cos(latitude))
-    )) * Math.sign(MathUtil.sin(localHourAngle));
+    const hemisphere = latitude >= 0 ? 0 : 180;
+    const azimuth = MathUtil.fixAngle2(MathUtil.atan2(
+      MathUtil.sin(localHourAngle),
+      MathUtil.cos(localHourAngle) * MathUtil.sin(latitude) - MathUtil.tan(body.declination) * MathUtil.cos(latitude)
+    ) - hemisphere);
 
     return [azimuth, altitude];
   }

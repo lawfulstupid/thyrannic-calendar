@@ -5,3 +5,4 @@ Links found to be useful for development:
 - https://en.wikipedia.org/wiki/Hour_angle
 - https://astro.dur.ac.uk/~ams/users/lunar_sid_syn.html
 - https://astrogreg.com/convert_ra_dec_to_alt_az.html
+- https://learn.64bitdragon.com/articles/computer-science/procedural-generation/midpoint-displacement-in-one-dimension

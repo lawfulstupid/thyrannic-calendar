@@ -73,12 +73,28 @@ export class EarthComponent {
     const rng = new Random(AppComponent.instance.city.name);
     const bearing: number = AppComponent.instance.bearing.angle;
 
-    let terrain = Array.from({ length: 360 }).map((_, a) => [a, rng.between(-1, 0)]);
-    terrain = terrain.map(([x, y]) => [MathUtil.fixAngle2(x + bearing), y]);
-    terrain.sort((a, b) => a[0] - b[0]);
-    terrain = terrain.concat([[180, 10], [-180, 10]]);
+    function displaceMidpoint(arr: Array<number>, idx1: number, idx2: number) {
+      if (Math.abs(idx1 - idx2) <= 1) return;
+      const m = Math.floor((idx1 + idx2) / 2);
+      if (arr[m] !== undefined) return;
+      const midValue = (arr[idx1] + arr[idx2]) / 2;
+      const maxDisplacement = Math.min(0.25, Math.abs(midValue), Math.abs(midValue + 1));
+      arr[m] = midValue + rng.between(-maxDisplacement, maxDisplacement);
+      displaceMidpoint(arr, idx1, m);
+      displaceMidpoint(arr, m, idx2);
+    }
 
-    this.terrainMap = terrain.map(([x, y]) => `${x},${y}`).join(' ');
+    // Generate terrain
+    const hills: Array<number> = new Array(360).fill(undefined);
+    hills[0] = rng.between(-1, 0);
+    hills[hills.length - 1] = hills[0];
+    displaceMidpoint(hills, 0, hills.length - 1);
+
+    // Convert terrain to SVG path
+    let terrain = hills.map((y, x) => [MathUtil.fixAngle2(x + bearing), y]);  // adjust for bearing
+    terrain.sort((a, b) => a[0] - b[0]);                                      // sort left to right
+    terrain = terrain.concat([[180, 10], [-180, 10]]);                        // close the loop without intersection
+    this.terrainMap = terrain.map(([x, y]) => `${x},${y}`).join(' ');         // join into path string
   }
 
 }

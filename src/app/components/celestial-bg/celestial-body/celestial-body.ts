@@ -41,7 +41,7 @@ export abstract class CelestialBody {
 
   public update(datetime: TDateTime) {
     ({ azimuth: this.azimuth, altitude: this.altitude } = OrbitalMechanics.RaDec2AzAlt(this, datetime));
-    ({ top: this.top, left: this.left } = OrbitalMechanics.onScreenPosition(this));
+    ({ top: this.top, left: this.left } = OrbitalMechanics.AzAlt2ScreenPos(this));
   }
 
 }
@@ -73,15 +73,14 @@ export abstract class IntrasolarBody extends CelestialBody {
   abstract readonly orbitalPeriod: number; // orbital period (fractional days)
   abstract readonly meanDistance: number; // centre-to-centre distance (km) along semi-major axis of ellipse
   abstract readonly radius: number; // radius of object (km)
-  override rightAscension: number = 0;
-  override declination: number = 0;
-  distance: number = 0;
+  distance!: number;
+  trueLongitude!: number;
+  override rightAscension!: number;
+  override declination!: number;
 
   public override update(datetime: TDateTime) {
-    const radd = OrbitalMechanics.computeRADD(this, datetime);
-    this.rightAscension = radd.rightAscension;
-    this.declination = radd.declination;
-    this.distance = radd.distance;
+    ({ distance: this.distance, trueLongitude: this.trueLongitude } = OrbitalMechanics.computeDistLong(this, datetime));
+    ({ rightAscension: this.rightAscension, declination: this.declination } = OrbitalMechanics.DistLong2RaDec(this));
     super.update(datetime);
     if (this.occlude) OrbitalMechanics.updateOcclusion(this);
     this.updatePath();

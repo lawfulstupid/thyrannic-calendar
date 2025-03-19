@@ -63,7 +63,7 @@ export class EarthComponent {
 
     // Update color
     // It takes time for change in daylight hours to affect temperature
-    const { declination } = OrbitalMechanics.computeRADD(CelestialBody.sun, datetime.add(-6, TemporalUnit.WEEK));
+    const { declination } = OrbitalMechanics.computeRaDec(CelestialBody.sun, datetime.add(-6, TemporalUnit.WEEK));
     const dayLength = OrbitalMechanics.getDayLength(declination);
     const progress = MathUtil.tween(10, dayLength, 8);
     this.groundColor = `color-mix(in xyz, ${100 * (1-progress)}% green, ${100 * progress}% snow)`;

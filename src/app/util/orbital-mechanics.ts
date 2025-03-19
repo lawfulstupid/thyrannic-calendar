@@ -6,8 +6,10 @@ import { TDateTime } from "../model/thyrannic-date-time";
 import { MathUtil } from "./math-util";
 import { Vector } from "./vector";
 
+export type DistLong = { distance: number, trueLongitude: number };
 export type RaDec = { rightAscension: number, declination: number };
 export type AzAlt = { azimuth: number, altitude: number };
+export type ScreenPos = { top: string, left: string };
 
 export class OrbitalMechanics {
 
@@ -17,7 +19,8 @@ export class OrbitalMechanics {
     return 1 / (1/p + 1/CelestialBody.sun.orbitalPeriod);
   }
 
-  public static computeRADD(body: IntrasolarBody, datetime: TDateTime): { rightAscension: number, declination: number, distance: number } {
+  // Computes true longitude + distance to an object
+  public static computeDistLong(body: IntrasolarBody, datetime: TDateTime): DistLong {
     const d = datetime.valueOf() * TemporalUnit.MINUTE.as(TemporalUnit.DAY);
     const meanAnomaly = body.meanAnomaly(d);
     const eccentricAnomaly = MathUtil.fixAngle(meanAnomaly + MathUtil.rad2deg(
@@ -30,13 +33,19 @@ export class OrbitalMechanics {
     const xv = MathUtil.cos(eccentricAnomaly) - body.eccentricity;
     const yv = Math.sqrt(1.0 - body.eccentricity**2) * MathUtil.sin(eccentricAnomaly);
     const trueAnomaly = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(yv, xv)));
-    const distance = Math.sqrt(xv**2 + yv**2) * body.meanDistance;
-    const trueLongitude = trueAnomaly + body.periapsisArgument;
 
+    return {
+      distance: Math.sqrt(xv**2 + yv**2) * body.meanDistance,
+      trueLongitude: trueAnomaly + body.periapsisArgument
+    }
+  }
+
+  // Converts distance + true longitude + inclination to right ascension + declination
+  public static DistLong2RaDec(body: DistLong & { inclination: number }): RaDec {
     // Compute ecliptic rectangular geocentric coordinates
-    const xs = distance * MathUtil.cos(body.inclination) * MathUtil.cos(trueLongitude);
-    const ys = distance * MathUtil.cos(body.inclination) * MathUtil.sin(trueLongitude);
-    const zs = distance * MathUtil.sin(body.inclination);
+    const xs = body.distance * MathUtil.cos(body.inclination) * MathUtil.cos(body.trueLongitude);
+    const ys = body.distance * MathUtil.cos(body.inclination) * MathUtil.sin(body.trueLongitude);
+    const zs = body.distance * MathUtil.sin(body.inclination);
 
     // Compute equatorial rectangular geocentric coordinates
     const xe = xs;
@@ -47,11 +56,17 @@ export class OrbitalMechanics {
     return {
       rightAscension: MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ye, xe))),
       declination: MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ze, Math.sqrt(xe**2 + ye**2)))),
-      distance
-    };
+    }
   }
 
-  public static RaDec2AzAlt(body: { rightAscension: number, declination: number }, datetime: TDateTime): { altitude: number, azimuth: number } {
+  // Computes right ascension + declination for an object
+  public static computeRaDec(body: IntrasolarBody, datetime: TDateTime): RaDec {
+    const distLong = OrbitalMechanics.computeDistLong(body, datetime);
+    return OrbitalMechanics.DistLong2RaDec({ ...distLong, inclination: body.inclination });
+  }
+
+  // Converts right ascension + declination to azimuth + altitude
+  public static RaDec2AzAlt(body: RaDec, datetime: TDateTime): AzAlt {
     const fractionalDay = (12 + datetime.hour + datetime.minute / 60) / 24;
     // 12PM -> solar right ascension
     // 06PM -> SRA + 90
@@ -73,7 +88,8 @@ export class OrbitalMechanics {
     return { azimuth, altitude };
   }
 
-  public static onScreenPosition(body: { altitude: number, azimuth: number }): { top: string, left: string } {
+  // Converts azimuth + altitude to screen position calc
+  public static AzAlt2ScreenPos(body: AzAlt): ScreenPos {
     return {
       top: `calc(90vh - ${body.altitude}vmin)`,
       left: `calc(50vw + ${body.azimuth}vmin)`

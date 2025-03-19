@@ -2,7 +2,7 @@ import { NgFor, NgIf, PercentPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { AbsPipe } from 'src/app/pipes/abs.pipe';
 import { OrbitalMechanics } from 'src/app/util/orbital-mechanics';
-import { CelestialBody, VisibleCelestialBody } from './celestial-body';
+import { CelestialBody, IntrasolarBody } from './celestial-body';
 
 @Component({
   selector: 'app-arukma',
@@ -11,7 +11,7 @@ import { CelestialBody, VisibleCelestialBody } from './celestial-body';
   templateUrl: './celestial-body.html',
   styleUrl: './celestial-body.scss'
 })
-export class ArukmaComponent extends VisibleCelestialBody {
+export class ArukmaComponent extends IntrasolarBody {
 
   override color = 'rgb(32, 33, 35)';
   override brightness = 2.4;

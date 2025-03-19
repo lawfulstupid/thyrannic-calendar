@@ -46,7 +46,7 @@ export abstract class CelestialBody {
 
 }
 
-export abstract class VisibleCelestialBody extends CelestialBody {
+export abstract class IntrasolarBody extends CelestialBody {
 
   // Visual options
   abstract color: string;

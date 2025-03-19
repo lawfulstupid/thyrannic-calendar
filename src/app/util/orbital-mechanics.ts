@@ -1,5 +1,5 @@
 import { AppComponent } from "../app.component";
-import { CelestialBody, VisibleCelestialBody } from "../components/celestial-bg/celestial-body/celestial-body";
+import { CelestialBody, IntrasolarBody } from "../components/celestial-bg/celestial-body/celestial-body";
 import { TemporalUnit } from "../model/temporal-unit";
 import { TDate } from "../model/thyrannic-date";
 import { TDateTime } from "../model/thyrannic-date-time";
@@ -17,7 +17,7 @@ export class OrbitalMechanics {
     return 1 / (1/p + 1/CelestialBody.sun.orbitalPeriod);
   }
 
-  public static computeRADD(body: VisibleCelestialBody, datetime: TDateTime): { rightAscension: number, declination: number, distance: number } {
+  public static computeRADD(body: IntrasolarBody, datetime: TDateTime): { rightAscension: number, declination: number, distance: number } {
     const d = datetime.valueOf() * TemporalUnit.MINUTE.as(TemporalUnit.DAY);
     const meanAnomaly = body.meanAnomaly(d);
     const eccentricAnomaly = MathUtil.fixAngle(meanAnomaly + MathUtil.rad2deg(
@@ -80,7 +80,7 @@ export class OrbitalMechanics {
     }
   }
 
-  public static updateOcclusion(body: VisibleCelestialBody) {
+  public static updateOcclusion(body: IntrasolarBody) {
     const earthToMoon = body.vectorFromEarth();
     const earthToSun = CelestialBody.sun.vectorFromEarth();
     const moonToSun = earthToSun.minus(earthToMoon);

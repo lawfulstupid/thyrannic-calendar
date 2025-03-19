@@ -1,7 +1,7 @@
 import { NgFor, NgIf, PercentPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { AbsPipe } from 'src/app/pipes/abs.pipe';
-import { CelestialBody, VisibleCelestialBody } from './celestial-body';
+import { CelestialBody, IntrasolarBody } from './celestial-body';
 
 @Component({
   selector: 'app-sun',
@@ -10,7 +10,7 @@ import { CelestialBody, VisibleCelestialBody } from './celestial-body';
   templateUrl: './celestial-body.html',
   styleUrl: './celestial-body.scss'
 })
-export class SunComponent extends VisibleCelestialBody {
+export class SunComponent extends IntrasolarBody {
 
   override color = 'yellow';
   override brightness = 1;

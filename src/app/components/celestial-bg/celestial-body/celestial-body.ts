@@ -54,7 +54,7 @@ export abstract class VisibleCelestialBody extends CelestialBody {
   abstract zIndex: number;
   abstract occlude: boolean;
 
-  path: { enabled: boolean, min?: string, max?: string, day?: string } = { enabled: false };
+  path: { enabled: boolean, min?: Array<string>, max?: Array<string>, day?: Array<string> } = { enabled: false };
 
   // Occlusion variables
   equatorialIllumination: number = 1;

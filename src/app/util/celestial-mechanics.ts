@@ -108,20 +108,25 @@ export class CelestialMechanics {
     return (sunset - sunrise) / 15;
   }
 
-  public static skyPath(rightAscension: number, declination: number): string {
-    const pathPoints = [];
+  public static skyPath(rightAscension: number, declination: number): Array<string> {
+    const paths: Array<string> = [];
+    let pathPoints: Array<string> = [];
     const dt = TDate.fromDate().at(12, 0);
     const minutesPerDay = TemporalUnit.DAY.as(TemporalUnit.MINUTE);
 
     let lastAz = 0;
     for (let u = 0; u <= minutesPerDay; u++) {
       const { azimuth, altitude } = CelestialMechanics.RaDec2AzAlt({ rightAscension, declination }, dt.add(u, TemporalUnit.MINUTE));
-      if (Math.abs(azimuth - lastAz) <= 90) { // avoids lines across asymptotes
-        pathPoints.push(`${azimuth},${90-altitude}`);
+      if (Math.abs(azimuth - lastAz) > 90) {
+        // split paths at asymptotes
+        paths.push(pathPoints.join(' '));
+        pathPoints = [];
       }
+      pathPoints.push(`${azimuth},${90-altitude}`);
       lastAz = azimuth;
     }
-    return pathPoints.join(' ');
+    paths.push(pathPoints.join(' '));
+    return paths;
   }
 
 }

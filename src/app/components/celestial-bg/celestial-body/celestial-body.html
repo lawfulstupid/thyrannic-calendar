@@ -12,7 +12,7 @@
   </div>
 </div>
 <svg *ngIf="path.enabled" viewBox="-50 0 100 100" [style.z-index]="zIndex">
-  <polyline [attr.points]="path.max" [attr.stroke]="color"/>
-  <polyline [attr.points]="path.day" [attr.stroke]="color"/>
-  <polyline [attr.points]="path.min" [attr.stroke]="color"/>
+  <polyline *ngFor="let path of path.max" [attr.points]="path" [attr.stroke]="color"/>
+  <polyline *ngFor="let path of path.day" [attr.points]="path" [attr.stroke]="color"/>
+  <polyline *ngFor="let path of path.min" [attr.points]="path" [attr.stroke]="color"/>
 </svg>

@@ -37,9 +37,9 @@ $diameter: calc($angular-diameter * 5vmin); // enlarged for visual effect
 
 svg {
   position: absolute;
-  top: 0;
+  bottom: 10vh;
+  height: 90vmin;
   left: 0;
-  height: 100vh;
   width: 100vw;
   opacity: 20%;
 }

@@ -73,7 +73,7 @@ export class CelestialMechanics {
   public static onScreenPosition(body: { altitude: number, azimuth: number }): { top: string, left: string } {
     return {
       top: `calc(90vh - ${body.altitude}vmin)`,
-      left:`calc(50vw + ${body.azimuth}vmin)`
+      left: `calc(50vw + ${body.azimuth}vmin)`
     }
   }
 

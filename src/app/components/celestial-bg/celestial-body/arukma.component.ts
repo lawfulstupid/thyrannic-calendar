@@ -1,7 +1,7 @@
 import { NgFor, NgIf, PercentPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { AbsPipe } from 'src/app/pipes/abs.pipe';
-import { CelestialMechanics } from 'src/app/util/celestial-mechanics';
+import { OrbitalMechanics } from 'src/app/util/orbital-mechanics';
 import { CelestialBody, VisibleCelestialBody } from './celestial-body';
 
 @Component({
@@ -22,7 +22,7 @@ export class ArukmaComponent extends VisibleCelestialBody {
   override periapsisArgument = 229.951;
   override eccentricity = 0.0464;
   override originAngle = CelestialBody.sun.originAngle + 76.0417;
-  override orbitalPeriod = CelestialMechanics.synodicToSiderealPeriod(17.79459);
+  override orbitalPeriod = OrbitalMechanics.synodicToSiderealPeriod(17.79459);
   override ascendingNodeLongitude = 344.672;
   override meanDistance = 278311.973;
   override radius = 1481.52;

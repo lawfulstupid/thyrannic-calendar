@@ -1,7 +1,7 @@
 import { AppComponent } from "src/app/app.component";
 import { TDateTime } from "src/app/model/thyrannic-date-time";
-import { CelestialMechanics } from "src/app/util/celestial-mechanics";
 import { MathUtil } from "src/app/util/math-util";
+import { OrbitalMechanics } from "src/app/util/orbital-mechanics";
 import { Vector } from "src/app/util/vector";
 import { EarthComponent } from "../earth/earth.component";
 import { StarsComponent } from "../stars/stars.component";
@@ -40,8 +40,8 @@ export abstract class CelestialBody {
   left: string = '0';
 
   public update(datetime: TDateTime) {
-    ({ azimuth: this.azimuth, altitude: this.altitude } = CelestialMechanics.RaDec2AzAlt(this, datetime));
-    ({ top: this.top, left: this.left } = CelestialMechanics.onScreenPosition(this));
+    ({ azimuth: this.azimuth, altitude: this.altitude } = OrbitalMechanics.RaDec2AzAlt(this, datetime));
+    ({ top: this.top, left: this.left } = OrbitalMechanics.onScreenPosition(this));
   }
 
 }
@@ -78,12 +78,12 @@ export abstract class VisibleCelestialBody extends CelestialBody {
   distance: number = 0;
 
   public override update(datetime: TDateTime) {
-    const radd = CelestialMechanics.computeRADD(this, datetime);
+    const radd = OrbitalMechanics.computeRADD(this, datetime);
     this.rightAscension = radd.rightAscension;
     this.declination = radd.declination;
     this.distance = radd.distance;
     super.update(datetime);
-    if (this.occlude) CelestialMechanics.updateOcclusion(this);
+    if (this.occlude) OrbitalMechanics.updateOcclusion(this);
     this.updatePath();
   }
 
@@ -131,9 +131,9 @@ export abstract class VisibleCelestialBody extends CelestialBody {
     const [decMin, decMax] = this.declinationMinMax();
     this.path = {
       enabled: true,
-      max: CelestialMechanics.skyPath(CelestialBody.sun.rightAscension, decMax),
-      min: CelestialMechanics.skyPath(CelestialBody.sun.rightAscension, decMin),
-      day: CelestialMechanics.skyPath(CelestialBody.sun.rightAscension, CelestialBody.sun.declination)
+      max: OrbitalMechanics.skyPath(CelestialBody.sun.rightAscension, decMax),
+      min: OrbitalMechanics.skyPath(CelestialBody.sun.rightAscension, decMin),
+      day: OrbitalMechanics.skyPath(CelestialBody.sun.rightAscension, CelestialBody.sun.declination)
     }
   }
 

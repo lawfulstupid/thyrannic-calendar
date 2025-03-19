@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
+import { AppComponent } from 'src/app/app.component';
 import { TemporalUnit } from 'src/app/model/temporal-unit';
 import { TDateTime } from 'src/app/model/thyrannic-date-time';
-import { CelestialMechanics } from 'src/app/util/celestial-mechanics';
 import { MathUtil } from 'src/app/util/math-util';
-import { CelestialBody } from '../celestial-body/celestial-body';
-import { AppComponent } from 'src/app/app.component';
+import { OrbitalMechanics } from 'src/app/util/orbital-mechanics';
 import { Random } from 'src/app/util/random';
+import { CelestialBody } from '../celestial-body/celestial-body';
 
 @Component({
   selector: 'app-earth',
@@ -63,8 +63,8 @@ export class EarthComponent {
 
     // Update color
     // It takes time for change in daylight hours to affect temperature
-    const { declination } = CelestialMechanics.computeRADD(CelestialBody.sun, datetime.add(-6, TemporalUnit.WEEK));
-    const dayLength = CelestialMechanics.getDayLength(declination);
+    const { declination } = OrbitalMechanics.computeRADD(CelestialBody.sun, datetime.add(-6, TemporalUnit.WEEK));
+    const dayLength = OrbitalMechanics.getDayLength(declination);
     const progress = MathUtil.tween(10, dayLength, 8);
     this.groundColor = `color-mix(in xyz, ${100 * (1-progress)}% green, ${100 * progress}% snow)`;
   }

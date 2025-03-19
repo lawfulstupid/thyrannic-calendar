@@ -6,7 +6,10 @@ import { TDateTime } from "../model/thyrannic-date-time";
 import { MathUtil } from "./math-util";
 import { Vector } from "./vector";
 
-export class CelestialMechanics {
+export type RaDec = { rightAscension: number, declination: number };
+export type AzAlt = { azimuth: number, altitude: number };
+
+export class OrbitalMechanics {
 
   private constructor() {}
 
@@ -116,7 +119,7 @@ export class CelestialMechanics {
 
     let lastAz = 0;
     for (let u = 0; u <= minutesPerDay; u++) {
-      const { azimuth, altitude } = CelestialMechanics.RaDec2AzAlt({ rightAscension, declination }, dt.add(u, TemporalUnit.MINUTE));
+      const { azimuth, altitude } = OrbitalMechanics.RaDec2AzAlt({ rightAscension, declination }, dt.add(u, TemporalUnit.MINUTE));
       if (Math.abs(azimuth - lastAz) > 90) {
         // split paths at asymptotes
         paths.push(pathPoints.join(' '));

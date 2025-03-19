@@ -2,6 +2,7 @@ import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 import { TDateTime } from 'src/app/model/thyrannic-date-time';
 import { MathUtil } from 'src/app/util/math-util';
+import { Random } from 'src/app/util/random';
 import { CelestialBody } from '../celestial-body/celestial-body';
 import { EarthComponent } from '../earth/earth.component';
 
@@ -14,6 +15,7 @@ import { EarthComponent } from '../earth/earth.component';
 })
 export class StarsComponent {
 
+  private static readonly SEED = 'make me some pretty stars';
   private static readonly MAX_STARS: number = 1000;
 
   protected stars: Array<Star> = [];
@@ -24,8 +26,9 @@ export class StarsComponent {
 
   constructor() {
     CelestialBody.stars = this;
+    const rng = new Random(StarsComponent.SEED);
     for (let i = 0; i < StarsComponent.MAX_STARS; i++) {
-      this.stars.push(new Star());
+      this.stars.push(new Star(rng));
     }
   }
 
@@ -39,13 +42,17 @@ export class StarsComponent {
 
 class Star extends CelestialBody {
 
-  public override readonly rightAscension: number = MathUtil.random(0, 360);
-  public override readonly declination: number = MathUtil.random(-90, 90);
-  public readonly diameter: number = MathUtil.random(0.5, 2);
-  public readonly brightnessMax: number = MathUtil.random(1, 80);
-  public readonly brightnessMin: number = MathUtil.random(0, this.brightnessMax);
-  public readonly animationDuration: number = MathUtil.random(2,6);
-  public readonly animationDelay: number = MathUtil.random(0, 2);
-  public readonly rotation: number = MathUtil.random(0, 360);
+  constructor(private readonly rng: Random) {
+    super();
+  }
+
+  public override readonly rightAscension: number = this.rng.between(0, 360);
+  public override readonly declination: number = this.rng.between(-90, 90);
+  public readonly diameter: number = this.rng.between(0.5, 2);
+  public readonly brightnessMax: number = this.rng.between(1, 80);
+  public readonly brightnessMin: number = this.rng.between(0, this.brightnessMax);
+  public readonly animationDuration: number = this.rng.between(2, 6);
+  public readonly animationDelay: number = this.rng.between(0, 2);
+  public readonly rotation: number = this.rng.between(0, 360);
 
 }

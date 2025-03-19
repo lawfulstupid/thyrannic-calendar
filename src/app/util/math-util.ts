@@ -84,8 +84,4 @@ export class MathUtil {
     return this.clamp(0, (c - a) / (b - a), 1);
   }
 
-  public static random(min: number, max: number): number {
-    return Math.random() * (max - min) + min;
-  }
-
 }

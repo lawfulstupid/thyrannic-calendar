@@ -22,6 +22,9 @@
   <select class="clickable" [(ngModel)]="_city" (ngModelChange)="changeCity()">
     <option *ngFor="let city of cities" [ngValue]="city">{{city.name}}</option>
   </select>
+  <select class="clickable" [(ngModel)]="bearing" (ngModelChange)="changeBearing()">
+    <option *ngFor="let bearing of bearings" [ngValue]="bearing">Facing {{bearing.name}}</option>
+  </select>
 </div>
 <span class="footer">
   <a href="http://github.com/lawfulstupid/thyrannic-calendar">v{{environment.appVersion}}</a>

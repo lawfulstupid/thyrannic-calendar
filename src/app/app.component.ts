@@ -6,6 +6,7 @@ import { CelestialBgComponent } from './components/celestial-bg/celestial-bg.com
 import { CelestialBody } from './components/celestial-bg/celestial-body/celestial-body';
 import { PinnedDateComponent } from "./components/pinned-date/pinned-date.component";
 import { TimeUnitComponent } from './components/time-unit/time-unit.component';
+import { Bearing } from './model/bearing';
 import { City } from './model/city';
 import { TemporalUnit } from './model/temporal-unit';
 import { TDate } from './model/thyrannic-date';
@@ -27,6 +28,7 @@ export class AppComponent {
   protected readonly environment = environment;
   protected readonly units = TemporalUnit;
   protected readonly cities: Array<City> = City.values;
+  protected readonly bearings: Array<Bearing> = Bearing.values;
   protected get sunPathEnabled() { return CelestialBody.sun.path.enabled; }
 
   // Load datetime from local storage
@@ -42,9 +44,11 @@ export class AppComponent {
 
   protected _city: City = LocalValue.CITY.get() || City.THYRANNOS;
   public get city(): City { return this._city; }
+  public bearing: Bearing = Bearing.SOUTH;
 
   constructor() {
     AppComponent.instance = this;
+    this.resetBearing();
   }
 
   public changeDateTime([quantity, unit]: [number, TemporalUnit]) {
@@ -56,6 +60,7 @@ export class AppComponent {
   }
 
   public changeCity() {
+    this.resetBearing();
     CelestialBody.update();
     LocalValue.CITY.put(this._city);
     CelestialBody.sun.updatePath();
@@ -64,6 +69,15 @@ export class AppComponent {
   public updateSunPathMode() {
     CelestialBody.sun.path.enabled = !CelestialBody.sun.path.enabled;
     CelestialBody.sun.updatePath();
+  }
+
+  public changeBearing() {
+    CelestialBody.update();
+    CelestialBody.sun.updatePath();
+  }
+
+  private resetBearing() {
+    this.bearing = this.city.latitude >= 0 ? Bearing.SOUTH : Bearing.NORTH;
   }
 
 }

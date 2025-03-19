@@ -64,6 +64,7 @@ export class AppComponent {
     CelestialBody.update();
     LocalValue.CITY.put(this._city);
     CelestialBody.sun.updatePath();
+    CelestialBody.earth.updateTerrain();
   }
 
   public updateSunPathMode() {
@@ -74,6 +75,7 @@ export class AppComponent {
   public changeBearing() {
     CelestialBody.update();
     CelestialBody.sun.updatePath();
+    CelestialBody.earth.updateTerrain();
   }
 
   private resetBearing() {

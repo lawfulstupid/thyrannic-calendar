@@ -1,2 +1,5 @@
 <div class="sky" [style.background-color]="skyColor"></div>
 <div id="earth" class="body earth" [style.background-color]="groundColor" [style.--brightness]="groundBrightness"></div>
+<svg viewBox="-180 -1 360 1" [style.--brightness]="groundBrightness">
+  <polygon [attr.points]="terrainMap" [attr.fill]="groundColor"></polygon>
+</svg>

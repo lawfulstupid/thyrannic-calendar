@@ -4,6 +4,8 @@ import { TDateTime } from 'src/app/model/thyrannic-date-time';
 import { CelestialMechanics } from 'src/app/util/celestial-mechanics';
 import { MathUtil } from 'src/app/util/math-util';
 import { CelestialBody } from '../celestial-body/celestial-body';
+import { AppComponent } from 'src/app/app.component';
+import { Random } from 'src/app/util/random';
 
 @Component({
   selector: 'app-earth',
@@ -16,6 +18,7 @@ export class EarthComponent {
 
   constructor() {
     CelestialBody.earth = this;
+    this.updateTerrain();
   }
 
   readonly tilt: number = 24.12;
@@ -23,6 +26,7 @@ export class EarthComponent {
   skyColor: string = 'skyblue';
   groundColor: string = 'green';
   groundBrightness: number = 1;
+  terrainMap!: string;
 
   public static get SUNRISE_SUNSET_START() { return 5 * CelestialBody.sun.angularDiameter; }
   public static get HORIZON() { return 0; }
@@ -62,7 +66,19 @@ export class EarthComponent {
     const { declination } = CelestialMechanics.computeRADD(CelestialBody.sun, datetime.add(-6, TemporalUnit.WEEK));
     const dayLength = CelestialMechanics.getDayLength(declination);
     const progress = MathUtil.tween(10, dayLength, 8);
-    this.groundColor = `color-mix(in xyz, ${100 * (1-progress)}% green, ${100 * progress}% snow)`
+    this.groundColor = `color-mix(in xyz, ${100 * (1-progress)}% green, ${100 * progress}% snow)`;
+  }
+
+  public updateTerrain() {
+    const rng = new Random(AppComponent.instance.city.name);
+    const bearing: number = AppComponent.instance.bearing.angle;
+
+    let terrain = Array.from({ length: 360 }).map((_, a) => [a, rng.between(-1, 0)]);
+    terrain = terrain.map(([x, y]) => [MathUtil.fixAngle2(x + bearing), y]);
+    terrain.sort((a, b) => a[0] - b[0]);
+    terrain = terrain.concat([[180, 10], [-180, 10]]);
+
+    this.terrainMap = terrain.map(([x, y]) => `${x},${y}`).join(' ');
   }
 
 }

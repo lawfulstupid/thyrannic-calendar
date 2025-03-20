@@ -26,12 +26,28 @@ export class EarthComponent {
   skyColor: string = 'skyblue';
   groundColor: string = 'green';
   groundBrightness: number = 1;
-  terrainMap!: string;
 
-  public static get SUNRISE_SUNSET_START() { return 5 * CelestialBody.sun.angularDiameter; }
-  public static get HORIZON() { return 0; }
-  public static get SUNRISE_SUNSET() { return -5 * CelestialBody.sun.angularDiameter / 2; }
-  public static get ASTRONOMICAL_DAWN_DUSK() { return -18; }
+  terrainMap!: Array<[number, number]>;
+  protected get terrainPath(): string {
+    return this.terrainMap
+      .concat([[180, 1], [-179, 1]])            // close the loop without intersection
+      .map(([x, y]) => `${x},${y}`).join(' ');  // join into path string
+  }
+
+  public static get SUNRISE_SUNSET_START(): number {
+    return EarthComponent.HORIZON + 5 * CelestialBody.sun.angularDiameter;
+  }
+  public static get HORIZON(): number {
+    const a = Math.floor(CelestialBody.sun.azimuth);
+    const terrainLevel = CelestialBody.earth.terrainMap.find(([x, _]) => x === a)![1];
+    return terrainLevel * -10; // to account for SVG stretching
+  }
+  public static get SUNRISE_SUNSET(): number {
+    return EarthComponent.HORIZON - 5 * CelestialBody.sun.angularDiameter / 2;
+  }
+  public static get ASTRONOMICAL_DAWN_DUSK(): number {
+    return EarthComponent.HORIZON - 18;
+  }
 
   public update(datetime: TDateTime) {
     this.updateSky();
@@ -89,11 +105,9 @@ export class EarthComponent {
     hills[hills.length - 1] = hills[0];
     displaceMidpoint(hills, 0, hills.length - 1, 1);
 
-    // Convert terrain to SVG path
-    let terrain = hills.map((y, x) => [MathUtil.fixAngle2(x + bearing), -y]); // adjust for bearing
-    terrain.sort((a, b) => a[0] - b[0]);                                      // sort left to right
-    terrain = terrain.concat([[180, 1], [-179, 1]]);                        // close the loop without intersection
-    this.terrainMap = terrain.map(([x, y]) => `${x},${y}`).join(' ');         // join into path string
+    // adjust for bearing
+    this.terrainMap = hills.map((y, x) => [MathUtil.fixAngle2(x + bearing), -y]);
+    this.terrainMap.sort((a, b) => a[0] - b[0]);
   }
 
 }

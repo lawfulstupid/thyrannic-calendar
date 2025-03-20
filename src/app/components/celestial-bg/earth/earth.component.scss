@@ -18,10 +18,10 @@ $diameter: calc(tan($angular-diameter * pi/360) * 5vmin * 360/pi);
 
 svg {
   position: absolute;
-  bottom: 10vh;
-  height: 10px;
-  width: 360vmin;
+  bottom: 0;
+  height: 20vh;
   left: calc(50vw - 180vmin);
+  width: 360vmin;
   @include ground;
 }
 

@@ -56,15 +56,20 @@ export class EarthComponent {
 
   private updateSky() {
     const solarAltitude = CelestialBody.sun.altitude;
-    if (solarAltitude > EarthComponent.HORIZON) {
-      const progress = MathUtil.tween(EarthComponent.SUNRISE_SUNSET_START, solarAltitude, EarthComponent.HORIZON);
-      this.skyColor = `color-mix(in xyz, ${100 * (1-progress)}% skyblue, ${100 * progress}% orangered)`;
-    } else if (solarAltitude > EarthComponent.SUNRISE_SUNSET) {
-      const progress = MathUtil.tween(EarthComponent.HORIZON, solarAltitude, EarthComponent.SUNRISE_SUNSET);
-      this.skyColor = `color-mix(in xyz, ${100 * (1-progress)}% orangered, ${100 * progress}% midnightblue)`;
+
+    // Compute Rayleigh scattering
+    const p = 60/8000; // ratio between atmosphere thickness and planet radius
+    const sin = MathUtil.sin(solarAltitude);
+    const scattering = - sin + Math.sqrt(sin ** 2 + p * 2 + p ** 2);
+    const red = MathUtil.tween(p, scattering, Math.sqrt(p * 2 + p ** 2));
+    const baseColor = `color-mix(in xyz, skyblue, ${100 * red}% orangered)`;
+
+    if (solarAltitude > EarthComponent.SUNRISE_SUNSET) {
+      const darkness = MathUtil.tween(EarthComponent.HORIZON, solarAltitude, EarthComponent.SUNRISE_SUNSET);
+      this.skyColor = `color-mix(in xyz, ${baseColor}, ${100 * darkness}% midnightblue)`;
     } else {
-      const progress = MathUtil.tween(EarthComponent.SUNRISE_SUNSET, solarAltitude, EarthComponent.ASTRONOMICAL_DAWN_DUSK);
-      this.skyColor = `color-mix(in xyz, ${100 * (1-progress)}% midnightblue, ${100 * progress}% #1f252d)`;
+      const darkness = MathUtil.tween(EarthComponent.SUNRISE_SUNSET, solarAltitude, EarthComponent.ASTRONOMICAL_DAWN_DUSK);
+      this.skyColor = `color-mix(in xyz, midnightblue, ${100 * darkness}% #1f252d)`;
     }
   }
 
@@ -72,7 +77,7 @@ export class EarthComponent {
     // Update brightness
     const altitude = CelestialBody.sun.altitude;
     if (altitude > EarthComponent.SUNRISE_SUNSET) {
-      this.groundBrightness = 1 - MathUtil.clamp(0, MathUtil.tween(EarthComponent.SUNRISE_SUNSET_START, altitude, EarthComponent.SUNRISE_SUNSET), 0.80);
+      this.groundBrightness = 1 - MathUtil.clamp(0, MathUtil.tween(EarthComponent.HORIZON, altitude, EarthComponent.SUNRISE_SUNSET), 0.80);
     } else {
       this.groundBrightness = 1 - MathUtil.clamp(0.80, MathUtil.tween(EarthComponent.SUNRISE_SUNSET, altitude, EarthComponent.ASTRONOMICAL_DAWN_DUSK), 0.90);
     }

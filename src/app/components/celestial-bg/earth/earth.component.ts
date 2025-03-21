@@ -30,8 +30,8 @@ export class EarthComponent {
   terrainMap!: Array<[number, number]>;
   protected get terrainPath(): string {
     return this.terrainMap
-      .concat([[180, 1], [-179, 1]])            // close the loop without intersection
-      .map(([x, y]) => `${x},${y}`).join(' ');  // join into path string
+      .concat([[180, -1], [-179, -1]])            // close the loop without intersection
+      .map(([x, y]) => `${x},${-y}`).join(' ');  // join into path string
   }
 
   public static get SUNRISE_SUNSET_START(): number {
@@ -40,7 +40,7 @@ export class EarthComponent {
   public static get HORIZON(): number {
     const a = Math.floor(CelestialBody.sun.azimuth);
     const terrainLevel = CelestialBody.earth.terrainMap.find(([x, _]) => x === a)![1];
-    return terrainLevel * -10; // to account for SVG stretching
+    return terrainLevel * 10; // to account for SVG stretching
   }
   public static get SUNRISE_SUNSET(): number {
     return EarthComponent.HORIZON - 5 * CelestialBody.sun.angularDiameter / 2;
@@ -111,7 +111,7 @@ export class EarthComponent {
     displaceMidpoint(hills, 0, hills.length - 1, 1);
 
     // adjust for bearing
-    this.terrainMap = hills.map((y, x) => [MathUtil.fixAngle2(x + bearing), -y]);
+    this.terrainMap = hills.map((y, x) => [MathUtil.fixAngle2(x + bearing), y]);
     this.terrainMap.sort((a, b) => a[0] - b[0]);
   }
 

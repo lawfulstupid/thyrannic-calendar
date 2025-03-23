@@ -13,6 +13,7 @@ import { TDate } from './model/thyrannic-date';
 import { TDateTime } from './model/thyrannic-date-time';
 import { OrdinalPipe } from './pipes/ordinal';
 import { LocalValue } from './util/local-value';
+import { EarthComponent } from './components/celestial-bg/earth/earth.component';
 
 @Component({
   selector: 'app-root',
@@ -82,6 +83,10 @@ export class AppComponent {
 
   private resetBearing() {
     this.bearing = this.city.latitude >= 0 ? Bearing.SOUTH : Bearing.NORTH;
+  }
+
+  protected get defaultTextColor(): string {
+    return CelestialBody.sun.altitude > EarthComponent.HORIZON ? 'black' : 'whitesmoke';
   }
 
 }

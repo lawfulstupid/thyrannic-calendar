@@ -32,9 +32,9 @@ export class StarsComponent {
     }
   }
 
-  public update(datetime: TDateTime) {
+  public update() {
     this.stars.forEach(star => {
-      star.update(datetime);
+      star.update();
     });
   }
 

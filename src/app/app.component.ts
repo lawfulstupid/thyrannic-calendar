@@ -49,11 +49,13 @@ export class AppComponent {
   constructor() {
     AppComponent.instance = this;
     this.resetBearing();
+    CelestialBody.init();
   }
 
   public changeDateTime([quantity, unit]: [number, TemporalUnit]) {
     try {
       this.datetime = this.datetime.add(quantity, unit);
+      CelestialBody.update();
     } catch (err) {
       console.error('Illegal operation:', err);
     }

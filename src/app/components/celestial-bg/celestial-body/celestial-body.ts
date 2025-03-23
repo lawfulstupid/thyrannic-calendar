@@ -19,12 +19,21 @@ export abstract class CelestialBody {
   public static earth: EarthComponent;
   public static stars: StarsComponent;
 
-  public static update(datetime: TDateTime = AppComponent.instance.datetime) {
-    this.sun.update(datetime);
-    this.arukma.update(datetime);
-    this.losit.update(datetime);
-    this.earth.update(datetime);
-    this.stars.update(datetime);
+  public static init() {
+    const loop = setInterval(() => {
+      if (this.sun && this.arukma && this.losit && this.earth && this.stars) {
+        clearInterval(loop);
+        this.update();
+      }
+    }, 1);
+  }
+
+  public static update() {
+    this.sun.update();
+    this.arukma.update();
+    this.losit.update();
+    this.earth.update();
+    this.stars.update();
   }
 
   // Variables based on time
@@ -39,8 +48,8 @@ export abstract class CelestialBody {
   top: string = '0';
   left: string = '0';
 
-  public update(datetime: TDateTime) {
-    ({ azimuth: this.azimuth, altitude: this.altitude } = OrbitalMechanics.RaDec2AzAlt(this, datetime));
+  public update() {
+    ({ azimuth: this.azimuth, altitude: this.altitude } = OrbitalMechanics.RaDec2AzAlt(this, AppComponent.instance.datetime));
     ({ top: this.top, left: this.left } = OrbitalMechanics.AzAlt2ScreenPos(this));
   }
 
@@ -78,10 +87,10 @@ export abstract class IntrasolarBody extends CelestialBody {
   override rightAscension!: number;
   override declination!: number;
 
-  public override update(datetime: TDateTime) {
-    ({ distance: this.distance, trueLongitude: this.trueLongitude } = OrbitalMechanics.computeDistLong(this, datetime));
+  public override update() {
+    ({ distance: this.distance, trueLongitude: this.trueLongitude } = OrbitalMechanics.computeDistLong(this, AppComponent.instance.datetime));
     ({ rightAscension: this.rightAscension, declination: this.declination } = OrbitalMechanics.DistLong2RaDec(this));
-    super.update(datetime);
+    super.update();
     if (this.occlude) OrbitalMechanics.updateOcclusion(this);
     this.updatePath();
   }
@@ -118,7 +127,7 @@ export abstract class IntrasolarBody extends CelestialBody {
 
   // min and max declination
   declinationMinMax(): [number, number] {
-    return [this.inclination - CelestialBody.earth.tilt, this.inclination + CelestialBody.earth.tilt];
+    return [this.inclination - EarthComponent.TILT, this.inclination + EarthComponent.TILT];
   }
 
   public vectorFromEarth(): Vector {

@@ -1,4 +1,4 @@
-<app-celestial-bg [datetime]="datetime"></app-celestial-bg>
+<app-celestial-bg></app-celestial-bg>
 <div class="date">
   <app-time-unit [unit]="units.WEEK" [value]="datetime.date.week" (change)="changeDateTime($event)">{{datetime.date.week | ordinal}}</app-time-unit>
   <span>{{' '}}</span>

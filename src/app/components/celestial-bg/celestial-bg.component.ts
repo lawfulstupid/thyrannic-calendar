@@ -1,7 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { TDateTime } from 'src/app/model/thyrannic-date-time';
+import { Component } from '@angular/core';
 import { ArukmaComponent } from './celestial-body/arukma.component';
-import { CelestialBody } from './celestial-body/celestial-body';
 import { LositComponent } from './celestial-body/losit.component';
 import { SunComponent } from "./celestial-body/sun.component";
 import { EarthComponent } from "./earth/earth.component";
@@ -14,10 +12,5 @@ import { StarsComponent } from "./stars/stars.component";
   imports: [EarthComponent, SunComponent, ArukmaComponent, LositComponent, StarsComponent]
 })
 export class CelestialBgComponent {
-
-  @Input('datetime')
-  set update(datetime: TDateTime) {
-    CelestialBody.update(datetime);
-  }
 
 }

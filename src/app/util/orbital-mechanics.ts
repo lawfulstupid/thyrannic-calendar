@@ -1,5 +1,6 @@
 import { AppComponent } from "../app.component";
 import { CelestialBody, IntrasolarBody } from "../components/celestial-bg/celestial-body/celestial-body";
+import { EarthComponent } from "../components/celestial-bg/earth/earth.component";
 import { TemporalUnit } from "../model/temporal-unit";
 import { TDate } from "../model/thyrannic-date";
 import { TDateTime } from "../model/thyrannic-date-time";
@@ -49,8 +50,8 @@ export class OrbitalMechanics {
 
     // Compute equatorial rectangular geocentric coordinates
     const xe = xs;
-    const ye = ys * MathUtil.cos(CelestialBody.earth.tilt) - zs * MathUtil.sin(CelestialBody.earth.tilt);
-    const ze = ys * MathUtil.sin(CelestialBody.earth.tilt) + zs * MathUtil.cos(CelestialBody.earth.tilt);
+    const ye = ys * MathUtil.cos(EarthComponent.TILT) - zs * MathUtil.sin(EarthComponent.TILT);
+    const ze = ys * MathUtil.sin(EarthComponent.TILT) + zs * MathUtil.cos(EarthComponent.TILT);
 
     // Compute right ascension and declination
     return {

@@ -21,7 +21,7 @@ export class EarthComponent {
     this.updateTerrain();
   }
 
-  readonly tilt: number = 24.12;
+  static readonly TILT: number = 24.12;
 
   skyColor: string = 'skyblue';
   groundColor: string = 'green';
@@ -49,9 +49,9 @@ export class EarthComponent {
     return EarthComponent.HORIZON - 18;
   }
 
-  public update(datetime: TDateTime) {
+  public update() {
     this.updateSky();
-    this.updateGround(datetime);
+    this.updateGround();
   }
 
   private updateSky() {
@@ -73,7 +73,7 @@ export class EarthComponent {
     }
   }
 
-  private updateGround(datetime: TDateTime) {
+  private updateGround() {
     // Update brightness
     const altitude = CelestialBody.sun.altitude;
     if (altitude > EarthComponent.SUNRISE_SUNSET) {
@@ -84,7 +84,7 @@ export class EarthComponent {
 
     // Update color
     // It takes time for change in daylight hours to affect temperature
-    const { declination } = OrbitalMechanics.computeRaDec(CelestialBody.sun, datetime.add(-6, TemporalUnit.WEEK));
+    const { declination } = OrbitalMechanics.computeRaDec(CelestialBody.sun, AppComponent.instance.datetime.add(-6, TemporalUnit.WEEK));
     const dayLength = OrbitalMechanics.getDayLength(declination);
     const progress = MathUtil.tween(10, dayLength, 8);
     this.groundColor = `color-mix(in xyz, green, ${100 * progress}% snow)`;

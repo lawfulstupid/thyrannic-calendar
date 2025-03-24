@@ -30,7 +30,11 @@ app-celestial-bg {
   height: 4ch;
   display: flex;
   flex-direction: row;
-  * {
+  .square {
+    width: 4ch;
+    text-align: center;
+  }
+  >* {
     margin-right: 1ch;
     height: 100%;
   }

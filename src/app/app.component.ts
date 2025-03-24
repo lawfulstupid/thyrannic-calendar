@@ -1,9 +1,12 @@
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { environment } from 'src/environments/environment';
 import { CelestialBgComponent } from './components/celestial-bg/celestial-bg.component';
 import { CelestialBody } from './components/celestial-bg/celestial-body/celestial-body';
+import { EarthComponent } from './components/celestial-bg/earth/earth.component';
 import { PinnedDateComponent } from "./components/pinned-date/pinned-date.component";
 import { TimeUnitComponent } from './components/time-unit/time-unit.component';
 import { Bearing } from './model/bearing';
@@ -13,18 +16,20 @@ import { TDate } from './model/thyrannic-date';
 import { TDateTime } from './model/thyrannic-date-time';
 import { OrdinalPipe } from './pipes/ordinal';
 import { LocalValue } from './util/local-value';
-import { EarthComponent } from './components/celestial-bg/earth/earth.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CelestialBgComponent, OrdinalPipe, TimeUnitComponent, FormsModule, NgFor, PinnedDateComponent],
+  imports: [FontAwesomeModule, CelestialBgComponent, OrdinalPipe, TimeUnitComponent, FormsModule, NgIf, NgFor, PinnedDateComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
 
   public static instance: AppComponent;
+
+  readonly faPlay = faPlay;
+  readonly faPause = faPause;
 
   protected readonly environment = environment;
   protected readonly units = TemporalUnit;
@@ -82,6 +87,18 @@ export class AppComponent {
     CelestialBody.update();
     CelestialBody.sun.updatePath();
     CelestialBody.earth.updateTerrain();
+  }
+
+  playLoop: NodeJS.Timeout | undefined;
+  public togglePlayPause() {
+    if (!this.playLoop) {
+      this.playLoop = setInterval(() => {
+        this.changeDateTime([1, TemporalUnit.MINUTE]);
+      }, 1);
+    } else {
+      clearInterval(this.playLoop);
+      this.playLoop = undefined;
+    }
   }
 
   private resetBearing() {

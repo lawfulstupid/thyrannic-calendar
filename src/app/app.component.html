@@ -19,6 +19,10 @@
 <div class="menu">
   <app-pinned-date [datetime]="datetime" (setDate)="datetime = $event"></app-pinned-date>
   <span class="separator"></span>
+  <button class="clickable square" (click)="togglePlayPause()">
+    <fa-icon [icon]="faPlay" *ngIf="!playLoop"></fa-icon>
+    <fa-icon [icon]="faPause" *ngIf="playLoop"></fa-icon>
+  </button>
   <button class="clickable" (click)="updateSunPathMode()">Sun path: {{sunPathEnabled ? 'on' : 'off'}}</button>
   <select class="clickable" [(ngModel)]="_city" (ngModelChange)="changeCity()">
     <option *ngFor="let city of cities" [ngValue]="city">{{city.name}}</option>

@@ -64,8 +64,11 @@ export class AppComponent {
 
   public changeCity() {
     this.resetBearing();
-    CelestialBody.update();
+    const oldCity: City = LocalValue.CITY.get() || City.THYRANNOS;
+    const longDiff = this.city.longitude - oldCity.longitude;
+    this.datetime = this.datetime.add(Math.round(longDiff * 4), TemporalUnit.MINUTE);
     LocalValue.CITY.put(this._city);
+    CelestialBody.update();
     CelestialBody.sun.updatePath();
     CelestialBody.earth.updateTerrain();
   }

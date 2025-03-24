@@ -1,4 +1,10 @@
 <div class="sky" [style.background-color]="skyColor"></div>
 <svg viewBox="-180 -1 360 2" preserveAspectRatio="none" [style.--brightness]="groundBrightness">
-  <polygon [attr.points]="terrainPath" [attr.fill]="groundColor"></polygon>
+  <defs>
+    <linearGradient id="snowGrad" y1="0%" y2="1000%">
+      <stop offset="0%" stop-color="snow"/>
+      <stop [attr.offset]="snowCoverage + '%'" stop-color="green"/>
+    </linearGradient>
+  </defs>
+  <polygon [attr.points]="terrainPath" fill="url(#snowGrad)"></polygon>
 </svg>

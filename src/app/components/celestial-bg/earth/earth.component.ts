@@ -24,8 +24,8 @@ export class EarthComponent {
   static readonly TILT: number = 24.12;
 
   skyColor: string = 'skyblue';
-  groundColor: string = 'green';
   groundBrightness: number = 1;
+  snowCoverage: number = 0;
 
   terrainMap!: Array<[number, number]>;
   protected get terrainPath(): string {
@@ -84,10 +84,9 @@ export class EarthComponent {
 
     // Update color
     // It takes time for change in daylight hours to affect temperature
-    const { declination } = OrbitalMechanics.computeRaDec(CelestialBody.sun, AppComponent.instance.datetime.add(-6, TemporalUnit.WEEK));
+    const { declination } = OrbitalMechanics.computeRaDec(CelestialBody.sun, AppComponent.instance.datetime.add(-4, TemporalUnit.WEEK));
     const dayLength = OrbitalMechanics.getDayLength(declination);
-    const progress = MathUtil.tween(10, dayLength, 8);
-    this.groundColor = `color-mix(in xyz, green, ${100 * progress}% snow)`;
+    this.snowCoverage = MathUtil.tween(10, dayLength, 0) * 500;
   }
 
   public updateTerrain() {

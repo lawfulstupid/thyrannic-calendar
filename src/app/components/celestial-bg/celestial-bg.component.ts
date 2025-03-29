@@ -7,9 +7,7 @@ import { SunComponent } from "./sun/sun.component";
 
 @Component({
   selector: 'app-celestial-bg',
-  standalone: true,
-  templateUrl: './celestial-bg.component.html',
-  imports: [EarthComponent, SunComponent, ArukmaComponent, LositComponent, StarsComponent]
+  templateUrl: './celestial-bg.component.html'
 })
 export class CelestialBg {
 

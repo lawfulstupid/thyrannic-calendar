@@ -8,8 +8,6 @@ import { CelestialBg } from '../celestial-bg.component';
 
 @Component({
   selector: 'app-earth',
-  standalone: true,
-  imports: [],
   templateUrl: './earth.component.html',
   styleUrl: './earth.component.scss'
 })

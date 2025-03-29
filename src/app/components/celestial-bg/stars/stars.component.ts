@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 import { MathUtil } from 'src/app/util/math-util';
 import { Random } from 'src/app/util/random';
@@ -8,8 +7,6 @@ import { EarthComponent } from '../earth/earth.component';
 
 @Component({
   selector: 'app-stars',
-  standalone: true,
-  imports: [NgFor],
   templateUrl: './stars.component.html',
   styleUrl: './stars.component.scss'
 })

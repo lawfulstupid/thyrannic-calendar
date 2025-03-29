@@ -1,13 +1,9 @@
-import { NgFor, NgIf, PercentPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { AbsPipe } from 'src/app/pipes/abs.pipe';
 import { CelestialBg } from '../celestial-bg.component';
 import { IntrasolarBody } from '../celestial-body/intrasolar-body';
 
 @Component({
   selector: 'app-sun',
-  standalone: true,
-  imports: [AbsPipe, PercentPipe, NgIf, NgFor],
   templateUrl: '../celestial-body/intrasolar-body.html',
   styleUrl: '../celestial-body/intrasolar-body.scss'
 })

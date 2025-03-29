@@ -5,6 +5,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { environment } from 'src/environments/environment';
 import { CelestialBg } from './components/celestial-bg/celestial-bg.component';
+import { CelestialBgModule } from './components/celestial-bg/celestial-bg.module';
 import { EarthComponent } from './components/celestial-bg/earth/earth.component';
 import { PinnedDateComponent } from "./components/pinned-date/pinned-date.component";
 import { TimeUnitComponent } from './components/time-unit/time-unit.component';
@@ -19,7 +20,7 @@ import { LocalValue } from './util/local-value';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FontAwesomeModule, CelestialBg, OrdinalPipe, TimeUnitComponent, FormsModule, NgIf, NgFor, PinnedDateComponent],
+  imports: [FontAwesomeModule, CelestialBgModule, OrdinalPipe, TimeUnitComponent, FormsModule, NgIf, NgFor, PinnedDateComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

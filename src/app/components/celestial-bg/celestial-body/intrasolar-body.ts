@@ -9,6 +9,8 @@ import { CelestialBody } from "./celestial-body";
 
 export abstract class IntrasolarBody extends CelestialBody {
 
+  readonly heliocentric: boolean = false;
+
   // Visual options
   abstract color: string;
   abstract brightness: number;
@@ -31,7 +33,7 @@ export abstract class IntrasolarBody extends CelestialBody {
   abstract readonly periapsisArgument: angle; // angle from longitude of ascending node to periapsis
   abstract readonly eccentricity: number; // eccentricity (0=circle, 0-1=eclipse, 1=parabola)
   abstract readonly originAngle: angle; // anomaly at epoch
-  abstract readonly orbitalPeriod: time; // orbital period (fractional days)
+  abstract readonly orbitalPeriod: time; // orbital period (sidereal; fractional days)
   abstract readonly meanDistance: distance; // centre-to-centre distance (km) along semi-major axis of ellipse
   abstract readonly radius: distance; // radius of object (km)
   distance!: distance;
@@ -42,6 +44,7 @@ export abstract class IntrasolarBody extends CelestialBody {
   public override update() {
     ({ distance: this.distance, trueLongitude: this.trueLongitude } = OrbitalMechanics.computeDistLong(this, AppComponent.instance.datetime));
     ({ rightAscension: this.rightAscension, declination: this.declination } = OrbitalMechanics.DistLong2RaDec(this));
+    if (this.heliocentric) OrbitalMechanics.convertToGeocentric(this);
     super.update();
     if (this.occlude) OrbitalMechanics.updateOcclusion(this);
     this.updatePath();
@@ -53,6 +56,7 @@ export abstract class IntrasolarBody extends CelestialBody {
   }
 
   // mean anomaly (0 at periapsis; increases uniformly with time)
+  // M = (originAngle - ascendingNodeLongitude - periapsisArgument) + (1/orbitalPeriod) * d
   meanAnomaly(d: time): angle {
     return MathUtil.fixAngle(this.meanLongitude(d) - this.periapsisLongitude);
   }

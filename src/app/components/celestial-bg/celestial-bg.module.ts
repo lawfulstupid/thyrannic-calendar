@@ -7,6 +7,7 @@ import { ArukmaComponent } from "./moons/arukma.component";
 import { LositComponent } from "./moons/losit.component";
 import { StarsComponent } from "./stars/stars.component";
 import { SunComponent } from "./sun/sun.component";
+import { VenusComponent } from "./planets/venus.component";
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { SunComponent } from "./sun/sun.component";
     SunComponent,
     ArukmaComponent,
     LositComponent,
-    StarsComponent
+    StarsComponent,
+    VenusComponent
   ],
   imports: [AbsPipe, NgIf, NgFor, PercentPipe],
   exports: [CelestialBg]

@@ -4,6 +4,7 @@ import { ArukmaComponent } from './moons/arukma.component';
 import { LositComponent } from './moons/losit.component';
 import { StarsComponent } from "./stars/stars.component";
 import { SunComponent } from "./sun/sun.component";
+import { VenusComponent } from './planets/venus.component';
 
 @Component({
   selector: 'app-celestial-bg',
@@ -16,10 +17,11 @@ export class CelestialBg {
   public static losit: LositComponent;
   public static earth: EarthComponent;
   public static stars: StarsComponent;
+  public static venus: VenusComponent;
 
   public static init() {
     const loop = setInterval(() => {
-      if (this.sun && this.arukma && this.losit && this.earth && this.stars) {
+      if (this.sun && this.arukma && this.losit && this.earth && this.stars && this.venus) {
         clearInterval(loop);
         this.update();
       }
@@ -32,6 +34,7 @@ export class CelestialBg {
     this.losit.update();
     this.earth.update();
     this.stars.update();
+    this.venus.update();
   }
 
 }

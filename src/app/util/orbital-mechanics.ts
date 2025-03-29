@@ -99,6 +99,42 @@ export class OrbitalMechanics {
     }
   }
 
+  public static convertToGeocentric(body: IntrasolarBody) {
+    // const sunToPlanet = body.vectorFromEarth();
+    // const earthToSun = CelestialBg.sun.vectorFromEarth();
+    // const earthToPlanet = earthToSun.plus(sunToPlanet);
+    // ({ distance: body.distance, rightAscension: body.rightAscension, declination: body.declination } = earthToPlanet.toRAD());
+
+    const xh = body.distance * (
+      MathUtil.cos(body.ascendingNodeLongitude) * MathUtil.cos(body.trueLongitude)
+      - MathUtil.sin(body.ascendingNodeLongitude) * MathUtil.sin(body.trueLongitude) * MathUtil.cos(body.inclination)
+    );
+    const yh = body.distance * (
+      MathUtil.sin(body.ascendingNodeLongitude) * MathUtil.cos(body.trueLongitude)
+      + MathUtil.cos(body.ascendingNodeLongitude) * MathUtil.sin(body.trueLongitude) * MathUtil.cos(body.inclination)
+    );
+    const zh = body.distance * (
+      MathUtil.sin(body.trueLongitude) * Math.sin(body.inclination)
+    );
+
+    // For moon (already geocentric), these should both equal 0
+    const xs = CelestialBg.sun.distance * MathUtil.cos(CelestialBg.sun.trueLongitude);
+    const ys = CelestialBg.sun.distance * MathUtil.sin(CelestialBg.sun.trueLongitude);
+
+    const xg = xh + xs;
+    const yg = yh + ys;
+    const zg = zh;
+
+    const xe = xg;
+    const ye = yg * MathUtil.cos(EarthComponent.TILT) - zg * MathUtil.sin(EarthComponent.TILT);
+    const ze = yg * MathUtil.sin(EarthComponent.TILT) + zg * MathUtil.cos(EarthComponent.TILT);
+
+    // This is same as end of DistLong2RaDec()
+    body.rightAscension = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ye, xe)));
+    body.declination = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ze, Math.sqrt(xe**2 + ye**2))));
+    body.distance = Math.sqrt(xe**2 + ye**2 + ze**2);
+  }
+
   public static updateOcclusion(body: IntrasolarBody) {
     const earthToMoon = body.vectorFromEarth();
     const earthToSun = CelestialBg.sun.vectorFromEarth();

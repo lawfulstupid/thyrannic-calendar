@@ -1,6 +1,5 @@
 import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
-import { TDateTime } from 'src/app/model/thyrannic-date-time';
 import { MathUtil } from 'src/app/util/math-util';
 import { Random } from 'src/app/util/random';
 import { CelestialBody } from '../celestial-body/celestial-body';

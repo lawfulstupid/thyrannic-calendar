@@ -1,5 +1,4 @@
 import { AppComponent } from "src/app/app.component";
-import { TDateTime } from "src/app/model/thyrannic-date-time";
 import { MathUtil } from "src/app/util/math-util";
 import { OrbitalMechanics } from "src/app/util/orbital-mechanics";
 import { Vector } from "src/app/util/vector";

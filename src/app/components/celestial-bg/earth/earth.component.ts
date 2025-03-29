@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { AppComponent } from 'src/app/app.component';
 import { TemporalUnit } from 'src/app/model/temporal-unit';
-import { TDateTime } from 'src/app/model/thyrannic-date-time';
 import { MathUtil } from 'src/app/util/math-util';
 import { OrbitalMechanics } from 'src/app/util/orbital-mechanics';
 import { Random } from 'src/app/util/random';

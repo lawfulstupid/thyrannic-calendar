@@ -4,6 +4,7 @@ import { TemporalUnit } from 'src/app/model/temporal-unit';
 import { MathUtil } from 'src/app/util/math-util';
 import { OrbitalMechanics } from 'src/app/util/orbital-mechanics';
 import { Random } from 'src/app/util/random';
+import { angle, deg } from '../../../util/units';
 import { CelestialBg } from '../celestial-bg.component';
 
 @Component({
@@ -18,7 +19,7 @@ export class EarthComponent {
     this.updateTerrain();
   }
 
-  static readonly TILT: number = 24.12;
+  static readonly TILT: angle = 24.12 * deg;
 
   skyColor: string = 'skyblue';
   groundBrightness: number = 1;
@@ -31,21 +32,21 @@ export class EarthComponent {
       .map(([x, y]) => `${x},${-y}`).join(' ');  // join into path string
   }
 
-  public static get SUNRISE_SUNSET_START(): number {
+  public static get SUNRISE_SUNSET_START(): angle {
     return EarthComponent.HORIZON + 5 * CelestialBg.sun.angularDiameter;
   }
 
-  public static get HORIZON(): number {
+  public static get HORIZON(): angle {
     const a = Math.floor(CelestialBg.sun.azimuth);
     const terrainLevel = CelestialBg.earth.terrainMap.find(([x, _]) => x === a)![1];
     return terrainLevel * 10; // to account for SVG stretching
   }
 
-  public static get SUNRISE_SUNSET(): number {
+  public static get SUNRISE_SUNSET(): angle {
     return EarthComponent.HORIZON - 5 * CelestialBg.sun.angularDiameter / 2;
   }
 
-  public static get ASTRONOMICAL_DAWN_DUSK(): number {
+  public static get ASTRONOMICAL_DAWN_DUSK(): angle {
     return EarthComponent.HORIZON - 18;
   }
 

@@ -6,24 +6,25 @@ import { TemporalUnit } from "../model/temporal-unit";
 import { TDate } from "../model/thyrannic-date";
 import { TDateTime } from "../model/thyrannic-date-time";
 import { MathUtil } from "./math-util";
+import { angle, distance, minutes, time } from "./units";
 import { Vector } from "./vector";
 
-export type DistLong = { distance: number, trueLongitude: number };
-export type RaDec = { rightAscension: number, declination: number };
-export type AzAlt = { azimuth: number, altitude: number };
+export type DistLong = { distance: distance, trueLongitude: angle };
+export type RaDec = { rightAscension: angle, declination: angle };
+export type AzAlt = { azimuth: angle, altitude: angle };
 export type ScreenPos = { top: string, left: string };
 
 export class OrbitalMechanics {
 
   private constructor() {}
 
-  public static synodicToSiderealPeriod(p: number): number {
+  public static synodicToSiderealPeriod(p: time): time {
     return 1 / (1/p + 1/CelestialBg.sun.orbitalPeriod);
   }
 
   // Computes true longitude + distance to an object
   public static computeDistLong(body: IntrasolarBody, datetime: TDateTime): DistLong {
-    const d = datetime.valueOf() * TemporalUnit.MINUTE.as(TemporalUnit.DAY);
+    const d = datetime.valueOf() * minutes;
     const meanAnomaly = body.meanAnomaly(d);
     const eccentricAnomaly = MathUtil.fixAngle(meanAnomaly + MathUtil.rad2deg(
       body.eccentricity * MathUtil.sin(meanAnomaly) * (
@@ -43,7 +44,7 @@ export class OrbitalMechanics {
   }
 
   // Converts distance + true longitude + inclination to right ascension + declination
-  public static DistLong2RaDec(body: DistLong & { inclination: number }): RaDec {
+  public static DistLong2RaDec(body: DistLong & { inclination: angle }): RaDec {
     // Compute ecliptic rectangular geocentric coordinates
     const xs = body.distance * MathUtil.cos(body.inclination) * MathUtil.cos(body.trueLongitude);
     const ys = body.distance * MathUtil.cos(body.inclination) * MathUtil.sin(body.trueLongitude);
@@ -121,7 +122,7 @@ export class OrbitalMechanics {
     body.illuminationDirection = MathUtil.fixAngle(sunDirection + latitudeAngle);
   }
 
-  public static getDayLength(solarDeclination: number): number {
+  public static getDayLength(solarDeclination: angle): time {
     const latitude = AppComponent.instance.city.latitude;
     const cos = MathUtil.tan(latitude) * MathUtil.tan(solarDeclination);
     const sunrise = MathUtil.acos(cos); // this only works because acos is clamped
@@ -129,7 +130,7 @@ export class OrbitalMechanics {
     return (sunset - sunrise) / 15;
   }
 
-  public static skyPath(rightAscension: number, declination: number): Array<string> {
+  public static skyPath(rightAscension: angle, declination: angle): Array<string> {
     const paths: Array<string> = [];
     let pathPoints: Array<string> = [];
     const dt = TDate.fromDate().at(12, 0);

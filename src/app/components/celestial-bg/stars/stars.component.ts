@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MathUtil } from 'src/app/util/math-util';
 import { Random } from 'src/app/util/random';
+import { deg } from '../../../util/units';
 import { CelestialBg } from '../celestial-bg.component';
 import { CelestialBody } from '../celestial-body/celestial-body';
 import { EarthComponent } from '../earth/earth.component';
@@ -43,13 +44,13 @@ class Star extends CelestialBody {
     super();
   }
 
-  public override readonly rightAscension: number = this.rng.between(0, 360);
-  public override readonly declination: number = this.rng.between(-90, 90);
+  public override readonly rightAscension: number = this.rng.between(0 * deg, 360 * deg);
+  public override readonly declination: number = this.rng.between(-90 * deg, 90 * deg);
   public readonly diameter: number = this.rng.between(0.5, 2);
   public readonly brightnessMax: number = this.rng.between(1, 80);
   public readonly brightnessMin: number = this.rng.between(0, this.brightnessMax);
   public readonly animationDuration: number = this.rng.between(2, 6);
   public readonly animationDelay: number = this.rng.between(0, 2);
-  public readonly rotation: number = this.rng.between(0, 360);
+  public readonly rotation: number = this.rng.between(0 * deg, 360 * deg);
 
 }

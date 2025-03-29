@@ -1,3 +1,5 @@
+import { angle } from "./units";
+
 export class MathUtil {
 
   private constructor() {}
@@ -11,45 +13,45 @@ export class MathUtil {
     return [Math.floor(a/b), MathUtil.mod(a, b)];
   }
 
-  public static fixAngle(a: number): number {
+  public static fixAngle(a: angle): angle {
     if (a < 0 || a >= 360) return this.fixAngle(a - 360 * Math.floor(a/360));
     return a;
   }
 
-  public static fixAngle2(a: number): number {
+  public static fixAngle2(a: angle): angle {
     const fixed = MathUtil.fixAngle(a);
     return fixed > 180 ? fixed - 360 : fixed;
   }
 
-  public static rad2deg(a: number): number {
+  public static rad2deg(a: angle): angle {
     return a * 180 / Math.PI;
   }
 
-  public static deg2rad(a: number): number {
+  public static deg2rad(a: angle): angle {
     return a * Math.PI / 180;
   }
 
-  public static sin(a: number): number {
+  public static sin(a: angle): number {
     return Math.sin(this.deg2rad(a));
   }
 
-  public static cos(a: number): number {
+  public static cos(a: angle): number {
     return Math.cos(this.deg2rad(a));
   }
 
-  public static tan(a: number): number {
+  public static tan(a: angle): number {
     return Math.tan(this.deg2rad(a));
   }
 
-  public static asin(x: number): number {
+  public static asin(x: number): angle {
     return MathUtil.rad2deg(Math.asin(MathUtil.clamp(-1, x, 1)));
   }
 
-  public static acos(x: number): number {
+  public static acos(x: number): angle {
     return MathUtil.rad2deg(Math.acos(MathUtil.clamp(-1, x, 1)));
   }
 
-  public static atan2(y: number, x: number): number {
+  public static atan2(y: number, x: number): angle {
     return MathUtil.rad2deg(Math.atan2(y, x));
   }
 

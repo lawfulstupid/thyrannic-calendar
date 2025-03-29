@@ -1,5 +1,6 @@
 import { AppComponent } from "src/app/app.component";
 import { OrbitalMechanics } from "src/app/util/orbital-mechanics";
+import { angle } from "../../../util/units";
 import { CelestialBg } from "../celestial-bg.component";
 
 export abstract class CelestialBody {
@@ -7,12 +8,12 @@ export abstract class CelestialBody {
   protected readonly celestialBodies = CelestialBg;
 
   // Variables based on time
-  abstract rightAscension: number;
-  abstract declination: number;
-  azimuth: number = 0;
-  altitude: number = 0;
-  get zenithAngle(): number { return 90 - this.altitude; }
-  get maxAltitude(): number { return 90 - AppComponent.instance.city.latitude + this.declination; }
+  abstract rightAscension: angle;
+  abstract declination: angle;
+  azimuth: angle = 0;
+  altitude: angle = 0;
+  get zenithAngle(): angle { return 90 - this.altitude; }
+  get maxAltitude(): angle { return 90 - AppComponent.instance.city.latitude + this.declination; }
 
   // On-screen position variables
   top: string = '0';

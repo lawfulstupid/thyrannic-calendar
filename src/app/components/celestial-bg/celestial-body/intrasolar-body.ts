@@ -2,6 +2,7 @@ import { AppComponent } from "src/app/app.component";
 import { MathUtil } from "src/app/util/math-util";
 import { OrbitalMechanics } from "src/app/util/orbital-mechanics";
 import { Vector } from "src/app/util/vector";
+import { angle, distance, time } from "../../../util/units";
 import { CelestialBg } from "../celestial-bg.component";
 import { EarthComponent } from "../earth/earth.component";
 import { CelestialBody } from "./celestial-body";
@@ -18,25 +19,25 @@ export abstract class IntrasolarBody extends CelestialBody {
 
   // Occlusion variables
   equatorialIllumination: number = 1;
-  illuminationDirection: number = 0;
+  illuminationDirection: angle = 0;
 
   // ecliptic plane = plane in which Earth orbits sun
   // orbital plane = plane in which object (sun/moon) orbits Earth
   // longitude = sidereal angle
   // argument = relative angle
   // anomaly = angle from periapsis to object position
-  abstract readonly inclination: number; // angle from ecliptic plane to orbital plane
-  abstract readonly ascendingNodeLongitude: number; // longitude of intersection between ecliptic and orbital planes
-  abstract readonly periapsisArgument: number; // angle from longitude of ascending node to periapsis
+  abstract readonly inclination: angle; // angle from ecliptic plane to orbital plane
+  abstract readonly ascendingNodeLongitude: angle; // longitude of intersection between ecliptic and orbital planes
+  abstract readonly periapsisArgument: angle; // angle from longitude of ascending node to periapsis
   abstract readonly eccentricity: number; // eccentricity (0=circle, 0-1=eclipse, 1=parabola)
-  abstract readonly originAngle: number; // anomaly at epoch
-  abstract readonly orbitalPeriod: number; // orbital period (fractional days)
-  abstract readonly meanDistance: number; // centre-to-centre distance (km) along semi-major axis of ellipse
-  abstract readonly radius: number; // radius of object (km)
-  distance!: number;
-  trueLongitude!: number;
-  override rightAscension!: number;
-  override declination!: number;
+  abstract readonly originAngle: angle; // anomaly at epoch
+  abstract readonly orbitalPeriod: time; // orbital period (fractional days)
+  abstract readonly meanDistance: distance; // centre-to-centre distance (km) along semi-major axis of ellipse
+  abstract readonly radius: distance; // radius of object (km)
+  distance!: distance;
+  trueLongitude!: angle;
+  override rightAscension!: angle;
+  override declination!: angle;
 
   public override update() {
     ({ distance: this.distance, trueLongitude: this.trueLongitude } = OrbitalMechanics.computeDistLong(this, AppComponent.instance.datetime));
@@ -47,37 +48,37 @@ export abstract class IntrasolarBody extends CelestialBody {
   }
 
   // how many degrees in the sky it takes up
-  get angularDiameter(): number {
+  get angularDiameter(): angle {
     return MathUtil.rad2deg(Math.acos(1 - 2 * (this.radius/this.distance) ** 2));
   }
 
   // mean anomaly (0 at periapsis; increases uniformly with time)
-  meanAnomaly(d: number): number {
+  meanAnomaly(d: time): angle {
     return MathUtil.fixAngle(this.meanLongitude(d) - this.periapsisLongitude);
   }
 
   // longitude of periapsis
-  get periapsisLongitude(): number {
+  get periapsisLongitude(): angle {
     return MathUtil.fixAngle(this.ascendingNodeLongitude + this.periapsisArgument);
   }
 
   // epoch of periapsis (in fractional days)
-  get periapsisEpoch(): number {
+  get periapsisEpoch(): time {
     return (this.periapsisArgument - this.originAngle) * (this.orbitalPeriod / 360);
   }
 
   // mean longitude
-  meanLongitude(d: number): number {
+  meanLongitude(d: time): angle {
     return MathUtil.fixAngle(this.originAngle + (360 / this.orbitalPeriod) * d);
   }
 
   // time of periapsis
-  periapsisTime(d: number): number {
+  periapsisTime(d: time): time {
     return this.periapsisEpoch - (this.meanAnomaly(d) / 360) / this.orbitalPeriod;
   }
 
   // min and max declination
-  declinationMinMax(): [number, number] {
+  declinationMinMax(): [angle, angle] {
     return [this.inclination - EarthComponent.TILT, this.inclination + EarthComponent.TILT];
   }
 

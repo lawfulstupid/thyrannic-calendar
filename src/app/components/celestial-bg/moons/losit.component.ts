@@ -3,14 +3,14 @@ import { Component } from '@angular/core';
 import { AbsPipe } from 'src/app/pipes/abs.pipe';
 import { OrbitalMechanics } from 'src/app/util/orbital-mechanics';
 import { CelestialBg } from '../celestial-bg.component';
-import { IntrasolarBody } from '../celestial-body/celestial-body';
+import { IntrasolarBody } from '../celestial-body/intrasolar-body';
 
 @Component({
   selector: 'app-losit',
   standalone: true,
   imports: [AbsPipe, PercentPipe, NgIf, NgFor],
-  templateUrl: '../celestial-body/celestial-body.html',
-  styleUrl: '../celestial-body/celestial-body.scss'
+  templateUrl: '../celestial-body/intrasolar-body.html',
+  styleUrl: '../celestial-body/intrasolar-body.scss'
 })
 export class LositComponent extends IntrasolarBody {
 

@@ -37,7 +37,7 @@ export class EarthComponent {
   }
 
   public static get HORIZON(): angle {
-    const a = Math.floor(CelestialBg.sun.azimuth);
+    const a = MathUtil.fixAngle2(Math.round(CelestialBg.sun.azimuth));
     const terrainLevel = CelestialBg.earth.terrainMap.find(([x, _]) => x === a)![1];
     return terrainLevel * 10; // to account for SVG stretching
   }

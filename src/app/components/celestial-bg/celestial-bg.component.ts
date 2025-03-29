@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { ArukmaComponent } from './celestial-body/arukma.component';
-import { LositComponent } from './celestial-body/losit.component';
-import { SunComponent } from "./celestial-body/sun.component";
 import { EarthComponent } from "./earth/earth.component";
+import { ArukmaComponent } from './moons/arukma.component';
+import { LositComponent } from './moons/losit.component';
 import { StarsComponent } from "./stars/stars.component";
+import { SunComponent } from "./sun/sun.component";
 
 @Component({
   selector: 'app-celestial-bg',

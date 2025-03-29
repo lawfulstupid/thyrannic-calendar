@@ -3,10 +3,10 @@ import { MathUtil } from "src/app/util/math-util";
 import { OrbitalMechanics } from "src/app/util/orbital-mechanics";
 import { Vector } from "src/app/util/vector";
 import { EarthComponent } from "../earth/earth.component";
+import { ArukmaComponent } from "../moons/arukma.component";
+import { LositComponent } from "../moons/losit.component";
 import { StarsComponent } from "../stars/stars.component";
-import { ArukmaComponent } from "./arukma.component";
-import { LositComponent } from "./losit.component";
-import { SunComponent } from "./sun.component";
+import { SunComponent } from "../sun/sun.component";
 
 export abstract class CelestialBody {
 

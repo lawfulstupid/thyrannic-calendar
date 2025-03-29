@@ -2,14 +2,14 @@ import { NgFor, NgIf, PercentPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { AbsPipe } from 'src/app/pipes/abs.pipe';
 import { OrbitalMechanics } from 'src/app/util/orbital-mechanics';
-import { CelestialBody, IntrasolarBody } from './celestial-body';
+import { CelestialBody, IntrasolarBody } from '../celestial-body/celestial-body';
 
 @Component({
   selector: 'app-arukma',
   standalone: true,
   imports: [AbsPipe, PercentPipe, NgIf, NgFor],
-  templateUrl: './celestial-body.html',
-  styleUrl: './celestial-body.scss'
+  templateUrl: '../celestial-body/celestial-body.html',
+  styleUrl: '../celestial-body/celestial-body.scss'
 })
 export class ArukmaComponent extends IntrasolarBody {
 

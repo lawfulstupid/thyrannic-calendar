@@ -2,7 +2,7 @@ import { NgFor, NgIf, PercentPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { AbsPipe } from 'src/app/pipes/abs.pipe';
 import { OrbitalMechanics } from 'src/app/util/orbital-mechanics';
-import { CelestialBody, IntrasolarBody } from './celestial-body';
+import { CelestialBody, IntrasolarBody } from '../celestial-body/celestial-body';
 
 @Component({
   selector: 'app-losit',

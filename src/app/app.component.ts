@@ -4,8 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { environment } from 'src/environments/environment';
-import { CelestialBgComponent } from './components/celestial-bg/celestial-bg.component';
-import { CelestialBody } from './components/celestial-bg/celestial-body/celestial-body';
+import { CelestialBg } from './components/celestial-bg/celestial-bg.component';
 import { EarthComponent } from './components/celestial-bg/earth/earth.component';
 import { PinnedDateComponent } from "./components/pinned-date/pinned-date.component";
 import { TimeUnitComponent } from './components/time-unit/time-unit.component';
@@ -20,7 +19,7 @@ import { LocalValue } from './util/local-value';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FontAwesomeModule, CelestialBgComponent, OrdinalPipe, TimeUnitComponent, FormsModule, NgIf, NgFor, PinnedDateComponent],
+  imports: [FontAwesomeModule, CelestialBg, OrdinalPipe, TimeUnitComponent, FormsModule, NgIf, NgFor, PinnedDateComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
@@ -35,7 +34,7 @@ export class AppComponent {
   protected readonly units = TemporalUnit;
   protected readonly cities: Array<City> = City.values;
   protected readonly bearings: Array<Bearing> = Bearing.values;
-  protected get sunPathEnabled() { return CelestialBody.sun.path.enabled; }
+  protected get sunPathEnabled() { return CelestialBg.sun.path.enabled; }
 
   // Load datetime from local storage
   private _datetime: TDateTime = LocalValue.CURRENT_DATETIME.get() || TDate.fromDate().at(12, 0);
@@ -55,13 +54,13 @@ export class AppComponent {
   constructor() {
     AppComponent.instance = this;
     this.resetBearing();
-    CelestialBody.init();
+    CelestialBg.init();
   }
 
   public changeDateTime([quantity, unit]: [number, TemporalUnit]) {
     try {
       this.datetime = this.datetime.add(quantity, unit);
-      CelestialBody.update();
+      CelestialBg.update();
     } catch (err) {
       console.error('Illegal operation:', err);
     }
@@ -73,20 +72,20 @@ export class AppComponent {
     const longDiff = this.city.longitude - oldCity.longitude;
     this.datetime = this.datetime.add(Math.round(longDiff * 4), TemporalUnit.MINUTE);
     LocalValue.CITY.put(this._city);
-    CelestialBody.update();
-    CelestialBody.sun.updatePath();
-    CelestialBody.earth.updateTerrain();
+    CelestialBg.update();
+    CelestialBg.sun.updatePath();
+    CelestialBg.earth.updateTerrain();
   }
 
   public updateSunPathMode() {
-    CelestialBody.sun.path.enabled = !CelestialBody.sun.path.enabled;
-    CelestialBody.sun.updatePath();
+    CelestialBg.sun.path.enabled = !CelestialBg.sun.path.enabled;
+    CelestialBg.sun.updatePath();
   }
 
   public changeBearing() {
-    CelestialBody.update();
-    CelestialBody.sun.updatePath();
-    CelestialBody.earth.updateTerrain();
+    CelestialBg.update();
+    CelestialBg.sun.updatePath();
+    CelestialBg.earth.updateTerrain();
   }
 
   playLoop: NodeJS.Timeout | undefined;
@@ -106,7 +105,7 @@ export class AppComponent {
   }
 
   protected get defaultTextColor(): string {
-    return CelestialBody.sun.altitude > EarthComponent.HORIZON ? 'black' : 'whitesmoke';
+    return CelestialBg.sun.altitude > EarthComponent.HORIZON ? 'black' : 'whitesmoke';
   }
 
 }

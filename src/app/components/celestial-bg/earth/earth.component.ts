@@ -4,7 +4,7 @@ import { TemporalUnit } from 'src/app/model/temporal-unit';
 import { MathUtil } from 'src/app/util/math-util';
 import { OrbitalMechanics } from 'src/app/util/orbital-mechanics';
 import { Random } from 'src/app/util/random';
-import { CelestialBody } from '../celestial-body/celestial-body';
+import { CelestialBg } from '../celestial-bg.component';
 
 @Component({
   selector: 'app-earth',
@@ -16,7 +16,7 @@ import { CelestialBody } from '../celestial-body/celestial-body';
 export class EarthComponent {
 
   constructor() {
-    CelestialBody.earth = this;
+    CelestialBg.earth = this;
     this.updateTerrain();
   }
 
@@ -34,16 +34,19 @@ export class EarthComponent {
   }
 
   public static get SUNRISE_SUNSET_START(): number {
-    return EarthComponent.HORIZON + 5 * CelestialBody.sun.angularDiameter;
+    return EarthComponent.HORIZON + 5 * CelestialBg.sun.angularDiameter;
   }
+
   public static get HORIZON(): number {
-    const a = Math.floor(CelestialBody.sun.azimuth);
-    const terrainLevel = CelestialBody.earth.terrainMap.find(([x, _]) => x === a)![1];
+    const a = Math.floor(CelestialBg.sun.azimuth);
+    const terrainLevel = CelestialBg.earth.terrainMap.find(([x, _]) => x === a)![1];
     return terrainLevel * 10; // to account for SVG stretching
   }
+
   public static get SUNRISE_SUNSET(): number {
-    return EarthComponent.HORIZON - 5 * CelestialBody.sun.angularDiameter / 2;
+    return EarthComponent.HORIZON - 5 * CelestialBg.sun.angularDiameter / 2;
   }
+
   public static get ASTRONOMICAL_DAWN_DUSK(): number {
     return EarthComponent.HORIZON - 18;
   }
@@ -54,7 +57,7 @@ export class EarthComponent {
   }
 
   private updateSky() {
-    const solarAltitude = CelestialBody.sun.altitude;
+    const solarAltitude = CelestialBg.sun.altitude;
 
     // Compute Rayleigh scattering
     const p = 60/8000; // ratio between atmosphere thickness and planet radius
@@ -74,7 +77,7 @@ export class EarthComponent {
 
   private updateGround() {
     // Update brightness
-    const altitude = CelestialBody.sun.altitude;
+    const altitude = CelestialBg.sun.altitude;
     if (altitude > EarthComponent.SUNRISE_SUNSET) {
       this.groundBrightness = 1 - MathUtil.clamp(0, MathUtil.tween(EarthComponent.HORIZON, altitude, EarthComponent.SUNRISE_SUNSET), 0.80);
     } else {
@@ -83,7 +86,7 @@ export class EarthComponent {
 
     // Update color
     // It takes time for change in daylight hours to affect temperature
-    const { declination } = OrbitalMechanics.computeRaDec(CelestialBody.sun, AppComponent.instance.datetime.add(-4, TemporalUnit.WEEK));
+    const { declination } = OrbitalMechanics.computeRaDec(CelestialBg.sun, AppComponent.instance.datetime.add(-4, TemporalUnit.WEEK));
     const dayLength = OrbitalMechanics.getDayLength(declination);
     this.snowCoverage = MathUtil.tween(10, dayLength, 0) * 500;
   }

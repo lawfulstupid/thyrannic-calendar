@@ -2,6 +2,7 @@ import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 import { MathUtil } from 'src/app/util/math-util';
 import { Random } from 'src/app/util/random';
+import { CelestialBg } from '../celestial-bg.component';
 import { CelestialBody } from '../celestial-body/celestial-body';
 import { EarthComponent } from '../earth/earth.component';
 
@@ -20,11 +21,11 @@ export class StarsComponent {
   protected stars: Array<Star> = [];
 
   protected get opacity() {
-    return MathUtil.tween(EarthComponent.SUNRISE_SUNSET_START, CelestialBody.sun.altitude, EarthComponent.SUNRISE_SUNSET);
+    return MathUtil.tween(EarthComponent.SUNRISE_SUNSET_START, CelestialBg.sun.altitude, EarthComponent.SUNRISE_SUNSET);
   }
 
   constructor() {
-    CelestialBody.stars = this;
+    CelestialBg.stars = this;
     const rng = new Random(StarsComponent.SEED);
     for (let i = 0; i < StarsComponent.MAX_STARS; i++) {
       this.stars.push(new Star(rng));

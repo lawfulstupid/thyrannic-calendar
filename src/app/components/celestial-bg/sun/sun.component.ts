@@ -1,7 +1,8 @@
 import { NgFor, NgIf, PercentPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { AbsPipe } from 'src/app/pipes/abs.pipe';
-import { CelestialBody, IntrasolarBody } from '../celestial-body/celestial-body';
+import { CelestialBg } from '../celestial-bg.component';
+import { IntrasolarBody } from '../celestial-body/celestial-body';
 
 @Component({
   selector: 'app-sun',
@@ -28,7 +29,7 @@ export class SunComponent extends IntrasolarBody {
 
   constructor() {
     super();
-    CelestialBody.sun = this;
+    CelestialBg.sun = this;
   }
 
 }

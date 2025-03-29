@@ -2,7 +2,8 @@ import { NgFor, NgIf, PercentPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { AbsPipe } from 'src/app/pipes/abs.pipe';
 import { OrbitalMechanics } from 'src/app/util/orbital-mechanics';
-import { CelestialBody, IntrasolarBody } from '../celestial-body/celestial-body';
+import { CelestialBg } from '../celestial-bg.component';
+import { IntrasolarBody } from '../celestial-body/celestial-body';
 
 @Component({
   selector: 'app-losit',
@@ -21,7 +22,7 @@ export class LositComponent extends IntrasolarBody {
   override inclination = 10.1134;
   override periapsisArgument = 265.951;
   override eccentricity = 0.1361;
-  override originAngle = CelestialBody.sun.originAngle + 321.7148;
+  override originAngle = CelestialBg.sun.originAngle + 321.7148;
   override orbitalPeriod = OrbitalMechanics.synodicToSiderealPeriod(48.28098);
   override ascendingNodeLongitude = 329.915;
   override meanDistance = 512655.038;
@@ -29,7 +30,7 @@ export class LositComponent extends IntrasolarBody {
 
   constructor() {
     super();
-    CelestialBody.losit = this;
+    CelestialBg.losit = this;
   }
 
 }

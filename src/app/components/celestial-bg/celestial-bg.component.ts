@@ -11,6 +11,29 @@ import { SunComponent } from "./sun/sun.component";
   templateUrl: './celestial-bg.component.html',
   imports: [EarthComponent, SunComponent, ArukmaComponent, LositComponent, StarsComponent]
 })
-export class CelestialBgComponent {
+export class CelestialBg {
+
+  public static sun: SunComponent;
+  public static arukma: ArukmaComponent;
+  public static losit: LositComponent;
+  public static earth: EarthComponent;
+  public static stars: StarsComponent;
+
+  public static init() {
+    const loop = setInterval(() => {
+      if (this.sun && this.arukma && this.losit && this.earth && this.stars) {
+        clearInterval(loop);
+        this.update();
+      }
+    }, 1);
+  }
+
+  public static update() {
+    this.sun.update();
+    this.arukma.update();
+    this.losit.update();
+    this.earth.update();
+    this.stars.update();
+  }
 
 }

@@ -2,38 +2,12 @@ import { AppComponent } from "src/app/app.component";
 import { MathUtil } from "src/app/util/math-util";
 import { OrbitalMechanics } from "src/app/util/orbital-mechanics";
 import { Vector } from "src/app/util/vector";
+import { CelestialBg } from "../celestial-bg.component";
 import { EarthComponent } from "../earth/earth.component";
-import { ArukmaComponent } from "../moons/arukma.component";
-import { LositComponent } from "../moons/losit.component";
-import { StarsComponent } from "../stars/stars.component";
-import { SunComponent } from "../sun/sun.component";
 
 export abstract class CelestialBody {
 
-  readonly celestialBodies = CelestialBody;
-
-  public static sun: SunComponent;
-  public static arukma: ArukmaComponent;
-  public static losit: LositComponent;
-  public static earth: EarthComponent;
-  public static stars: StarsComponent;
-
-  public static init() {
-    const loop = setInterval(() => {
-      if (this.sun && this.arukma && this.losit && this.earth && this.stars) {
-        clearInterval(loop);
-        this.update();
-      }
-    }, 1);
-  }
-
-  public static update() {
-    this.sun.update();
-    this.arukma.update();
-    this.losit.update();
-    this.earth.update();
-    this.stars.update();
-  }
+  protected readonly celestialBodies = CelestialBg;
 
   // Variables based on time
   abstract rightAscension: number;
@@ -138,9 +112,9 @@ export abstract class IntrasolarBody extends CelestialBody {
     const [decMin, decMax] = this.declinationMinMax();
     this.path = {
       enabled: true,
-      max: OrbitalMechanics.skyPath(CelestialBody.sun.rightAscension, decMax),
-      min: OrbitalMechanics.skyPath(CelestialBody.sun.rightAscension, decMin),
-      day: OrbitalMechanics.skyPath(CelestialBody.sun.rightAscension, CelestialBody.sun.declination)
+      max: OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, decMax),
+      min: OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, decMin),
+      day: OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, CelestialBg.sun.declination)
     }
   }
 

@@ -1,5 +1,6 @@
 import { AppComponent } from "../app.component";
-import { CelestialBody, IntrasolarBody } from "../components/celestial-bg/celestial-body/celestial-body";
+import { CelestialBg } from "../components/celestial-bg/celestial-bg.component";
+import { IntrasolarBody } from "../components/celestial-bg/celestial-body/celestial-body";
 import { EarthComponent } from "../components/celestial-bg/earth/earth.component";
 import { TemporalUnit } from "../model/temporal-unit";
 import { TDate } from "../model/thyrannic-date";
@@ -17,7 +18,7 @@ export class OrbitalMechanics {
   private constructor() {}
 
   public static synodicToSiderealPeriod(p: number): number {
-    return 1 / (1/p + 1/CelestialBody.sun.orbitalPeriod);
+    return 1 / (1/p + 1/CelestialBg.sun.orbitalPeriod);
   }
 
   // Computes true longitude + distance to an object
@@ -72,7 +73,7 @@ export class OrbitalMechanics {
     // 12PM -> solar right ascension
     // 06PM -> SRA + 90
     // 12AM -> SRA + 180
-    const lmst = MathUtil.fixAngle2(fractionalDay * 360 + CelestialBody.sun.rightAscension);
+    const lmst = MathUtil.fixAngle2(fractionalDay * 360 + CelestialBg.sun.rightAscension);
     const localHourAngle = MathUtil.fixAngle2(lmst - body.rightAscension);
     const latitude = AppComponent.instance.city.latitude;
 
@@ -99,7 +100,7 @@ export class OrbitalMechanics {
 
   public static updateOcclusion(body: IntrasolarBody) {
     const earthToMoon = body.vectorFromEarth();
-    const earthToSun = CelestialBody.sun.vectorFromEarth();
+    const earthToSun = CelestialBg.sun.vectorFromEarth();
     const moonToSun = earthToSun.minus(earthToMoon);
     const moonToEarth = earthToMoon.times(-1);
 

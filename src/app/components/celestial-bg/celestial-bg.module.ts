@@ -8,6 +8,7 @@ import { LositComponent } from "./moons/losit.component";
 import { StarsComponent } from "./stars/stars.component";
 import { SunComponent } from "./sun/sun.component";
 import { VenusComponent } from "./planets/venus.component";
+import { Arukma2Component } from "./moons/arukma2.component";
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { VenusComponent } from "./planets/venus.component";
     EarthComponent,
     SunComponent,
     ArukmaComponent,
+    Arukma2Component,
     LositComponent,
     StarsComponent,
     VenusComponent

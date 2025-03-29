@@ -9,6 +9,7 @@ import { CelestialBody } from "./celestial-body";
 
 export abstract class IntrasolarBody extends CelestialBody {
 
+  readonly lunar: boolean = false;
   readonly heliocentric: boolean = false;
 
   // Visual options
@@ -44,7 +45,7 @@ export abstract class IntrasolarBody extends CelestialBody {
   public override update() {
     ({ distance: this.distance, trueLongitude: this.trueLongitude } = OrbitalMechanics.computeDistLong(this, AppComponent.instance.datetime));
     ({ rightAscension: this.rightAscension, declination: this.declination } = OrbitalMechanics.DistLong2RaDec(this));
-    if (this.heliocentric) OrbitalMechanics.convertToGeocentric(this);
+    if (this.heliocentric || this.lunar) OrbitalMechanics.convertToGeocentric(this);
     super.update();
     if (this.occlude) OrbitalMechanics.updateOcclusion(this);
     this.updatePath();

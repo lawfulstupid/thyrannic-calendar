@@ -118,8 +118,8 @@ export class OrbitalMechanics {
     );
 
     // For moon (already geocentric), these should both equal 0
-    const xs = CelestialBg.sun.distance * MathUtil.cos(CelestialBg.sun.trueLongitude);
-    const ys = CelestialBg.sun.distance * MathUtil.sin(CelestialBg.sun.trueLongitude);
+    const xs = body.lunar ? 0 : CelestialBg.sun.distance * MathUtil.cos(CelestialBg.sun.trueLongitude);
+    const ys = body.lunar ? 0 : CelestialBg.sun.distance * MathUtil.sin(CelestialBg.sun.trueLongitude);
 
     const xg = xh + xs;
     const yg = yh + ys;

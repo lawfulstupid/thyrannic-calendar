@@ -1,14 +1,21 @@
 import { Component } from "@angular/core";
 import { AU, days, km } from "src/app/util/units";
 import { CelestialBg } from "../celestial-bg.component";
-import { HeliocentricBody } from "../celestial-body/intrasolar-body";
+import { IntrasolarBody } from "../celestial-body/intrasolar-body";
 
 @Component({
   selector: 'app-venus',
-    templateUrl: HeliocentricBody.templateUrl,
-    styleUrl: HeliocentricBody.styleUrl
+  templateUrl: '../celestial-body/intrasolar-body.html',
+  styleUrl: '../celestial-body/intrasolar-body.scss'
 })
-export class VenusComponent extends HeliocentricBody {
+export class VenusComponent extends IntrasolarBody {
+
+  override heliocentric = true;
+
+  override color: string = 'orange';
+  override brightness: number = 0.4;
+  override zIndex: number = 2;
+  override occlude: boolean = true;
 
   override inclination: number = 3.3946;
   override ascendingNodeLongitude: number = 76.6799;

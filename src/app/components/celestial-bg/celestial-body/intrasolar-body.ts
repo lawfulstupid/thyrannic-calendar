@@ -9,7 +9,19 @@ import { CelestialBody } from "./celestial-body";
 
 export abstract class IntrasolarBody extends CelestialBody {
 
-  abstract readonly heliocentric: boolean;
+  readonly heliocentric: boolean = false;
+
+  // Visual options
+  abstract color: string;
+  abstract brightness: number;
+  abstract zIndex: number;
+  abstract occlude: boolean;
+
+  path: { enabled: boolean, min?: Array<string>, max?: Array<string>, day?: Array<string> } = { enabled: false };
+
+  // Occlusion variables
+  equatorialIllumination: number = 1;
+  illuminationDirection: angle = 0;
 
   // ecliptic plane = plane in which Earth orbits sun
   // orbital plane = plane in which object (sun/moon) orbits Earth
@@ -24,8 +36,6 @@ export abstract class IntrasolarBody extends CelestialBody {
   abstract readonly orbitalPeriod: time; // orbital period (sidereal; fractional days)
   abstract readonly meanDistance: distance; // centre-to-centre distance (km) along semi-major axis of ellipse
   abstract readonly radius: distance; // radius of object (km)
-
-  // Calculated position values
   distance!: distance;
   trueLongitude!: angle;
   override rightAscension!: angle;
@@ -35,6 +45,8 @@ export abstract class IntrasolarBody extends CelestialBody {
     ({ distance: this.distance, trueLongitude: this.trueLongitude } = OrbitalMechanics.computeDistLong(this, AppComponent.instance.datetime));
     ({ distance: this.distance, rightAscension: this.rightAscension, declination: this.declination } = OrbitalMechanics.DistLong2RaDec(this));
     super.update();
+    if (this.occlude) OrbitalMechanics.updateOcclusion(this);
+    this.updatePath();
   }
 
   // how many degrees in the sky it takes up
@@ -77,33 +89,6 @@ export abstract class IntrasolarBody extends CelestialBody {
     return Vector.fromRAD(this.rightAscension, this.declination, this.distance);
   }
 
-}
-
-export abstract class GeocentricBody extends IntrasolarBody {
-
-  public static readonly templateUrl = '../celestial-body/geocentric-body.html';
-  public static readonly styleUrl = '../celestial-body/geocentric-body.scss';
-
-  override readonly heliocentric = false;
-
-  // Visual options
-  abstract color: string;
-  abstract brightness: number;
-  abstract zIndex: number;
-  abstract occlude: boolean;
-
-  // Occlusion variables
-  equatorialIllumination: number = 1;
-  illuminationDirection: angle = 0;
-
-  path: { enabled: boolean, min?: Array<string>, max?: Array<string>, day?: Array<string> } = { enabled: false };
-
-  public override update() {
-    super.update();
-    if (this.occlude) OrbitalMechanics.updateOcclusion(this);
-    this.updatePath();
-  }
-
   updatePath() {
     if (!this.path.enabled) return;
     const [decMin, decMax] = this.declinationMinMax();
@@ -114,14 +99,5 @@ export abstract class GeocentricBody extends IntrasolarBody {
       day: OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, CelestialBg.sun.declination)
     }
   }
-
-}
-
-export abstract class HeliocentricBody extends IntrasolarBody {
-
-  public static readonly templateUrl = '../celestial-body/heliocentric-body.html';
-  public static readonly styleUrl = '../celestial-body/heliocentric-body.scss';
-
-  override readonly heliocentric = true;
 
 }

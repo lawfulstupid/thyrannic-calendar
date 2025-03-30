@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { OrbitalMechanics } from 'src/app/util/orbital-mechanics';
 import { days, deg, km } from '../../../util/units';
 import { CelestialBg } from '../celestial-bg.component';
-import { GeocentricBody } from '../celestial-body/intrasolar-body';
+import { IntrasolarBody } from '../celestial-body/intrasolar-body';
 
 @Component({
   selector: 'app-arukma',
-  templateUrl: GeocentricBody.templateUrl,
-  styleUrl: GeocentricBody.styleUrl
+  templateUrl: '../celestial-body/intrasolar-body.html',
+  styleUrl: '../celestial-body/intrasolar-body.scss'
 })
-export class ArukmaComponent extends GeocentricBody {
+export class ArukmaComponent extends IntrasolarBody {
 
   override color = 'rgb(32, 33, 35)';
   override brightness = 2.4;

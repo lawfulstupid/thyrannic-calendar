@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { MathUtil } from 'src/app/util/math-util';
 import { AU, days, deg, km } from '../../../util/units';
 import { CelestialBg } from '../celestial-bg.component';
-import { IntrasolarBody } from '../celestial-body/intrasolar-body';
+import { GeocentricBody } from '../celestial-body/intrasolar-body';
 
 @Component({
   selector: 'app-sun',
-  templateUrl: '../celestial-body/intrasolar-body.html',
-  styleUrl: '../celestial-body/intrasolar-body.scss'
+  templateUrl: GeocentricBody.templateUrl,
+  styleUrl: GeocentricBody.styleUrl
 })
-export class SunComponent extends IntrasolarBody {
+export class SunComponent extends GeocentricBody {
 
   override color = 'yellow';
   override brightness = 1;

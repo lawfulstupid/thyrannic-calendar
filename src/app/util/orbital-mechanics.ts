@@ -1,6 +1,6 @@
 import { AppComponent } from "../app.component";
 import { CelestialBg } from "../components/celestial-bg/celestial-bg.component";
-import { IntrasolarBody } from "../components/celestial-bg/celestial-body/intrasolar-body";
+import { GeocentricBody, IntrasolarBody } from "../components/celestial-bg/celestial-body/intrasolar-body";
 import { EarthComponent } from "../components/celestial-bg/earth/earth.component";
 import { TemporalUnit } from "../model/temporal-unit";
 import { TDate } from "../model/thyrannic-date";
@@ -122,7 +122,7 @@ export class OrbitalMechanics {
     }
   }
 
-  public static updateOcclusion(body: IntrasolarBody) {
+  public static updateOcclusion(body: GeocentricBody) {
     const earthToMoon = body.vectorFromEarth();
     const earthToSun = CelestialBg.sun.vectorFromEarth();
     const moonToSun = earthToSun.minus(earthToMoon);

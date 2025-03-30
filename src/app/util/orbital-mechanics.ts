@@ -10,6 +10,7 @@ import { angle, distance, minutes, time } from "./units";
 import { Vector } from "./vector";
 
 export type DistLong = { distance: distance, trueLongitude: angle };
+export type Orbital = DistLong & { heliocentric: boolean, ascendingNodeLongitude: angle, inclination: angle };
 export type RaDec = { rightAscension: angle, declination: angle };
 export type AzAlt = { azimuth: angle, altitude: angle };
 export type ScreenPos = { top: string, left: string };
@@ -44,28 +45,50 @@ export class OrbitalMechanics {
   }
 
   // Converts distance + true longitude + inclination to right ascension + declination
-  public static DistLong2RaDec(body: DistLong & { inclination: angle }): RaDec {
+  public static DistLong2RaDec(body: Orbital): RaDec & { distance: distance } {
     // Compute ecliptic rectangular geocentric coordinates
-    const xs = body.distance * MathUtil.cos(body.inclination) * MathUtil.cos(body.trueLongitude);
-    const ys = body.distance * MathUtil.cos(body.inclination) * MathUtil.sin(body.trueLongitude);
-    const zs = body.distance * MathUtil.sin(body.inclination);
+    let xg, yg, zg;
+    xg = body.distance * (
+      MathUtil.cos(body.ascendingNodeLongitude) * MathUtil.cos(body.trueLongitude)
+      - MathUtil.sin(body.ascendingNodeLongitude) * MathUtil.sin(body.trueLongitude) * MathUtil.cos(body.inclination)
+    );
+    yg = body.distance * (
+      MathUtil.sin(body.ascendingNodeLongitude) * MathUtil.cos(body.trueLongitude)
+      + MathUtil.cos(body.ascendingNodeLongitude) * MathUtil.sin(body.trueLongitude) * MathUtil.cos(body.inclination)
+    );
+    zg = body.distance * (
+      MathUtil.sin(body.trueLongitude) * MathUtil.sin(body.inclination)
+    );
+
+    // At this point we could optionally adjust xg,yg,zg for perturbations (source 1: 7-10)
+
+    if (body.heliocentric) {
+      xg += CelestialBg.sun.distance * MathUtil.cos(CelestialBg.sun.trueLongitude);
+      yg += CelestialBg.sun.distance * MathUtil.sin(CelestialBg.sun.trueLongitude);
+    }
 
     // Compute equatorial rectangular geocentric coordinates
-    const xe = xs;
-    const ye = ys * MathUtil.cos(EarthComponent.TILT) - zs * MathUtil.sin(EarthComponent.TILT);
-    const ze = ys * MathUtil.sin(EarthComponent.TILT) + zs * MathUtil.cos(EarthComponent.TILT);
+    const xe = xg;
+    const ye = yg * MathUtil.cos(EarthComponent.TILT) - zg * MathUtil.sin(EarthComponent.TILT);
+    const ze = yg * MathUtil.sin(EarthComponent.TILT) + zg * MathUtil.cos(EarthComponent.TILT);
 
-    // Compute right ascension and declination
+    // Compute right ascension and declination (and updated distance)
     return {
       rightAscension: MathUtil.fixAngle(MathUtil.atan2(ye, xe)),
       declination: MathUtil.fixAngle(MathUtil.atan2(ze, Math.sqrt(xe**2 + ye**2))),
+      distance: Math.sqrt(xe**2 + ye**2 + ze**2)
     }
   }
 
   // Computes right ascension + declination for an object
   public static computeRaDec(body: IntrasolarBody, datetime: TDateTime): RaDec {
     const distLong = OrbitalMechanics.computeDistLong(body, datetime);
-    return OrbitalMechanics.DistLong2RaDec({ ...distLong, inclination: body.inclination });
+    return OrbitalMechanics.DistLong2RaDec({
+      ...distLong,
+      heliocentric: body.heliocentric,
+      ascendingNodeLongitude: body.ascendingNodeLongitude,
+      inclination: body.inclination
+    });
   }
 
   // Converts right ascension + declination to azimuth + altitude
@@ -97,42 +120,6 @@ export class OrbitalMechanics {
       top: `calc(90vh - ${body.altitude}vmin)`,
       left: `calc(50vw + ${body.azimuth}vmin)`
     }
-  }
-
-  public static convertToGeocentric(body: IntrasolarBody) {
-    // const sunToPlanet = body.vectorFromEarth();
-    // const earthToSun = CelestialBg.sun.vectorFromEarth();
-    // const earthToPlanet = earthToSun.plus(sunToPlanet);
-    // ({ distance: body.distance, rightAscension: body.rightAscension, declination: body.declination } = earthToPlanet.toRAD());
-
-    const xh = body.distance * (
-      MathUtil.cos(body.ascendingNodeLongitude) * MathUtil.cos(body.trueLongitude)
-      - MathUtil.sin(body.ascendingNodeLongitude) * MathUtil.sin(body.trueLongitude) * MathUtil.cos(body.inclination)
-    );
-    const yh = body.distance * (
-      MathUtil.sin(body.ascendingNodeLongitude) * MathUtil.cos(body.trueLongitude)
-      + MathUtil.cos(body.ascendingNodeLongitude) * MathUtil.sin(body.trueLongitude) * MathUtil.cos(body.inclination)
-    );
-    const zh = body.distance * (
-      MathUtil.sin(body.trueLongitude) * Math.sin(body.inclination)
-    );
-
-    // For moon (already geocentric), these should both equal 0
-    const xs = body.lunar ? 0 : CelestialBg.sun.distance * MathUtil.cos(CelestialBg.sun.trueLongitude);
-    const ys = body.lunar ? 0 : CelestialBg.sun.distance * MathUtil.sin(CelestialBg.sun.trueLongitude);
-
-    const xg = xh + xs;
-    const yg = yh + ys;
-    const zg = zh;
-
-    const xe = xg;
-    const ye = yg * MathUtil.cos(EarthComponent.TILT) - zg * MathUtil.sin(EarthComponent.TILT);
-    const ze = yg * MathUtil.sin(EarthComponent.TILT) + zg * MathUtil.cos(EarthComponent.TILT);
-
-    // This is same as end of DistLong2RaDec()
-    body.rightAscension = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ye, xe)));
-    body.declination = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ze, Math.sqrt(xe**2 + ye**2))));
-    body.distance = Math.sqrt(xe**2 + ye**2 + ze**2);
   }
 
   public static updateOcclusion(body: IntrasolarBody) {

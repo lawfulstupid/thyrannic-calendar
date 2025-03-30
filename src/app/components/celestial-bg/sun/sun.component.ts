@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MathUtil } from 'src/app/util/math-util';
 import { AU, days, deg, km } from '../../../util/units';
 import { CelestialBg } from '../celestial-bg.component';
 import { IntrasolarBody } from '../celestial-body/intrasolar-body';
@@ -15,12 +16,12 @@ export class SunComponent extends IntrasolarBody {
   override zIndex = 1;
   override occlude = false;
 
-  override inclination = 0 * deg;
+  override inclination = 0 * deg; // 0 by definition
   override periapsisArgument = 94.662 * deg;
   override eccentricity = 0.0167;
-  override originAngle = 11.2854 * deg;
+  override originAngle = MathUtil.fixAngle((11.2854 - 316.224) * deg);
   override orbitalPeriod = 340.16433 * days;
-  override ascendingNodeLongitude = 316.224 * deg;
+  override ascendingNodeLongitude = 0 * deg; // undefined by definition
   override meanDistance = 1 * AU;
   override radius = 695_700 * km;
 

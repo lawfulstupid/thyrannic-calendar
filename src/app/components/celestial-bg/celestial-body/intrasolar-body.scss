@@ -4,10 +4,9 @@
     height: 0;
 }
 
-$angular-diameter: var(--angularDiameter);
-$diameter: calc($angular-diameter * 5vmin); // enlarged for visual effect
-
 .body {
+  $angular-diameter: var(--angularDiameter);
+  $diameter: calc($angular-diameter * 5vmin); // enlarged for visual effect
   width: $diameter;
   height: $diameter;
   position: absolute;
@@ -32,6 +31,20 @@ $diameter: calc($angular-diameter * 5vmin); // enlarged for visual effect
   .lit {
     background-color: var(--body-color);
     filter: brightness(calc(var(--brightness) * 3));
+  }
+  // create a point of light to replace the body if it gets too small
+  &::before {
+    content: '';
+    $angular-diameter: var(--angularDiameter);
+    $diameter: min(max(0.5px, calc($angular-diameter * 5vmin)), 2px); // enlarged for visual effect
+    width: $diameter;
+    height: $diameter;
+    position: absolute;
+    left: calc(50% - $diameter / 2);
+    top: calc(50% - $diameter / 2);
+    border-radius: 100%;
+    background-color: white;
+    opacity: var(--visibility);
   }
 }
 

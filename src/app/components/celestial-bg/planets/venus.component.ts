@@ -21,7 +21,7 @@ export class VenusComponent extends HeliocentricBody {
   override originAngle: number = 179.5761;
   override orbitalPeriod: number = 224.701 * days;
   override meanDistance: number = 0.72333 * AU;
-  override radius: number = 6051.8 * km * 100;
+  override radius: number = 6051.8 * km;
 
   constructor() {
     super();

@@ -5,7 +5,6 @@ import { LositComponent } from './moons/losit.component';
 import { StarsComponent } from "./stars/stars.component";
 import { SunComponent } from "./sun/sun.component";
 import { VenusComponent } from './planets/venus.component';
-import { Arukma2Component } from './moons/arukma2.component';
 
 @Component({
   selector: 'app-celestial-bg',
@@ -15,7 +14,6 @@ export class CelestialBg {
 
   public static sun: SunComponent;
   public static arukma: ArukmaComponent;
-  public static arukma2: Arukma2Component;
   public static losit: LositComponent;
   public static earth: EarthComponent;
   public static stars: StarsComponent;
@@ -33,7 +31,6 @@ export class CelestialBg {
   public static update() {
     this.sun.update();
     this.arukma.update();
-    this.arukma2.update();
     this.losit.update();
     this.earth.update();
     this.stars.update();

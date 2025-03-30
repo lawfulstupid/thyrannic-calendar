@@ -4,14 +4,16 @@
     height: 0;
 }
 
+$angular-diameter: var(--angularDiameter);
+$diameter: calc($angular-diameter * 5vmin); // enlarged for visual effect
+$aura-radius: clamp(0px, calc($diameter * 10), 1px); // sf 10 seems to work well
+
 .body {
-  $angular-diameter: var(--angularDiameter);
-  $diameter: calc($angular-diameter * 5vmin); // enlarged for visual effect
   width: $diameter;
   height: $diameter;
   position: absolute;
-  left: calc( $diameter / -2 );
-  top: calc( $diameter / -2 );
+  left: calc($diameter / -2);
+  top: calc($diameter / -2);
   border-radius: 100%;
   background-color: var(--sky-color);
   * {
@@ -32,18 +34,15 @@
     background-color: var(--body-color);
     filter: brightness(calc(var(--brightness) * 3));
   }
-  // create a point of light to replace the body if it gets too small
   &::before {
     content: '';
-    $angular-diameter: var(--angularDiameter);
-    $diameter: min(max(0.5px, calc($angular-diameter * 5vmin)), 2px); // enlarged for visual effect
-    width: $diameter;
-    height: $diameter;
+    width: 0;
+    height: 0;
     position: absolute;
-    left: calc(50% - $diameter / 2);
-    top: calc(50% - $diameter / 2);
+    left: 50%;
+    top: 50%;
     border-radius: 100%;
-    background-color: white;
+    box-shadow: white 0 0 $aura-radius $aura-radius;
     opacity: var(--visibility);
   }
 }

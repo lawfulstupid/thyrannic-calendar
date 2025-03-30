@@ -21,6 +21,10 @@ export class TDate {
     [e,r] = MathUtil.divMod(seq, TemporalUnit.STD_EPOCH.as(TemporalUnit.DAY));
     [p,r] = MathUtil.divMod(r, TemporalUnit.STD_PERIOD.as(TemporalUnit.DAY));
     [y,r] = MathUtil.divMod(r, TemporalUnit.SHORT_YEAR.as(TemporalUnit.DAY));
+    if (y === 20) {
+      r += TemporalUnit.SHORT_YEAR.as(TemporalUnit.DAY);
+      [y,r] = [19, MathUtil.mod(r, TemporalUnit.LONG_YEAR.as(TemporalUnit.DAY))];
+    }
     [w,r] = MathUtil.divMod(r, TemporalUnit.WEEK.as(TemporalUnit.DAY));
     d = TDay.fromValue(r);
     return new TDate(new TYear(e+1, 20*p+y+1), w+1, d);
@@ -30,7 +34,7 @@ export class TDate {
     // 16th Brogos 20,22 === 10th August 2022
     return this.fromValue(Math.floor(date.valueOf() / 86400000) + 1280664);
   }
-  
+
   public at(hour: number, minute: number): TDateTime {
     return new TDateTime(this, hour, minute);
   }
@@ -61,7 +65,7 @@ export class TDate {
       return new TDateTime(this).add(quantity, unit);
     }
   }
-  
+
   public diff(that: TDate, unit: TemporalUnit = TemporalUnit.DAY): number {
     if (TemporalUnit.YEAR.defines(unit)) {
       return this.year.diff(that.year, unit);

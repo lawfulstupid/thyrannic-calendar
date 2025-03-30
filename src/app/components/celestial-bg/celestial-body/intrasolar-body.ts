@@ -15,7 +15,6 @@ export abstract class IntrasolarBody extends CelestialBody {
   // Visual options
   abstract color: string;
   abstract brightness: number;
-  abstract zIndex: number;
   abstract occlude: boolean;
 
   path: { enabled: boolean, min?: Array<string>, max?: Array<string>, day?: Array<string> } = { enabled: false };

@@ -35,6 +35,15 @@ export class CelestialBg {
     this.earth.update();
     this.stars.update();
     this.venus.update();
+    this.setZIndices();
+  }
+
+  private static setZIndices() {
+    const bodies = [this.sun, this.arukma, this.losit, this.venus];
+    bodies.sort((a,b) => b.distance - a.distance);
+    bodies.forEach((body, idx) => {
+      body.zIndex = idx;
+    });
   }
 
 }

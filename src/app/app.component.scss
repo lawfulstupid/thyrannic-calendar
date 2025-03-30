@@ -5,7 +5,11 @@ app-celestial-bg {
   position: absolute;
   left: 0;
   top: 0;
-  z-index: -1;
+}
+
+.ui {
+  z-index: 100;
+  position: relative;
 }
 
 .date {

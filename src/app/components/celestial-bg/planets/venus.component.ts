@@ -12,7 +12,6 @@ export class VenusComponent extends HeliocentricBody {
 
   override color: string = 'orange';
   override brightness: number = 0.4;
-  override zIndex: number = 2;
 
   override inclination: number = 3.3946 * deg;
   override ascendingNodeLongitude: number = 76.6799 * deg;

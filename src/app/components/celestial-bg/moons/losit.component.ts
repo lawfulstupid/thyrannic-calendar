@@ -13,7 +13,6 @@ export class LositComponent extends GeocentricBody {
 
   override color = 'rgb(63, 21, 16)';
   override brightness = 0.92;
-  override zIndex = 2;
   override occlude = true;
 
   override inclination = 10.1134 * deg;

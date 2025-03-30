@@ -18,6 +18,7 @@ export abstract class CelestialBody {
   // On-screen position variables
   top: string = '0';
   left: string = '0';
+  zIndex: number = 0;
 
   public update() {
     ({ azimuth: this.azimuth, altitude: this.altitude } = OrbitalMechanics.RaDec2AzAlt(this, AppComponent.instance.datetime));

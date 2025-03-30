@@ -1,6 +1,6 @@
 import { AppComponent } from "src/app/app.component";
 import { MathUtil } from "src/app/util/math-util";
-import { OrbitalMechanics } from "src/app/util/orbital-mechanics";
+import { Orbital, OrbitalMechanics } from "src/app/util/orbital-mechanics";
 import { Vector } from "src/app/util/vector";
 import { angle, distance, time } from "../../../util/units";
 import { CelestialBg } from "../celestial-bg.component";
@@ -9,7 +9,8 @@ import { CelestialBody } from "./celestial-body";
 
 export abstract class IntrasolarBody extends CelestialBody {
 
-  readonly heliocentric: boolean = false;
+  public static readonly templateUrl = '../celestial-body/intrasolar-body.html';
+  public static readonly styleUrl = '../celestial-body/intrasolar-body.scss';
 
   // Visual options
   abstract color: string;
@@ -28,6 +29,7 @@ export abstract class IntrasolarBody extends CelestialBody {
   // longitude = sidereal angle
   // argument = relative angle
   // anomaly = angle from periapsis to object position
+  abstract readonly heliocentric: boolean;
   abstract readonly inclination: angle; // angle from ecliptic plane to orbital plane
   abstract readonly ascendingNodeLongitude: angle; // longitude of intersection between ecliptic and orbital planes
   abstract readonly periapsisArgument: angle; // angle from longitude of ascending node to periapsis
@@ -100,4 +102,13 @@ export abstract class IntrasolarBody extends CelestialBody {
     }
   }
 
+}
+
+export abstract class GeocentricBody extends IntrasolarBody implements Orbital {
+  override readonly heliocentric = false;
+}
+
+export abstract class HeliocentricBody extends IntrasolarBody implements Orbital {
+  override readonly heliocentric = true;
+  override readonly occlude = true;
 }

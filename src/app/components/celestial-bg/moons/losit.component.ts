@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { OrbitalMechanics } from 'src/app/util/orbital-mechanics';
 import { days, deg, km } from '../../../util/units';
 import { CelestialBg } from '../celestial-bg.component';
-import { IntrasolarBody } from '../celestial-body/intrasolar-body';
+import { GeocentricBody, IntrasolarBody } from '../celestial-body/intrasolar-body';
 
 @Component({
   selector: 'app-losit',
-  templateUrl: '../celestial-body/intrasolar-body.html',
-  styleUrl: '../celestial-body/intrasolar-body.scss'
+  templateUrl: IntrasolarBody.templateUrl,
+  styleUrl: IntrasolarBody.styleUrl
 })
-export class LositComponent extends IntrasolarBody {
+export class LositComponent extends GeocentricBody {
 
   override color = 'rgb(63, 21, 16)';
   override brightness = 0.92;

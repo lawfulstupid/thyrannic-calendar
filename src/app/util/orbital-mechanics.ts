@@ -62,6 +62,7 @@ export class OrbitalMechanics {
 
     // At this point we could optionally adjust xg,yg,zg for perturbations (source 1: 7-10)
 
+    // Adjust coordinates for heliocentrism
     if (body.heliocentric) {
       xg += CelestialBg.sun.distance * MathUtil.cos(CelestialBg.sun.trueLongitude);
       yg += CelestialBg.sun.distance * MathUtil.sin(CelestialBg.sun.trueLongitude);

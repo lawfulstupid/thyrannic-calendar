@@ -24,6 +24,6 @@ export class Arukma extends GeocentricBody {
   override orbitalPeriod = OrbitalMechanics.synodicToSiderealPeriod(17.79459 * days);
   override ascendingNodeLongitude = 344.672 * deg;
   override radius = 1481.52 * km;
-  override mass = 4.2089E22;
+  override density = 3.09;
 
 }

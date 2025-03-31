@@ -21,6 +21,6 @@ export class Venus extends HeliocentricBody {
   override originAngle = 179.5761 * deg;
   override orbitalPeriod = 224.701 * days;
   override radius = 6051.8 * km;
-  override mass = 4.867E24;
+  override density = 5.24227;
 
 }

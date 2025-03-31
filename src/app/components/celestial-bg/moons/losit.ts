@@ -24,6 +24,6 @@ export class Losit extends GeocentricBody {
   override orbitalPeriod = OrbitalMechanics.synodicToSiderealPeriod(48.28098 * days);
   override ascendingNodeLongitude = 329.915 * deg;
   override radius = 1968.45 * km;
-  override mass = 1.04794E23;
+  override density = 3.28;
 
 }

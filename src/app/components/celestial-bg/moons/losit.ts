@@ -20,7 +20,7 @@ export class Losit extends GeocentricBody {
   }
 
   override color = 'rgb(63, 21, 16)';
-  override brightness = 0.92;
+  override albedo = 0.14;
   override occlude = true;
 
   override inclination = 10.1134 * deg;

@@ -24,7 +24,7 @@ export abstract class IntrasolarBody extends CelestialBody implements DistLong {
 
   // Visual options
   abstract color: string;
-  abstract brightness: number;
+  abstract albedo: number;
   abstract occlude: boolean;
 
   skyPath: {
@@ -40,7 +40,7 @@ export abstract class IntrasolarBody extends CelestialBody implements DistLong {
   illuminationDirection: angle = 0;
   get pointOpacity(): number {
     const starOpacity = MathUtil.clamp(0.5, CelestialBg.stars.opacity, 1) * 2;
-    return MathUtil.clamp(0, this.equatorialIllumination * starOpacity, 1);
+    return MathUtil.clamp(0, this.equatorialIllumination * this.albedo * starOpacity, 1);
   }
 
   // ecliptic plane = plane in which Earth orbits sun

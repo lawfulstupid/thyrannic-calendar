@@ -1,5 +1,5 @@
 @mixin brighten {
-  filter: brightness(calc(var(--brightness) * 3));
+  filter: brightness(calc(calc(var(--albedo) * var(--albedo) * 180)));
 }
 
 circle,ellipse {

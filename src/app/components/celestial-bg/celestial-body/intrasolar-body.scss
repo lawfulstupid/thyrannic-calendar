@@ -43,7 +43,7 @@ $aura-radius: clamp(0px, calc($diameter * 10), 1px); // sf 10 seems to work well
     top: 50%;
     border-radius: 100%;
     box-shadow: white 0 0 $aura-radius $aura-radius;
-    opacity: var(--visibility);
+    opacity: var(--point-opacity);
   }
 }
 

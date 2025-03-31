@@ -5,7 +5,7 @@
     [style.--body-color]="color"
     [style.--brightness]="brightness"
     [style.--sky-color]="celestialBodies.earth.skyColor"
-    [style.--visibility]="equatorialIllumination"
+    [style.--point-opacity]="pointOpacity"
     [style.--eclipse-width]="equatorialIllumination - 0.5 | abs | percent"
     [style.transform]="'rotate(' + illuminationDirection + 'deg)'"
   >

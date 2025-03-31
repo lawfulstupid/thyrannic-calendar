@@ -22,6 +22,10 @@ export abstract class IntrasolarBody extends CelestialBody {
   // Occlusion variables
   equatorialIllumination: number = 1;
   illuminationDirection: angle = 0;
+  get pointOpacity(): number {
+    const starOpacity = MathUtil.clamp(0.5, CelestialBg.stars.opacity, 1) * 2;
+    return MathUtil.clamp(0, this.equatorialIllumination * starOpacity, 1);
+  }
 
   // ecliptic plane = plane in which Earth orbits sun
   // orbital plane = plane in which object (sun/moon) orbits Earth

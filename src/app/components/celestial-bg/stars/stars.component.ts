@@ -18,7 +18,7 @@ export class StarsComponent {
 
   protected stars: Array<Star> = [];
 
-  protected get opacity() {
+  public get opacity() {
     return MathUtil.tween(EarthComponent.SUNRISE_SUNSET_START, CelestialBg.sun.altitude, EarthComponent.SUNRISE_SUNSET);
   }
 

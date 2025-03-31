@@ -55,8 +55,9 @@ export abstract class IntrasolarBody extends CelestialBody implements DistLong {
   abstract readonly eccentricity: number; // eccentricity (0=circle, 0-1=eclipse, 1=parabola)
   abstract readonly originAngle: angle; // anomaly at epoch
   abstract readonly orbitalPeriod: time; // orbital period (sidereal; fractional days)
-  abstract readonly meanDistance: distance; // centre-to-centre distance (km) along semi-major axis of ellipse
   abstract readonly radius: distance; // radius of object (km)
+  abstract readonly mass: number; // kilograms
+
   distance!: distance;
   trueLongitude!: angle;
   override rightAscension!: angle;
@@ -77,6 +78,12 @@ export abstract class IntrasolarBody extends CelestialBody implements DistLong {
   public override updateScreenPosition() {
     super.updateScreenPosition();
     this.updatePath();
+  }
+
+  // centre-to-centre distance (km) along semi-major axis of ellipse
+  get meanDistance(): distance {
+    const GM = OrbitalMechanics.G * (this.mass + (this.heliocentric ? CelestialBg.sun.mass : Earth.MASS));
+    return ((GM * (this.orbitalPeriod * 60 * 60 * 24 / (2 * Math.PI)) ** 2) ** (1/3)) / 1000;
   }
 
   // how many degrees in the sky it takes up

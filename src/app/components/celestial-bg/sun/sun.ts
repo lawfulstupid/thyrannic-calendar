@@ -24,5 +24,6 @@ export class Sun extends GeocentricBody {
   override ascendingNodeLongitude = 0 * deg; // undefined by definition
   override radius = 695_700 * km;
   override density = 1.4102;
+  override get mass() { return 1.989E30; } // workaround for floating point issues
 
 }

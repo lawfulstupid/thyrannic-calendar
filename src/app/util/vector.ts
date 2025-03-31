@@ -1,4 +1,5 @@
 import { MathUtil } from "./math-util";
+import { RaDec } from "./orbital-mechanics";
 
 export class Vector {
 
@@ -17,12 +18,12 @@ export class Vector {
     );
   }
 
-  public toRAD(): [number, number] {
-    const dist = this.norm();
-    const declination = MathUtil.asin(this.y / dist);
-    const hDist = dist * MathUtil.cos(declination);
+  public toRAD(): RaDec & { distance: number } {
+    const distance = this.norm();
+    const declination = MathUtil.asin(this.y / distance);
+    const hDist = distance * MathUtil.cos(declination);
     const rightAscension = MathUtil.acos(this.x / hDist);
-    return [rightAscension, declination];
+    return { rightAscension, declination, distance };
   }
 
   public norm(): number {

@@ -1,9 +1,14 @@
 <div class="anchor" [style.top]="top" [style.left]="left" [style.z-index]="zIndex">
+  <div class="point"
+    [style.--angularDiameter]="angularDiameter"
+    [style.--point-opacity]="pointOpacity"
+  ></div>
   <div class="body"
     [style.--angularDiameter]="angularDiameter"
     [style.--body-color]="color"
     [style.--brightness]="brightness"
     [style.--sky-color]="celestialBodies.earth.skyColor"
+    [style.--point-opacity]="pointOpacity"
     [style.--eclipse-width]="equatorialIllumination - 0.5 | abs | percent"
     [style.transform]="'rotate(' + illuminationDirection + 'deg)'"
   >
@@ -11,7 +16,7 @@
     <div class="meridean" [class.lit]="equatorialIllumination > 0.5"></div>
   </div>
 </div>
-<svg *ngIf="path.enabled" viewBox="-50 0 100 90" [style.z-index]="zIndex+3">
+<svg *ngIf="path.enabled" viewBox="-50 0 100 90" [style.z-index]="zIndex+50">
   <polyline *ngFor="let path of path.max" [attr.points]="path" [attr.stroke]="color"/>
   <polyline *ngFor="let path of path.day" [attr.points]="path" [attr.stroke]="color"/>
   <polyline *ngFor="let path of path.min" [attr.points]="path" [attr.stroke]="color"/>

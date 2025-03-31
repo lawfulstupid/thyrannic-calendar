@@ -8,14 +8,16 @@ import { angle, deg } from '../../../util/units';
 import { CelestialBg } from '../celestial-bg.component';
 
 @Component({
-  selector: 'app-earth',
-  templateUrl: './earth.component.html',
-  styleUrl: './earth.component.scss'
+  selector: Earth.ID,
+  templateUrl: './earth.html',
+  styleUrl: './earth.scss'
 })
-export class EarthComponent {
+export class Earth {
+
+  public static readonly ID = 'earth';
 
   constructor() {
-    CelestialBg.earth = this;
+    CelestialBg.register(this);
     this.updateTerrain();
   }
 
@@ -33,7 +35,7 @@ export class EarthComponent {
   }
 
   public static get SUNRISE_SUNSET_START(): angle {
-    return EarthComponent.HORIZON + 5 * CelestialBg.sun.angularDiameter;
+    return Earth.HORIZON + 5 * CelestialBg.sun.angularDiameter;
   }
 
   public static get HORIZON(): angle {
@@ -43,11 +45,11 @@ export class EarthComponent {
   }
 
   public static get SUNRISE_SUNSET(): angle {
-    return EarthComponent.HORIZON - 5 * CelestialBg.sun.angularDiameter / 2;
+    return Earth.HORIZON - 5 * CelestialBg.sun.angularDiameter / 2;
   }
 
   public static get ASTRONOMICAL_DAWN_DUSK(): angle {
-    return EarthComponent.HORIZON - 18;
+    return Earth.HORIZON - 18;
   }
 
   public update() {
@@ -65,11 +67,11 @@ export class EarthComponent {
     const red = MathUtil.tween(p, scattering, Math.sqrt(p * 2 + p ** 2));
     const baseColor = `color-mix(in xyz, skyblue, ${100 * red}% orangered)`;
 
-    if (solarAltitude > EarthComponent.SUNRISE_SUNSET) {
-      const darkness = MathUtil.tween(EarthComponent.HORIZON, solarAltitude, EarthComponent.SUNRISE_SUNSET);
+    if (solarAltitude > Earth.SUNRISE_SUNSET) {
+      const darkness = MathUtil.tween(Earth.HORIZON, solarAltitude, Earth.SUNRISE_SUNSET);
       this.skyColor = `color-mix(in xyz, ${baseColor}, ${100 * darkness}% midnightblue)`;
     } else {
-      const darkness = MathUtil.tween(EarthComponent.SUNRISE_SUNSET, solarAltitude, EarthComponent.ASTRONOMICAL_DAWN_DUSK);
+      const darkness = MathUtil.tween(Earth.SUNRISE_SUNSET, solarAltitude, Earth.ASTRONOMICAL_DAWN_DUSK);
       this.skyColor = `color-mix(in xyz, midnightblue, ${100 * darkness}% #1f252d)`;
     }
   }
@@ -77,10 +79,10 @@ export class EarthComponent {
   private updateGround() {
     // Update brightness
     const altitude = CelestialBg.sun.altitude;
-    if (altitude > EarthComponent.SUNRISE_SUNSET) {
-      this.groundBrightness = 1 - MathUtil.clamp(0, MathUtil.tween(EarthComponent.HORIZON, altitude, EarthComponent.SUNRISE_SUNSET), 0.80);
+    if (altitude > Earth.SUNRISE_SUNSET) {
+      this.groundBrightness = 1 - MathUtil.clamp(0, MathUtil.tween(Earth.HORIZON, altitude, Earth.SUNRISE_SUNSET), 0.80);
     } else {
-      this.groundBrightness = 1 - MathUtil.clamp(0.80, MathUtil.tween(EarthComponent.SUNRISE_SUNSET, altitude, EarthComponent.ASTRONOMICAL_DAWN_DUSK), 0.90);
+      this.groundBrightness = 1 - MathUtil.clamp(0.80, MathUtil.tween(Earth.SUNRISE_SUNSET, altitude, Earth.ASTRONOMICAL_DAWN_DUSK), 0.90);
     }
 
     // Update color

@@ -1,18 +1,20 @@
 import { AppComponent } from "src/app/app.component";
 import { MathUtil } from "src/app/util/math-util";
-import { OrbitalMechanics } from "src/app/util/orbital-mechanics";
+import { Orbital, OrbitalMechanics } from "src/app/util/orbital-mechanics";
 import { Vector } from "src/app/util/vector";
 import { angle, distance, time } from "../../../util/units";
 import { CelestialBg } from "../celestial-bg.component";
-import { EarthComponent } from "../earth/earth.component";
+import { Earth } from "../earth/earth";
 import { CelestialBody } from "./celestial-body";
 
 export abstract class IntrasolarBody extends CelestialBody {
 
+  public static readonly templateUrl = '../celestial-body/intrasolar-body.html';
+  public static readonly styleUrl = '../celestial-body/intrasolar-body.scss';
+
   // Visual options
   abstract color: string;
   abstract brightness: number;
-  abstract zIndex: number;
   abstract occlude: boolean;
 
   path: { enabled: boolean, min?: Array<string>, max?: Array<string>, day?: Array<string> } = { enabled: false };
@@ -20,18 +22,23 @@ export abstract class IntrasolarBody extends CelestialBody {
   // Occlusion variables
   equatorialIllumination: number = 1;
   illuminationDirection: angle = 0;
+  get pointOpacity(): number {
+    const starOpacity = MathUtil.clamp(0.5, CelestialBg.stars.opacity, 1) * 2;
+    return MathUtil.clamp(0, this.equatorialIllumination * starOpacity, 1);
+  }
 
   // ecliptic plane = plane in which Earth orbits sun
   // orbital plane = plane in which object (sun/moon) orbits Earth
   // longitude = sidereal angle
   // argument = relative angle
   // anomaly = angle from periapsis to object position
+  abstract readonly heliocentric: boolean;
   abstract readonly inclination: angle; // angle from ecliptic plane to orbital plane
   abstract readonly ascendingNodeLongitude: angle; // longitude of intersection between ecliptic and orbital planes
   abstract readonly periapsisArgument: angle; // angle from longitude of ascending node to periapsis
   abstract readonly eccentricity: number; // eccentricity (0=circle, 0-1=eclipse, 1=parabola)
   abstract readonly originAngle: angle; // anomaly at epoch
-  abstract readonly orbitalPeriod: time; // orbital period (fractional days)
+  abstract readonly orbitalPeriod: time; // orbital period (sidereal; fractional days)
   abstract readonly meanDistance: distance; // centre-to-centre distance (km) along semi-major axis of ellipse
   abstract readonly radius: distance; // radius of object (km)
   distance!: distance;
@@ -39,9 +46,14 @@ export abstract class IntrasolarBody extends CelestialBody {
   override rightAscension!: angle;
   override declination!: angle;
 
+  constructor() {
+    super();
+    CelestialBg.register(this);
+  }
+
   public override update() {
     ({ distance: this.distance, trueLongitude: this.trueLongitude } = OrbitalMechanics.computeDistLong(this, AppComponent.instance.datetime));
-    ({ rightAscension: this.rightAscension, declination: this.declination } = OrbitalMechanics.DistLong2RaDec(this));
+    ({ distance: this.distance, rightAscension: this.rightAscension, declination: this.declination } = OrbitalMechanics.DistLong2RaDec(this));
     super.update();
     if (this.occlude) OrbitalMechanics.updateOcclusion(this);
     this.updatePath();
@@ -53,6 +65,7 @@ export abstract class IntrasolarBody extends CelestialBody {
   }
 
   // mean anomaly (0 at periapsis; increases uniformly with time)
+  // M = (originAngle - ascendingNodeLongitude - periapsisArgument) + (1/orbitalPeriod) * d
   meanAnomaly(d: time): angle {
     return MathUtil.fixAngle(this.meanLongitude(d) - this.periapsisLongitude);
   }
@@ -79,7 +92,7 @@ export abstract class IntrasolarBody extends CelestialBody {
 
   // min and max declination
   declinationMinMax(): [angle, angle] {
-    return [this.inclination - EarthComponent.TILT, this.inclination + EarthComponent.TILT];
+    return [this.inclination - Earth.TILT, this.inclination + Earth.TILT];
   }
 
   public vectorFromEarth(): Vector {
@@ -97,4 +110,13 @@ export abstract class IntrasolarBody extends CelestialBody {
     }
   }
 
+}
+
+export abstract class GeocentricBody extends IntrasolarBody implements Orbital {
+  override readonly heliocentric = false;
+}
+
+export abstract class HeliocentricBody extends IntrasolarBody implements Orbital {
+  override readonly heliocentric = true;
+  override readonly occlude = true;
 }

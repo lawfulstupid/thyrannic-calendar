@@ -2,18 +2,19 @@ import { Component } from '@angular/core';
 import { OrbitalMechanics } from 'src/app/util/orbital-mechanics';
 import { days, deg, km } from '../../../util/units';
 import { CelestialBg } from '../celestial-bg.component';
-import { IntrasolarBody } from '../celestial-body/intrasolar-body';
+import { GeocentricBody, IntrasolarBody } from '../celestial-body/intrasolar-body';
 
 @Component({
-  selector: 'app-arukma',
-  templateUrl: '../celestial-body/intrasolar-body.html',
-  styleUrl: '../celestial-body/intrasolar-body.scss'
+  selector: Arukma.ID,
+  templateUrl: IntrasolarBody.templateUrl,
+  styleUrl: IntrasolarBody.styleUrl
 })
-export class ArukmaComponent extends IntrasolarBody {
+export class Arukma extends GeocentricBody {
+
+  public static readonly ID = 'arukma';
 
   override color = 'rgb(32, 33, 35)';
   override brightness = 2.4;
-  override zIndex = 3;
   override occlude = true;
 
   override inclination = 6.6541 * deg;
@@ -24,10 +25,5 @@ export class ArukmaComponent extends IntrasolarBody {
   override ascendingNodeLongitude = 344.672 * deg;
   override meanDistance = 278311.973 * km;
   override radius = 1481.52 * km;
-
-  constructor() {
-    super();
-    CelestialBg.arukma = this;
-  }
 
 }

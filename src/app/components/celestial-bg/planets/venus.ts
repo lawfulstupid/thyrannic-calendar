@@ -3,11 +3,11 @@ import { AU, days, deg, km } from "src/app/util/units";
 import { HeliocentricBody, IntrasolarBody } from "../celestial-body/intrasolar-body";
 
 @Component({
-  selector: VenusComponent.ID,
+  selector: Venus.ID,
   templateUrl: IntrasolarBody.templateUrl,
   styleUrl: IntrasolarBody.styleUrl
 })
-export class VenusComponent extends HeliocentricBody {
+export class Venus extends HeliocentricBody {
 
   public static readonly ID = 'venus';
 

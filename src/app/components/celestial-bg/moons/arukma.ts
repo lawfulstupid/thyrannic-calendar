@@ -5,11 +5,11 @@ import { CelestialBg } from '../celestial-bg.component';
 import { GeocentricBody, IntrasolarBody } from '../celestial-body/intrasolar-body';
 
 @Component({
-  selector: ArukmaComponent.ID,
+  selector: Arukma.ID,
   templateUrl: IntrasolarBody.templateUrl,
   styleUrl: IntrasolarBody.styleUrl
 })
-export class ArukmaComponent extends GeocentricBody {
+export class Arukma extends GeocentricBody {
 
   public static readonly ID = 'arukma';
 

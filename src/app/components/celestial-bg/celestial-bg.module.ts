@@ -2,22 +2,22 @@ import { NgFor, NgIf, PercentPipe } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { AbsPipe } from "src/app/pipes/abs.pipe";
 import { CelestialBg } from "./celestial-bg.component";
-import { EarthComponent } from "./earth/earth.component";
-import { ArukmaComponent } from "./moons/arukma.component";
-import { LositComponent } from "./moons/losit.component";
-import { StarsComponent } from "./stars/stars.component";
-import { SunComponent } from "./sun/sun.component";
-import { VenusComponent } from "./planets/venus.component";
+import { Earth } from "./earth/earth";
+import { Arukma } from "./moons/arukma";
+import { Losit } from "./moons/losit";
+import { Venus } from "./planets/venus";
+import { Stars } from "./stars/stars";
+import { Sun } from "./sun/sun";
 
 @NgModule({
   declarations: [
     CelestialBg,
-    EarthComponent,
-    SunComponent,
-    ArukmaComponent,
-    LositComponent,
-    StarsComponent,
-    VenusComponent
+    Sun,
+    Earth,
+    Stars,
+    Arukma,
+    Losit,
+    Venus
   ],
   imports: [AbsPipe, NgIf, NgFor, PercentPipe],
   exports: [CelestialBg]

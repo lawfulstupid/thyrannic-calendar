@@ -4,14 +4,14 @@ import { Random } from 'src/app/util/random';
 import { angle, deg } from '../../../util/units';
 import { CelestialBg } from '../celestial-bg.component';
 import { CelestialBody } from '../celestial-body/celestial-body';
-import { EarthComponent } from '../earth/earth.component';
+import { Earth } from '../earth/earth';
 
 @Component({
-  selector: StarsComponent.ID,
-  templateUrl: './stars.component.html',
-  styleUrl: './stars.component.scss'
+  selector: Stars.ID,
+  templateUrl: './stars.html',
+  styleUrl: './stars.scss'
 })
-export class StarsComponent {
+export class Stars {
 
   public static readonly ID = 'stars';
   private static readonly SEED = 'make me some pretty stars';
@@ -20,13 +20,13 @@ export class StarsComponent {
   protected stars: Array<Star> = [];
 
   public get opacity() {
-    return MathUtil.tween(EarthComponent.SUNRISE_SUNSET_START, CelestialBg.sun.altitude, EarthComponent.SUNRISE_SUNSET);
+    return MathUtil.tween(Earth.SUNRISE_SUNSET_START, CelestialBg.sun.altitude, Earth.SUNRISE_SUNSET);
   }
 
   constructor() {
     CelestialBg.register(this);
-    const rng = new Random(StarsComponent.SEED);
-    for (let i = 0; i < StarsComponent.MAX_STARS; i++) {
+    const rng = new Random(Stars.SEED);
+    for (let i = 0; i < Stars.MAX_STARS; i++) {
       this.stars.push(new Star(rng));
     }
   }

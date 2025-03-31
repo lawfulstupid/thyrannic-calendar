@@ -4,7 +4,7 @@ import { Orbital, OrbitalMechanics } from "src/app/util/orbital-mechanics";
 import { Vector } from "src/app/util/vector";
 import { angle, distance, time } from "../../../util/units";
 import { CelestialBg } from "../celestial-bg.component";
-import { EarthComponent } from "../earth/earth.component";
+import { Earth } from "../earth/earth";
 import { CelestialBody } from "./celestial-body";
 
 export abstract class IntrasolarBody extends CelestialBody {
@@ -92,7 +92,7 @@ export abstract class IntrasolarBody extends CelestialBody {
 
   // min and max declination
   declinationMinMax(): [angle, angle] {
-    return [this.inclination - EarthComponent.TILT, this.inclination + EarthComponent.TILT];
+    return [this.inclination - Earth.TILT, this.inclination + Earth.TILT];
   }
 
   public vectorFromEarth(): Vector {

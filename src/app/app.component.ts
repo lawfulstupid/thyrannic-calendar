@@ -6,7 +6,7 @@ import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { environment } from 'src/environments/environment';
 import { CelestialBg } from './components/celestial-bg/celestial-bg.component';
 import { CelestialBgModule } from './components/celestial-bg/celestial-bg.module';
-import { EarthComponent } from './components/celestial-bg/earth/earth.component';
+import { Earth } from './components/celestial-bg/earth/earth';
 import { PinnedDateComponent } from "./components/pinned-date/pinned-date.component";
 import { TimeUnitComponent } from './components/time-unit/time-unit.component';
 import { Bearing } from './model/bearing';
@@ -106,7 +106,7 @@ export class AppComponent {
   }
 
   protected get defaultTextColor(): string {
-    return CelestialBg.sun.altitude > EarthComponent.HORIZON ? 'black' : 'whitesmoke';
+    return CelestialBg.sun.altitude > Earth.HORIZON ? 'black' : 'whitesmoke';
   }
 
 }

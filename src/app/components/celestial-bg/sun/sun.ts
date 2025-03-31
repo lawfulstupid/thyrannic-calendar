@@ -4,11 +4,11 @@ import { AU, days, deg, km } from '../../../util/units';
 import { GeocentricBody, IntrasolarBody } from '../celestial-body/intrasolar-body';
 
 @Component({
-  selector: SunComponent.ID,
+  selector: Sun.ID,
   templateUrl: IntrasolarBody.templateUrl,
   styleUrl: IntrasolarBody.styleUrl
 })
-export class SunComponent extends GeocentricBody {
+export class Sun extends GeocentricBody {
 
   public static readonly ID = 'sun';
 

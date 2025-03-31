@@ -5,11 +5,13 @@ import { CelestialBg } from '../celestial-bg.component';
 import { GeocentricBody, IntrasolarBody } from '../celestial-body/intrasolar-body';
 
 @Component({
-  selector: 'app-arukma',
+  selector: ArukmaComponent.ID,
   templateUrl: IntrasolarBody.templateUrl,
   styleUrl: IntrasolarBody.styleUrl
 })
 export class ArukmaComponent extends GeocentricBody {
+
+  public static readonly ID = 'arukma';
 
   override color = 'rgb(32, 33, 35)';
   override brightness = 2.4;
@@ -23,10 +25,5 @@ export class ArukmaComponent extends GeocentricBody {
   override ascendingNodeLongitude = 344.672 * deg;
   override meanDistance = 278311.973 * km;
   override radius = 1481.52 * km;
-
-  constructor() {
-    super();
-    CelestialBg.arukma = this;
-  }
 
 }

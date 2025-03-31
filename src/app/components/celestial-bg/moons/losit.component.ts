@@ -5,11 +5,13 @@ import { CelestialBg } from '../celestial-bg.component';
 import { GeocentricBody, IntrasolarBody } from '../celestial-body/intrasolar-body';
 
 @Component({
-  selector: 'app-losit',
+  selector: LositComponent.ID,
   templateUrl: IntrasolarBody.templateUrl,
   styleUrl: IntrasolarBody.styleUrl
 })
 export class LositComponent extends GeocentricBody {
+
+  public static readonly ID = 'losit';
 
   override color = 'rgb(63, 21, 16)';
   override brightness = 0.92;
@@ -23,10 +25,5 @@ export class LositComponent extends GeocentricBody {
   override ascendingNodeLongitude = 329.915 * deg;
   override meanDistance = 512655.038 * km;
   override radius = 1968.45 * km;
-
-  constructor() {
-    super();
-    CelestialBg.losit = this;
-  }
 
 }

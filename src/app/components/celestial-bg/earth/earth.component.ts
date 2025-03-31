@@ -8,14 +8,16 @@ import { angle, deg } from '../../../util/units';
 import { CelestialBg } from '../celestial-bg.component';
 
 @Component({
-  selector: 'app-earth',
+  selector: EarthComponent.ID,
   templateUrl: './earth.component.html',
   styleUrl: './earth.component.scss'
 })
 export class EarthComponent {
 
+  public static readonly ID = 'earth';
+
   constructor() {
-    CelestialBg.earth = this;
+    CelestialBg.register(this);
     this.updateTerrain();
   }
 

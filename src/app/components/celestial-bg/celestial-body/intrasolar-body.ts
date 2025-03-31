@@ -46,6 +46,11 @@ export abstract class IntrasolarBody extends CelestialBody {
   override rightAscension!: angle;
   override declination!: angle;
 
+  constructor() {
+    super();
+    CelestialBg.register(this);
+  }
+
   public override update() {
     ({ distance: this.distance, trueLongitude: this.trueLongitude } = OrbitalMechanics.computeDistLong(this, AppComponent.instance.datetime));
     ({ distance: this.distance, rightAscension: this.rightAscension, declination: this.declination } = OrbitalMechanics.DistLong2RaDec(this));

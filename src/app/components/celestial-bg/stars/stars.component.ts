@@ -7,12 +7,13 @@ import { CelestialBody } from '../celestial-body/celestial-body';
 import { EarthComponent } from '../earth/earth.component';
 
 @Component({
-  selector: 'app-stars',
+  selector: StarsComponent.ID,
   templateUrl: './stars.component.html',
   styleUrl: './stars.component.scss'
 })
 export class StarsComponent {
 
+  public static readonly ID = 'stars';
   private static readonly SEED = 'make me some pretty stars';
   private static readonly MAX_STARS: number = 1000;
 
@@ -23,7 +24,7 @@ export class StarsComponent {
   }
 
   constructor() {
-    CelestialBg.stars = this;
+    CelestialBg.register(this);
     const rng = new Random(StarsComponent.SEED);
     for (let i = 0; i < StarsComponent.MAX_STARS; i++) {
       this.stars.push(new Star(rng));

@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
 import { MathUtil } from 'src/app/util/math-util';
 import { AU, days, deg, km } from '../../../util/units';
-import { CelestialBg } from '../celestial-bg.component';
 import { GeocentricBody, IntrasolarBody } from '../celestial-body/intrasolar-body';
 
 @Component({
-  selector: 'app-sun',
+  selector: SunComponent.ID,
   templateUrl: IntrasolarBody.templateUrl,
   styleUrl: IntrasolarBody.styleUrl
 })
 export class SunComponent extends GeocentricBody {
+
+  public static readonly ID = 'sun';
 
   override color = 'yellow';
   override brightness = 1;
@@ -23,10 +24,5 @@ export class SunComponent extends GeocentricBody {
   override ascendingNodeLongitude = 0 * deg; // undefined by definition
   override meanDistance = 1 * AU;
   override radius = 695_700 * km;
-
-  constructor() {
-    super();
-    CelestialBg.sun = this;
-  }
 
 }

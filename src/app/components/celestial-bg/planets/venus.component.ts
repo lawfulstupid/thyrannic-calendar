@@ -1,14 +1,15 @@
 import { Component } from "@angular/core";
 import { AU, days, deg, km } from "src/app/util/units";
-import { CelestialBg } from "../celestial-bg.component";
 import { HeliocentricBody, IntrasolarBody } from "../celestial-body/intrasolar-body";
 
 @Component({
-  selector: 'app-venus',
+  selector: VenusComponent.ID,
   templateUrl: IntrasolarBody.templateUrl,
   styleUrl: IntrasolarBody.styleUrl
 })
 export class VenusComponent extends HeliocentricBody {
+
+  public static readonly ID = 'venus';
 
   override color: string = 'orange';
   override brightness: number = 0.4;
@@ -21,10 +22,5 @@ export class VenusComponent extends HeliocentricBody {
   override orbitalPeriod: number = 224.701 * days;
   override meanDistance: number = 0.72333 * AU;
   override radius: number = 6051.8 * km;
-
-  constructor() {
-    super();
-    CelestialBg.venus = this;
-  }
 
 }

@@ -6,6 +6,7 @@ import { CelestialBg } from "./celestial-bg.component";
 import { Earth } from "./earth/earth";
 import { Arukma } from "./moons/arukma";
 import { Losit } from "./moons/losit";
+import { Venus } from "./planets/venus";
 import { Sky } from "./sky/sky";
 import { Stars } from "./stars/stars";
 import { Sun } from "./sun/sun";
@@ -19,6 +20,7 @@ import { Sun } from "./sun/sun";
     Sky,
     Arukma,
     Losit,
+    Venus
   ],
   imports: [AbsPipe, NgIf, NgFor, PercentPipe, PowPipe],
   exports: [CelestialBg]

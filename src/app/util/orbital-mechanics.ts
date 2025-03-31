@@ -35,7 +35,7 @@ export class OrbitalMechanics {
     // Compute distance, true anomaly, true longitude
     const xv = MathUtil.cos(eccentricAnomaly) - body.eccentricity;
     const yv = Math.sqrt(1.0 - body.eccentricity**2) * MathUtil.sin(eccentricAnomaly);
-    const trueAnomaly = MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(yv, xv)));
+    const trueAnomaly = MathUtil.fixAngle(MathUtil.atan2(yv, xv));
 
     return {
       distance: Math.sqrt(xv**2 + yv**2) * body.meanDistance,
@@ -57,8 +57,8 @@ export class OrbitalMechanics {
 
     // Compute right ascension and declination
     return {
-      rightAscension: MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ye, xe))),
-      declination: MathUtil.fixAngle(MathUtil.rad2deg(Math.atan2(ze, Math.sqrt(xe**2 + ye**2)))),
+      rightAscension: MathUtil.fixAngle(MathUtil.atan2(ye, xe)),
+      declination: MathUtil.fixAngle(MathUtil.atan2(ze, Math.sqrt(xe**2 + ye**2))),
     }
   }
 

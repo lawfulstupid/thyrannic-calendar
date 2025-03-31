@@ -73,7 +73,7 @@ export class Vector {
   public signedAngleTo(that: Vector, normal: Vector): number {
     const y = that.cross(this).dot(normal.normal());
     const x = this.dot(that);
-    return MathUtil.rad2deg(Math.atan2(y, x));
+    return MathUtil.atan2(y, x);
   }
 
   public toString(): string {

@@ -49,7 +49,7 @@ export abstract class IntrasolarBody extends CelestialBody {
 
   // how many degrees in the sky it takes up
   get angularDiameter(): angle {
-    return MathUtil.rad2deg(Math.acos(1 - 2 * (this.radius/this.distance) ** 2));
+    return MathUtil.acos(1 - 2 * (this.radius/this.distance) ** 2);
   }
 
   // mean anomaly (0 at periapsis; increases uniformly with time)

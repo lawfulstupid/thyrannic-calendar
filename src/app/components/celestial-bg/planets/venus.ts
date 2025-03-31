@@ -12,7 +12,7 @@ export class Venus extends HeliocentricBody {
   public static readonly ID = 'venus';
 
   override color = 'orange';
-  override brightness = 0.4;
+  override albedo = 0.7;
 
   override inclination = 3.3946 * deg;
   override ascendingNodeLongitude = 76.6799 * deg;

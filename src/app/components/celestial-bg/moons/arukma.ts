@@ -14,7 +14,7 @@ export class Arukma extends GeocentricBody {
   public static readonly ID = 'arukma';
 
   override color = 'rgb(32, 33, 35)';
-  override brightness = 2.4;
+  override albedo = 0.19;
   override occlude = true;
 
   override inclination = 6.6541 * deg;

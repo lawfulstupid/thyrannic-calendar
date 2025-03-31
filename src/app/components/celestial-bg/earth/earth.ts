@@ -22,6 +22,7 @@ export class Earth {
   }
 
   static readonly TILT: angle = 24.12 * deg;
+  static readonly MASS: number = 5.972E24;
 
   skyColor: string = 'skyblue';
   groundBrightness: number = 1;

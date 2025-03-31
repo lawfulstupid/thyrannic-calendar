@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { AU, days, deg, km } from "src/app/util/units";
+import { days, deg, km } from "src/app/util/units";
 import { HeliocentricBody, IntrasolarBody } from "../celestial-body/intrasolar-body";
 
 @Component({
@@ -11,16 +11,16 @@ export class Venus extends HeliocentricBody {
 
   public static readonly ID = 'venus';
 
-  override color: string = 'orange';
-  override brightness: number = 0.4;
+  override color = 'orange';
+  override brightness = 0.4;
 
-  override inclination: number = 3.3946 * deg;
-  override ascendingNodeLongitude: number = 76.6799 * deg;
-  override periapsisArgument: number = 54.8910 * deg;
-  override eccentricity: number = 0.006773;
-  override originAngle: number = 179.5761 * deg;
-  override orbitalPeriod: number = 224.701 * days;
-  override meanDistance: number = 0.72333 * AU;
-  override radius: number = 6051.8 * km;
+  override inclination = 3.3946 * deg;
+  override ascendingNodeLongitude = 76.6799 * deg;
+  override periapsisArgument = 54.8910 * deg;
+  override eccentricity = 0.006773;
+  override originAngle = 179.5761 * deg;
+  override orbitalPeriod = 224.701 * days;
+  override radius = 6051.8 * km;
+  override mass = 4.867E24;
 
 }

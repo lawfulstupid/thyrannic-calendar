@@ -23,7 +23,7 @@ export class Arukma extends GeocentricBody {
   override originAngle = CelestialBg.sun.originAngle + 76.0417 * deg;
   override orbitalPeriod = OrbitalMechanics.synodicToSiderealPeriod(17.79459 * days);
   override ascendingNodeLongitude = 344.672 * deg;
-  override meanDistance = 278311.973 * km;
   override radius = 1481.52 * km;
+  override mass = 4.2089E22;
 
 }

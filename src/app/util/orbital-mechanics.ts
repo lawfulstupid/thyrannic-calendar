@@ -19,6 +19,9 @@ export class OrbitalMechanics {
 
   private constructor() {}
 
+  // Gravitational constant
+  public static readonly G = 6.6743015E-11;
+
   public static synodicToSiderealPeriod(p: time): time {
     return 1 / (1/p + 1/CelestialBg.sun.orbitalPeriod);
   }

@@ -23,7 +23,7 @@ export class Losit extends GeocentricBody {
   override originAngle = CelestialBg.sun.originAngle + 321.7148 * deg;
   override orbitalPeriod = OrbitalMechanics.synodicToSiderealPeriod(48.28098 * days);
   override ascendingNodeLongitude = 329.915 * deg;
-  override meanDistance = 512655.038 * km;
   override radius = 1968.45 * km;
+  override mass = 1.04794E23;
 
 }

@@ -27,7 +27,7 @@ export class CelestialBg {
     }, 1);
   }
 
-  public static register(body: any & { constructor: { ID: string }}) {
+  public static register(body: any & { constructor: { ID: string } }) {
     console.debug('Registering', body.constructor.ID);
     (<any>CelestialBg)[body.constructor.ID] = body;
     if (body instanceof IntrasolarBody) {

@@ -1,6 +1,9 @@
-<div class="anchor" [style.top]="top" [style.left]="left">
+<div class="anchor" [style.top]="top" [style.left]="left" [style.z-index]="zIndex">
+  <div class="point"
+    [style.--angularDiameter]="angularDiameter"
+    [style.--point-opacity]="pointOpacity"
+  ></div>
   <div class="body"
-    [style.z-index]="zIndex"
     [style.--angularDiameter]="angularDiameter"
     [style.--body-color]="color"
     [style.--brightness]="brightness"

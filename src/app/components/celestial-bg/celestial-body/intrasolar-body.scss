@@ -34,17 +34,14 @@ $aura-radius: clamp(0px, calc($diameter * 10), 1px); // sf 10 seems to work well
     background-color: var(--body-color);
     filter: brightness(calc(var(--brightness) * 3));
   }
-  &::before {
-    content: '';
-    width: 0;
-    height: 0;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    border-radius: 100%;
-    box-shadow: white 0 0 $aura-radius $aura-radius;
-    opacity: var(--point-opacity);
-  }
+}
+
+.point {
+  width: 0;
+  height: 0;
+  border-radius: 100%;
+  box-shadow: white 0 0 $aura-radius $aura-radius;
+  opacity: var(--point-opacity);
 }
 
 svg {

@@ -23,6 +23,6 @@ export class Sun extends GeocentricBody {
   override orbitalPeriod = 340.16433 * days;
   override ascendingNodeLongitude = 0 * deg; // undefined by definition
   override radius = 695_700 * km;
-  override mass = 1.989E30;
+  override density = 1.4102;
 
 }

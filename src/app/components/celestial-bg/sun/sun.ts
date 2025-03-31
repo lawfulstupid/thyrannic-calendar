@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MathUtil } from 'src/app/util/math-util';
-import { AU, days, deg, km } from '../../../util/units';
+import { days, deg, km } from '../../../util/units';
 import { CelestialBg } from '../celestial-bg.component';
 import { GeocentricBody, IntrasolarBody } from '../celestial-body/intrasolar-body';
 
@@ -23,8 +23,8 @@ export class Sun extends GeocentricBody {
   override originAngle = MathUtil.fixAngle((11.2854 - 316.224) * deg);
   override orbitalPeriod = 340.16433 * days;
   override ascendingNodeLongitude = 0 * deg; // undefined by definition
-  override meanDistance = 1 * AU;
   override radius = 695_700 * km;
+  override mass = 1.989E30;
 
   override updatePosition() {
     super.updatePosition();

@@ -46,6 +46,7 @@ export class AppComponent {
   protected set datetime(datetime: TDateTime) {
     this._datetime = datetime;
     LocalValue.CURRENT_DATETIME.put(datetime);
+    CelestialBg.update();
   }
 
   protected _city: City = LocalValue.CITY.get() || City.THYRANNOS;
@@ -61,7 +62,6 @@ export class AppComponent {
   public changeDateTime([quantity, unit]: [number, TemporalUnit]) {
     try {
       this.datetime = this.datetime.add(quantity, unit);
-      CelestialBg.update();
     } catch (err) {
       console.error('Illegal operation:', err);
     }

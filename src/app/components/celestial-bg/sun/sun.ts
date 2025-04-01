@@ -20,8 +20,9 @@ export class Sun extends GeocentricBody {
   }
 
   override color = 'yellow';
-  override albedo = 100;
+  override albedo = 1;
   override occlude = false;
+  override get brightness() { return 35; } // arbitrary number that works well
 
   override inclination = 0 * deg; // 0 by definition
   override periapsisArgument = 94.662 * deg;

@@ -40,7 +40,7 @@ export abstract class IntrasolarBody extends CelestialBody implements DistLong {
   illuminationDirection: angle = 0;
   get pointOpacity(): number {
     const starOpacity = MathUtil.clamp(0.5, CelestialBg.stars.opacity, 1) * 2;
-    return MathUtil.clamp(0, this.equatorialIllumination * this.albedo * starOpacity, 1);
+    return MathUtil.clamp(0, this.equatorialIllumination * this.brightness * starOpacity, 1);
   }
 
   // ecliptic plane = plane in which Earth orbits sun
@@ -86,6 +86,14 @@ export abstract class IntrasolarBody extends CelestialBody implements DistLong {
     return ((GM * (this.orbitalPeriod * 60 * 60 * 24 / (2 * Math.PI)) ** 2) ** (1/3)) / 1000;
   }
 
+  // centre-to-centre (km)
+  get distanceFromSun(): distance {
+    const earthToBody = this.vectorFromEarth();
+    const earthToSun = CelestialBg.sun.vectorFromEarth();
+    const bodyToSun = earthToSun.minus(earthToBody);
+    return bodyToSun.norm();
+  }
+
   // kilograms
   get mass(): number {
     return (4 * Math.PI / 3) * (this.radius ** 3) * this.density * 10E12;
@@ -118,6 +126,11 @@ export abstract class IntrasolarBody extends CelestialBody implements DistLong {
   // epoch of periapsis (in fractional days)
   get periapsisEpoch(): time {
     return (this.periapsisArgument - this.originAngle) * (this.orbitalPeriod / 360);
+  }
+
+  // absolute quantity of reflected light
+  get brightness(): number {
+    return this.albedo * CelestialBg.sun.brightness / ((this.distanceFromSun / CelestialBg.sun.meanDistance) ** 2);
   }
 
   // mean longitude

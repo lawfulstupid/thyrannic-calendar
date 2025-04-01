@@ -14,7 +14,7 @@ export class Losit extends GeocentricBody {
   public static readonly ID = 'losit';
 
   override color = 'rgb(63, 21, 16)';
-  override brightness = 0.92;
+  override albedo = 0.14;
   override occlude = true;
 
   override inclination = 10.1134 * deg;
@@ -23,7 +23,7 @@ export class Losit extends GeocentricBody {
   override originAngle = CelestialBg.sun.originAngle + 321.7148 * deg;
   override orbitalPeriod = OrbitalMechanics.synodicToSiderealPeriod(48.28098 * days);
   override ascendingNodeLongitude = 329.915 * deg;
-  override meanDistance = 512655.038 * km;
   override radius = 1968.45 * km;
+  override density = 3.28;
 
 }

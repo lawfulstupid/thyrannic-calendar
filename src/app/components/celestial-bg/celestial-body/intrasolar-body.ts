@@ -14,7 +14,7 @@ export abstract class IntrasolarBody extends CelestialBody {
 
   // Visual options
   abstract color: string;
-  abstract brightness: number;
+  abstract albedo: number;
   abstract occlude: boolean;
 
   path: { enabled: boolean, min?: Array<string>, max?: Array<string>, day?: Array<string> } = { enabled: false };
@@ -24,7 +24,7 @@ export abstract class IntrasolarBody extends CelestialBody {
   illuminationDirection: angle = 0;
   get pointOpacity(): number {
     const starOpacity = MathUtil.clamp(0.5, CelestialBg.stars.opacity, 1) * 2;
-    return MathUtil.clamp(0, this.equatorialIllumination * starOpacity, 1);
+    return MathUtil.clamp(0, this.equatorialIllumination * this.brightness * starOpacity, 1);
   }
 
   // ecliptic plane = plane in which Earth orbits sun
@@ -39,8 +39,9 @@ export abstract class IntrasolarBody extends CelestialBody {
   abstract readonly eccentricity: number; // eccentricity (0=circle, 0-1=eclipse, 1=parabola)
   abstract readonly originAngle: angle; // anomaly at epoch
   abstract readonly orbitalPeriod: time; // orbital period (sidereal; fractional days)
-  abstract readonly meanDistance: distance; // centre-to-centre distance (km) along semi-major axis of ellipse
   abstract readonly radius: distance; // radius of object (km)
+  abstract readonly density: number; // mean density (g/cm3)
+
   distance!: distance;
   trueLongitude!: angle;
   override rightAscension!: angle;
@@ -57,6 +58,25 @@ export abstract class IntrasolarBody extends CelestialBody {
     super.update();
     if (this.occlude) OrbitalMechanics.updateOcclusion(this);
     this.updatePath();
+  }
+
+  // centre-to-centre distance (km) along semi-major axis of ellipse
+  get meanDistance(): distance {
+    const GM = OrbitalMechanics.G * (this.mass + (this.heliocentric ? CelestialBg.sun.mass : Earth.MASS));
+    return ((GM * (this.orbitalPeriod * 60 * 60 * 24 / (2 * Math.PI)) ** 2) ** (1/3)) / 1000;
+  }
+
+  // centre-to-centre (km)
+  get distanceFromSun(): distance {
+    const earthToBody = this.vectorFromEarth();
+    const earthToSun = CelestialBg.sun.vectorFromEarth();
+    const bodyToSun = earthToSun.minus(earthToBody);
+    return bodyToSun.norm();
+  }
+
+  // kilograms
+  get mass(): number {
+    return (4 * Math.PI / 3) * (this.radius ** 3) * this.density * 10E12;
   }
 
   // how many degrees in the sky it takes up
@@ -78,6 +98,11 @@ export abstract class IntrasolarBody extends CelestialBody {
   // epoch of periapsis (in fractional days)
   get periapsisEpoch(): time {
     return (this.periapsisArgument - this.originAngle) * (this.orbitalPeriod / 360);
+  }
+
+  // absolute quantity of reflected light
+  get brightness(): number {
+    return this.albedo * CelestialBg.sun.brightness / ((this.distanceFromSun / CelestialBg.sun.meanDistance) ** 2);
   }
 
   // mean longitude

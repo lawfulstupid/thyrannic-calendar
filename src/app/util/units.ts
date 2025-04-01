@@ -3,7 +3,6 @@ import { MathUtil } from "src/app/util/math-util";
 
 export type distance = number;
 export const km: distance = 1;
-export const AU: distance = 149_600_000 * km;
 
 export type angle = number;
 export const deg: angle = 1;

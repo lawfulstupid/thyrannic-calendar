@@ -14,7 +14,7 @@ export class Arukma extends GeocentricBody {
   public static readonly ID = 'arukma';
 
   override color = 'rgb(32, 33, 35)';
-  override brightness = 2.4;
+  override albedo = 0.19;
   override occlude = true;
 
   override inclination = 6.6541 * deg;
@@ -23,7 +23,7 @@ export class Arukma extends GeocentricBody {
   override originAngle = CelestialBg.sun.originAngle + 76.0417 * deg;
   override orbitalPeriod = OrbitalMechanics.synodicToSiderealPeriod(17.79459 * days);
   override ascendingNodeLongitude = 344.672 * deg;
-  override meanDistance = 278311.973 * km;
   override radius = 1481.52 * km;
+  override density = 3.09;
 
 }

@@ -6,9 +6,8 @@
   <div class="body"
     [style.--angularDiameter]="angularDiameter"
     [style.--body-color]="color"
-    [style.--albedo]="albedo"
+    [style.--brightness]="brightness"
     [style.--sky-color]="celestialBodies.earth.skyColor"
-    [style.--point-opacity]="pointOpacity"
     [style.--eclipse-width]="equatorialIllumination - 0.5 | abs | percent"
     [style.transform]="'rotate(' + illuminationDirection + 'deg)'"
   >

@@ -7,6 +7,7 @@ import { Arukma } from "./moons/arukma";
 import { Losit } from "./moons/losit";
 import { Stars } from "./stars/stars";
 import { Sun } from "./sun/sun";
+import { North } from "./north/north";
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { Sun } from "./sun/sun";
     Stars,
     Arukma,
     Losit,
+    North
   ],
   imports: [AbsPipe, NgIf, NgFor, PercentPipe],
   exports: [CelestialBg]

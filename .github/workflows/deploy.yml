@@ -26,9 +26,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-tags: true
-          fetch-depth: 0
       - name: Set up Git user
         uses: fregante/setup-git-user@v2
       - name: Set up Node
@@ -38,24 +35,16 @@ jobs:
       - name: Get tag
         id: get-tag
         run: |
-          # Check if head is not tagged
-          TAG_LIST=($(git tag --contains))
-          TAG=${TAG_LIST[0]}
-          if [ -z $TAG ]; then
-            # Check if package version equal latest tag in main
-            TAG=v$(npm pkg get version | tr -d '"')
-            LAST_TAG=$(git describe --tags --abbrev=0)
-            if [ "$TAG" == "$LAST_TAG" ]; then
-              # No change made to package version, do one now
-              TAG=$(npm version patch)
-              git push --follow-tags
-            else
-              # Package version changed, tag it now
-              git push origin :refs/tags/$TAG
-              git tag -f $TAG
-              git push origin --tags
-            fi
+          # Check if last commit is a merge
+          if [ $(git cat-file -p HEAD | grep parent | wc -l) -gt 1 ]; then
+            BUMP=minor
+          else
+            BUMP=patch
           fi
+          # Do version bump
+          TAG=$(npm version $BUMP)
+          git push --follow-tags
+          # Output new tag
           echo "Tag: $TAG"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
       - name: Code build

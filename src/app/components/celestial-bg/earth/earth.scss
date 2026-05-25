@@ -20,8 +20,8 @@ svg {
   position: absolute;
   bottom: 0;
   height: 20vh;
-  left: calc(50vw - 180vmin);
-  width: 360vmin;
+  left: calc(50vw - 540vmin);
+  width: 1080vmin;
   @include ground;
 }
 

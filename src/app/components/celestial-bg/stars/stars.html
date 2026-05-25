@@ -1,6 +1,7 @@
 <div [style.opacity]="opacity" [style.z-index]="-99">
   <div *ngFor="let star of stars"
     class="star"
+    id="star-{{star.id}}"
     [style.display]="star.display ? 'inherit' : 'none'"
     [style.bottom]="'calc(10vh + ' + star.bottom + 'vmin)'"
     [style.left]="'calc(50vw + ' + star.left + 'vmin)'"

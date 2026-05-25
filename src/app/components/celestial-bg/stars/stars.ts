@@ -27,7 +27,7 @@ export class Stars {
     CelestialBg.register(this);
     const rng = new Random(Stars.SEED);
     for (let i = 0; i < Stars.MAX_STARS; i++) {
-      this.stars.push(new Star(rng));
+      this.stars.push(new Star(i, rng));
     }
   }
 
@@ -41,7 +41,7 @@ export class Stars {
 
 class Star extends CelestialBody {
 
-  constructor(private readonly rng: Random) {
+  constructor(public readonly id: number, private readonly rng: Random) {
     super();
   }
 

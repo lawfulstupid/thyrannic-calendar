@@ -46,8 +46,8 @@ $aura-radius: clamp(0px, calc($diameter * 10), 1px); // sf 10 seems to work well
 
 svg {
   position: absolute;
-  bottom: 10vh;
-  height: 90vmin;
+  bottom: 0;
+  height: 300vmin;
   left: 0;
   width: 100vw;
   opacity: 20%;

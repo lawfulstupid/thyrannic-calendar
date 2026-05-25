@@ -16,6 +16,7 @@ import { TDate } from './model/thyrannic-date';
 import { TDateTime } from './model/thyrannic-date-time';
 import { OrdinalPipe } from './pipes/ordinal';
 import { LocalValue } from './util/local-value';
+import { MathUtil } from './util/math-util';
 
 @Component({
   selector: 'app-root',
@@ -85,7 +86,16 @@ export class AppComponent {
     CelestialBg.sun.updatePath();
   }
 
-  public changeBearing() {
+  public changeBearing(dir?: 1 | -1) {
+    if (dir !== undefined) {
+      const targetAngle = MathUtil.fixAngle(this.bearing.angle + dir * 45);
+      const targetBearing = Bearing.values.find(bearing => bearing.angle === targetAngle);
+      if (targetBearing) {
+        this.bearing = targetBearing;
+      } else {
+        throw new Error('Unable to find bearing ' + targetAngle);
+      }
+    }
     CelestialBg.update();
     CelestialBg.sun.updatePath();
     CelestialBg.earth.updateTerrain();

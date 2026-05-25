@@ -37,6 +37,8 @@ export class AppComponent {
   protected readonly bearings: Array<Bearing> = Bearing.values;
   protected get sunPathEnabled() { return CelestialBg.sun.path.enabled; }
 
+  public static readonly FOV = 90;
+
   // Load datetime from local storage
   private _datetime: TDateTime = LocalValue.CURRENT_DATETIME.get() || TDate.fromDate().at(12, 0);
   public get datetime(): TDateTime {

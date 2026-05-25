@@ -1,6 +1,6 @@
 {
   "name": "thryannic-calendar",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "scripts": {
     "start": "ng serve",
     "build": "ng build"

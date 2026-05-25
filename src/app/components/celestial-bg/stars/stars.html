@@ -2,7 +2,7 @@
   <div *ngFor="let star of stars"
     class="star"
     [style.display]="star.display ? 'inherit' : 'none'"
-    [style.top]="star.top"
+    [style.bottom]="star.bottom"
     [style.left]="star.left"
     [style.--diameter]="star.diameter + 'px'"
     [style.--rotation]="star.rotation + 'deg'"

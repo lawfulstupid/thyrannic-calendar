@@ -49,7 +49,9 @@ svg {
   height: 300vmin;
   left: 0;
   width: 100vw;
-  opacity: 20%;
+  &.path {
+    opacity: 20%;
+  }
 }
 
 polyline {

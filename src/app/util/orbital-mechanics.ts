@@ -152,7 +152,7 @@ export class OrbitalMechanics {
     const zi = d * z / x;
 
     // Occlusion culling
-    if (Math.abs(yi) > 10000 || Math.abs(zi) > 10000) return { display: false };
+    if (Math.abs(yi) > 1000 || Math.abs(zi) > 1000) return { display: false };
 
     return {
       display: true,

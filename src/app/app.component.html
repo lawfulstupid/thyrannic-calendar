@@ -31,6 +31,14 @@
     <option *ngFor="let bearing of bearings" [ngValue]="bearing">Facing {{bearing.name}}</option>
   </select>
 </div>
+<div class="bearing ui">
+  <button class="clickable left" (click)="changeBearing(1)">
+    <i class="arrow"></i>
+  </button>
+  <button class="clickable right" (click)="changeBearing(-1)">
+    <i class="arrow"></i>
+  </button>
+</div>
 <span class="footer ui">
   <a href="http://github.com/lawfulstupid/thyrannic-calendar">v{{environment.appVersion}}</a>
 </span>

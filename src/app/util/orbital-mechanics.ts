@@ -13,7 +13,7 @@ export type DistLong = { distance: distance, trueLongitude: angle };
 export type Orbital = DistLong & { heliocentric: boolean, ascendingNodeLongitude: angle, inclination: angle };
 export type RaDec = { rightAscension: angle, declination: angle };
 export type AzAlt = { azimuth: angle, altitude: angle };
-export type ScreenPos = { top: string, left: string };
+export type ScreenPos = { display: true, bottom: number, left: number, scale: number } | { display: false };
 
 export class OrbitalMechanics {
 
@@ -83,8 +83,8 @@ export class OrbitalMechanics {
 
   // Computes right ascension + declination for an object
   public static computeRaDec(body: IntrasolarBody, datetime: TDateTime): RaDec {
-    const distLong = OrbitalMechanics.computeDistLong(body, datetime);
-    return OrbitalMechanics.DistLong2RaDec({
+    const distLong = this.computeDistLong(body, datetime);
+    return this.DistLong2RaDec({
       ...distLong,
       heliocentric: body.heliocentric,
       ascendingNodeLongitude: body.ascendingNodeLongitude,
@@ -115,12 +115,53 @@ export class OrbitalMechanics {
     return { azimuth, altitude };
   }
 
+  // Converts azimuth + altitude to point on unit sphere
+  // (0,0)  -> (1,0,0)
+  // (0,90) -> (0,1,0)
+  // (90,0) -> (0,0,1)
+  public static AzAlt2Vector(coords: AzAlt): Vector {
+    const y = MathUtil.sin(coords.altitude);
+    const x = MathUtil.cos(coords.azimuth) * MathUtil.cos(coords.altitude);
+    const z = MathUtil.sin(coords.azimuth) * MathUtil.cos(coords.altitude);
+    return new Vector(x, y, z);
+  }
+
   // Converts azimuth + altitude to screen position calc
   public static AzAlt2ScreenPos(body: AzAlt): ScreenPos {
+    /* GNOMONIC/RECTILINEAR PROJECTION
+     * Assume observer is at the origin of a unit sphere
+     * The body we want to render is on the surface of the sphere
+     * The observer is looking in the direction of the positive x-axis
+     * For reference, +Y is above the observer and +Z is to their right
+     * The viewport is a rectangle on the plane x = d where d is the distance of the viewport from the observer
+     * We draw a line from the origin to the body and see where it insersects the viewport
+     * That gives us the coordinates of the body as rendered on the viewport
+     */
+
+    // Compute position of body on unit sphere
+    const x = MathUtil.cos(body.azimuth) * MathUtil.cos(body.altitude);
+    const y = MathUtil.sin(body.altitude);
+    const z = MathUtil.sin(body.azimuth) * MathUtil.cos(body.altitude);
+    if (x <= 0) return { display: false } // body is behind observer
+
+    // Compute distance to viewport (50 = half viewport width)
+    const d = 50 / MathUtil.tan(AppComponent.FOV / 2);
+
+    // Line to body intersects viewport at (d,yi,zi)
+    const yi = d * y / x;
+    const zi = d * z / x;
+
+    // Occlusion culling
+    if (Math.abs(yi) > 1000 || Math.abs(zi) > 1000) return { display: false };
+
     return {
-      top: `calc(90vh - ${body.altitude}vmin)`,
-      left: `calc(50vw + ${body.azimuth}vmin)`
+      display: true,
+      bottom: yi,
+      left: zi,
+      scale: 1 / x
     }
+    // x = cosine of angular distance between body and view direction (+x)
+    //   = cos(acos((x,y,z) . (1,0,0)))
   }
 
   public static updateOcclusion(body: IntrasolarBody) {
@@ -162,13 +203,17 @@ export class OrbitalMechanics {
 
     let lastAz = 0;
     for (let u = 0; u <= minutesPerDay; u++) {
-      const { azimuth, altitude } = OrbitalMechanics.RaDec2AzAlt({ rightAscension, declination }, dt.add(u, TemporalUnit.MINUTE));
+      const { azimuth, altitude } = this.RaDec2AzAlt({ rightAscension, declination }, dt.add(u, TemporalUnit.MINUTE));
       if (Math.abs(azimuth - lastAz) > 90) {
         // split paths at asymptotes
         paths.push(pathPoints.join(' '));
         pathPoints = [];
       }
-      pathPoints.push(`${azimuth},${90-altitude}`);
+
+      const screenPos = this.AzAlt2ScreenPos({ azimuth, altitude });
+      if (screenPos.display) {
+        pathPoints.push(`${screenPos.left},${90-screenPos.bottom}`)
+      }
       lastAz = azimuth;
     }
     paths.push(pathPoints.join(' '));

@@ -1,7 +1,8 @@
 <div [style.opacity]="opacity" [style.z-index]="-99">
   <div *ngFor="let star of stars"
     class="star"
-    [style.top]="star.top"
+    [style.display]="star.display ? 'inherit' : 'none'"
+    [style.bottom]="star.bottom"
     [style.left]="star.left"
     [style.--diameter]="star.diameter + 'px'"
     [style.--rotation]="star.rotation + 'deg'"

@@ -29,9 +29,16 @@ export class Earth {
 
   terrainMap!: Array<[number, number]>;
   protected get terrainPath(): string {
-    return this.terrainMap
-      .concat([[180, -1], [-179, -1]])            // close the loop without intersection
+    const l = this.terrainMap.map(([x,y]) => [x - 360, y]);
+    const m = this.terrainMap;
+    const r = this.terrainMap.map(([x,y]) => [x + 360, y]);
+
+    return l.concat(m).concat(r)
+      .concat([[540, -1], [-539, -1]])           // close the loop without intersection
       .map(([x, y]) => `${x},${-y}`).join(' ');  // join into path string
+  }
+  protected get terrainScale(): number {
+    return 90 / AppComponent.FOV;
   }
 
   public static get SUNRISE_SUNSET_START(): angle {

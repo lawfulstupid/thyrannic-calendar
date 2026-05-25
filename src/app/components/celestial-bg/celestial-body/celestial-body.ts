@@ -16,13 +16,18 @@ export abstract class CelestialBody {
   get maxAltitude(): angle { return 90 - AppComponent.instance.city.latitude + this.declination; }
 
   // On-screen position variables
-  top: string = '0';
-  left: string = '0';
+  display: boolean = false;
+  bottom: number = 0;
+  left: number = 0;
+  scale: number = 1;
   zIndex: number = 0;
 
   public update() {
     ({ azimuth: this.azimuth, altitude: this.altitude } = OrbitalMechanics.RaDec2AzAlt(this, AppComponent.instance.datetime));
-    ({ top: this.top, left: this.left } = OrbitalMechanics.AzAlt2ScreenPos(this));
+    const pos = OrbitalMechanics.AzAlt2ScreenPos(this);
+    if (this.display = pos.display) {
+      ({ bottom: this.bottom, left: this.left, scale: this.scale } = pos);
+    }
   }
 
 }

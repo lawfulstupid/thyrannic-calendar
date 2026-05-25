@@ -1,4 +1,9 @@
-<div class="anchor" [style.top]="top" [style.left]="left" [style.z-index]="zIndex">
+<div class="anchor"
+  [style.display]="display ? 'inherit' : 'none'"
+  [style.bottom]="'calc(10vh + ' + bottom + 'vmin)'"
+  [style.left]="'calc(50vw + ' + left + 'vmin)'"
+  [style.z-index]="zIndex"
+>
   <div class="point"
     [style.--angularDiameter]="angularDiameter"
     [style.--point-opacity]="pointOpacity"
@@ -10,7 +15,7 @@
     [style.--sky-color]="celestialBodies.earth.skyColor"
     [style.--point-opacity]="pointOpacity"
     [style.--eclipse-width]="equatorialIllumination - 0.5 | abs | percent"
-    [style.transform]="'rotate(' + illuminationDirection + 'deg)'"
+    [style.transform]="'rotate(' + illuminationDirection + 'deg) scale(' + scale + ')'"
   >
     <div class="lit-half"></div>
     <div class="meridean" [class.lit]="equatorialIllumination > 0.5"></div>

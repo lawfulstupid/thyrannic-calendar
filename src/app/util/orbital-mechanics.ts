@@ -128,7 +128,7 @@ export class OrbitalMechanics {
 
   // Converts azimuth + altitude to screen position calc
   public static AzAlt2ScreenPos(body: AzAlt): ScreenPos {
-    /* STEREOGRAPHIC PROJECTION
+    /* GNOMONIC/RECTILINEAR PROJECTION
      * Assume observer is at the origin of a unit sphere
      * The body we want to render is on the surface of the sphere
      * The observer is looking in the direction of the positive x-axis

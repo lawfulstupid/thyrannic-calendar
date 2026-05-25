@@ -21,8 +21,7 @@ export class Vector {
   public toRAD(): RaDec & { distance: number } {
     const distance = this.norm();
     const declination = MathUtil.asin(this.y / distance);
-    const hDist = distance * MathUtil.cos(declination);
-    const rightAscension = MathUtil.acos(this.x / hDist);
+    const rightAscension = MathUtil.atan2(this.z, this.x);
     return { rightAscension, declination, distance };
   }
 

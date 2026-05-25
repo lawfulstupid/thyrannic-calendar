@@ -19,13 +19,14 @@ export abstract class CelestialBody {
   display: boolean = false;
   top: string = '0';
   left: string = '0';
+  scale: number = 1;
   zIndex: number = 0;
 
   public update() {
     ({ azimuth: this.azimuth, altitude: this.altitude } = OrbitalMechanics.RaDec2AzAlt(this, AppComponent.instance.datetime));
     const pos = OrbitalMechanics.AzAlt2ScreenPos(this);
     if (this.display = pos.display) {
-      ({ top: this.top, left: this.left } = pos);
+      ({ top: this.top, left: this.left, scale: this.scale } = pos);
     }
   }
 

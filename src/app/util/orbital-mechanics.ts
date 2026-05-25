@@ -13,7 +13,7 @@ export type DistLong = { distance: distance, trueLongitude: angle };
 export type Orbital = DistLong & { heliocentric: boolean, ascendingNodeLongitude: angle, inclination: angle };
 export type RaDec = { rightAscension: angle, declination: angle };
 export type AzAlt = { azimuth: angle, altitude: angle };
-export type ScreenPos = { display: true, top: string, left: string } | { display: false };
+export type ScreenPos = { display: true, top: string, left: string, scale: number } | { display: false };
 
 export class OrbitalMechanics {
 
@@ -154,8 +154,11 @@ export class OrbitalMechanics {
     return {
       display: true,
       top: `calc(90vh - ${yi}vmin)`,
-      left: `calc(50vw + ${zi}vmin)`
+      left: `calc(50vw + ${zi}vmin)`,
+      scale: 1 / x
     }
+    // x = cosine of angular distance between body and view direction (+x)
+    //   = cos(acos((x,y,z) . (1,0,0)))
   }
 
   public static updateOcclusion(body: IntrasolarBody) {

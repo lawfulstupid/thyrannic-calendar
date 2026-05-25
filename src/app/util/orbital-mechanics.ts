@@ -13,7 +13,7 @@ export type DistLong = { distance: distance, trueLongitude: angle };
 export type Orbital = DistLong & { heliocentric: boolean, ascendingNodeLongitude: angle, inclination: angle };
 export type RaDec = { rightAscension: angle, declination: angle };
 export type AzAlt = { azimuth: angle, altitude: angle };
-export type ScreenPos = { display: true, top: string, left: string, scale: number } | { display: false };
+export type ScreenPos = { display: true, bottom: number, left: number, scale: number } | { display: false };
 
 export class OrbitalMechanics {
 
@@ -83,8 +83,8 @@ export class OrbitalMechanics {
 
   // Computes right ascension + declination for an object
   public static computeRaDec(body: IntrasolarBody, datetime: TDateTime): RaDec {
-    const distLong = OrbitalMechanics.computeDistLong(body, datetime);
-    return OrbitalMechanics.DistLong2RaDec({
+    const distLong = this.computeDistLong(body, datetime);
+    return this.DistLong2RaDec({
       ...distLong,
       heliocentric: body.heliocentric,
       ascendingNodeLongitude: body.ascendingNodeLongitude,
@@ -151,10 +151,13 @@ export class OrbitalMechanics {
     const yi = d * y / x;
     const zi = d * z / x;
 
+    // Occlusion culling
+    if (Math.abs(yi) > 1000 || Math.abs(zi) > 1000) return { display: false };
+
     return {
       display: true,
-      top: `calc(90vh - ${yi}vmin)`,
-      left: `calc(50vw + ${zi}vmin)`,
+      bottom: yi,
+      left: zi,
       scale: 1 / x
     }
     // x = cosine of angular distance between body and view direction (+x)
@@ -200,13 +203,17 @@ export class OrbitalMechanics {
 
     let lastAz = 0;
     for (let u = 0; u <= minutesPerDay; u++) {
-      const { azimuth, altitude } = OrbitalMechanics.RaDec2AzAlt({ rightAscension, declination }, dt.add(u, TemporalUnit.MINUTE));
+      const { azimuth, altitude } = this.RaDec2AzAlt({ rightAscension, declination }, dt.add(u, TemporalUnit.MINUTE));
       if (Math.abs(azimuth - lastAz) > 90) {
         // split paths at asymptotes
         paths.push(pathPoints.join(' '));
         pathPoints = [];
       }
-      pathPoints.push(`${azimuth},${90-altitude}`);
+
+      const screenPos = this.AzAlt2ScreenPos({ azimuth, altitude });
+      if (screenPos.display) {
+        pathPoints.push(`${screenPos.left},${90-screenPos.bottom}`)
+      }
       lastAz = azimuth;
     }
     paths.push(pathPoints.join(' '));

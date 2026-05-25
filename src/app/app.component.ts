@@ -71,7 +71,6 @@ export class AppComponent {
   }
 
   public changeCity() {
-    this.resetBearing();
     const oldCity: City = LocalValue.CITY.get() || City.THYRANNOS;
     const longDiff = this.city.longitude - oldCity.longitude;
     this.datetime = this.datetime.add(Math.round(longDiff * 4), TemporalUnit.MINUTE);

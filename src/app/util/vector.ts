@@ -1,5 +1,6 @@
 import { MathUtil } from "./math-util";
 import { RaDec } from "./orbital-mechanics";
+import { angle } from "./units";
 
 export class Vector {
 
@@ -74,6 +75,24 @@ export class Vector {
     const y = that.cross(this).dot(normal.normal());
     const x = this.dot(that);
     return MathUtil.atan2(y, x);
+  }
+
+  public rotate(yaw: angle, pitch: angle, roll: angle): Vector {
+    const r11 = MathUtil.cos(yaw) * MathUtil.cos(pitch);
+    const r12 = MathUtil.cos(yaw) * MathUtil.sin(pitch) * MathUtil.sin(roll) - MathUtil.sin(yaw) * MathUtil.cos(roll);
+    const r13 = MathUtil.cos(yaw) * MathUtil.sin(pitch) * MathUtil.cos(roll) + MathUtil.sin(yaw) * MathUtil.sin(roll);
+    const r21 = MathUtil.sin(yaw) * MathUtil.cos(pitch);
+    const r22 = MathUtil.sin(yaw) * MathUtil.sin(pitch) * MathUtil.sin(roll) + MathUtil.cos(yaw) * MathUtil.cos(roll);
+    const r23 = MathUtil.sin(yaw) * MathUtil.sin(pitch) * MathUtil.cos(roll) - MathUtil.cos(yaw) * MathUtil.sin(roll);
+    const r31 = MathUtil.sin(pitch) * -1;
+    const r32 = MathUtil.cos(pitch) * MathUtil.sin(roll);
+    const r33 = MathUtil.cos(pitch) * MathUtil.cos(roll);
+
+    return new Vector(
+      r11 * this.x + r12 * this.y + r13 * this.z,
+      r21 * this.x + r22 * this.y + r23 * this.z,
+      r31 * this.x + r32 * this.y + r33 * this.z
+    );
   }
 
   public toString(): string {

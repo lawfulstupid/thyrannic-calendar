@@ -57,9 +57,9 @@ class Star extends CelestialBody {
     const galacticDec = MathUtil.asin(r) * deg;
 
     // Change basis to celestial equator via 3d vector
-    const galacticPos = Vector.fromRAD(galacticRA, galacticDec);
+    const galacticPos = Vector.fromSpherical(galacticRA, galacticDec);
     const geocentricPos = galacticPos.rotate(Stars.INCLINATION, Stars.ZERO_LONG, 0);
-    ({ rightAscension: this.rightAscension, declination: this.declination } = geocentricPos.toRAD());
+    ({ rightAscension: this.rightAscension, declination: this.declination } = geocentricPos.toSpherical());
   }
 
   public override readonly rightAscension: angle;

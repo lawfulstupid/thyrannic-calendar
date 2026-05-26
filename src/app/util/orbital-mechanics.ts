@@ -115,17 +115,6 @@ export class OrbitalMechanics {
     return { azimuth, altitude };
   }
 
-  // Converts azimuth + altitude to point on unit sphere
-  // (0,0)  -> (1,0,0)
-  // (0,90) -> (0,1,0)
-  // (90,0) -> (0,0,1)
-  public static AzAlt2Vector(coords: AzAlt): Vector {
-    const y = MathUtil.sin(coords.altitude);
-    const x = MathUtil.cos(coords.azimuth) * MathUtil.cos(coords.altitude);
-    const z = MathUtil.sin(coords.azimuth) * MathUtil.cos(coords.altitude);
-    return new Vector(x, y, z);
-  }
-
   // Converts azimuth + altitude to screen position calc
   public static AzAlt2ScreenPos(body: AzAlt): ScreenPos {
     /* GNOMONIC/RECTILINEAR PROJECTION
@@ -139,17 +128,15 @@ export class OrbitalMechanics {
      */
 
     // Compute position of body on unit sphere
-    const x = MathUtil.cos(body.azimuth) * MathUtil.cos(body.altitude);
-    const y = MathUtil.sin(body.altitude);
-    const z = MathUtil.sin(body.azimuth) * MathUtil.cos(body.altitude);
-    if (x <= 0) return { display: false } // body is behind observer
+    const p = Vector.fromSpherical(body.azimuth, body.altitude);
+    if (p.x <= 0) return { display: false } // body is behind observer
 
     // Compute distance to viewport (50 = half viewport width)
     const d = 50 / MathUtil.tan(AppComponent.FOV / 2);
 
     // Line to body intersects viewport at (d,yi,zi)
-    const yi = d * y / x;
-    const zi = d * z / x;
+    const yi = d * p.y / p.x;
+    const zi = d * p.z / p.x;
 
     // Occlusion culling
     if (Math.abs(yi) > 1000 || Math.abs(zi) > 1000) return { display: false };
@@ -158,7 +145,7 @@ export class OrbitalMechanics {
       display: true,
       bottom: yi,
       left: zi,
-      scale: 1 / x
+      scale: 1 / p.x
     }
     // x = cosine of angular distance between body and view direction (+x)
     //   = cos(acos((x,y,z) . (1,0,0)))

@@ -1,5 +1,5 @@
 import { MathUtil } from "./math-util";
-import { RaDec } from "./orbital-mechanics";
+import { AzAlt, RaDec } from "./orbital-mechanics";
 import { angle } from "./units";
 
 export class Vector {
@@ -10,20 +10,26 @@ export class Vector {
     readonly z: number
   ) {}
 
-  public static fromRAD(rightAscension: number, declination: number, distance: number = 1): Vector {
-    const hDist = distance * MathUtil.cos(declination);
+  public static fromSpherical(azimuth: angle, altitude: angle, distance: number = 1): Vector {
+    const hDist = distance * MathUtil.cos(altitude);
     return new Vector(
-      hDist * MathUtil.cos(rightAscension),
-      distance * MathUtil.sin(declination),
-      hDist * MathUtil.sin(rightAscension)
-    );
+      hDist * MathUtil.cos(azimuth),
+      distance * MathUtil.sin(altitude),
+      hDist * MathUtil.sin(azimuth)
+    )
   }
 
-  public toRAD(): RaDec & { distance: number } {
+  public toSpherical(): AzAlt & RaDec & { distance: number } {
     const distance = this.norm();
-    const declination = MathUtil.asin(this.y / distance);
-    const rightAscension = MathUtil.atan2(this.z, this.x);
-    return { rightAscension, declination, distance };
+    const altitude = MathUtil.asin(this.y / distance);
+    const azimuth = MathUtil.atan2(this.z, this.x);
+    return {
+      azimuth,
+      altitude,
+      rightAscension: azimuth,
+      declination: altitude,
+      distance
+    }
   }
 
   public norm(): number {

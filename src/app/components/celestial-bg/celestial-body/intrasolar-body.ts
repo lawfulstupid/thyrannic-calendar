@@ -96,7 +96,7 @@ export abstract class IntrasolarBody extends CelestialBody {
   }
 
   public vectorFromEarth(): Vector {
-    return Vector.fromRAD(this.rightAscension, this.declination, this.distance);
+    return Vector.fromSpherical(this.rightAscension, this.declination, this.distance);
   }
 
   updatePath() {

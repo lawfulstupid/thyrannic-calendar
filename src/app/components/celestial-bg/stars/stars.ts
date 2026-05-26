@@ -70,8 +70,8 @@ class Star extends CelestialBody {
 
   public override readonly rightAscension: angle;
   public override readonly declination: angle;
-  public readonly diameter: number = this.rng.lognormal(1, 0.25);
-  public readonly brightnessMax: number = this.rng.lognormal(50, 50);
+  public readonly diameter: number = MathUtil.clamp(0.2, this.rng.lognormal(1, 0.25), 2);
+  public readonly brightnessMax: number = MathUtil.clamp(0, this.rng.lognormal(0.5, 0.5), 1);
   public readonly brightnessMin: number = this.rng.between(0.1, 0.9) * this.brightnessMax;
   public readonly animationDuration: number = this.rng.lognormal(5, 2);
   public readonly animationDelay: number = this.rng.lognormal(1, 1);

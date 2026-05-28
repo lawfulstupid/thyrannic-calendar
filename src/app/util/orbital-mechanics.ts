@@ -110,7 +110,7 @@ export class OrbitalMechanics {
     const azimuth = MathUtil.fixAngle2(MathUtil.atan2(
       MathUtil.sin(localHourAngle),
       MathUtil.cos(localHourAngle) * MathUtil.sin(latitude) - MathUtil.tan(body.declination) * MathUtil.cos(latitude)
-    ) + AppComponent.instance.bearing.angle);
+    ));
 
     return { azimuth, altitude };
   }
@@ -128,7 +128,7 @@ export class OrbitalMechanics {
      */
 
     // Compute position of body on unit sphere
-    const p = Vector.fromSpherical(body.azimuth, body.altitude);
+    const p = Vector.fromSpherical(body.azimuth + AppComponent.instance.bearing.angle, body.altitude);
     if (p.x <= 0) return { display: false } // body is behind observer
 
     // Compute distance to viewport (50 = half viewport width)

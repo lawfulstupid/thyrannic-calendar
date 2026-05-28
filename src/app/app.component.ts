@@ -97,7 +97,6 @@ export class AppComponent {
     }
     CelestialBg.update();
     CelestialBg.sun.updatePath();
-    CelestialBg.earth.updateTerrain();
   }
 
   playLoop: NodeJS.Timeout | undefined;

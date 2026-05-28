@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AppComponent } from 'src/app/app.component';
 import { TemporalUnit } from 'src/app/model/temporal-unit';
 import { MathUtil } from 'src/app/util/math-util';
-import { OrbitalMechanics } from 'src/app/util/orbital-mechanics';
+import { AzAlt, OrbitalMechanics } from 'src/app/util/orbital-mechanics';
 import { Random } from 'src/app/util/random';
 import { angle, deg } from '../../../util/units';
 import { CelestialBg } from '../celestial-bg.component';
@@ -27,32 +27,32 @@ export class Earth {
   groundBrightness: number = 1;
   snowCoverage: number = 0;
 
-  terrainMap!: Array<[number, number]>;
+  terrainMap!: Array<AzAlt>;
   protected get terrainPath(): string {
-    const l = this.terrainMap.map(([x,y]) => [x - 360, y]);
-    const m = this.terrainMap;
-    const r = this.terrainMap.map(([x,y]) => [x + 360, y]);
-
-    return l.concat(m).concat(r)
-      .concat([[540, -1], [-539, -1]])           // close the loop without intersection
-      .map(([x, y]) => `${x},${-y}`).join(' ');  // join into path string
-  }
-  protected get terrainScale(): number {
-    return 90 / AppComponent.FOV;
+    return this.terrainMap
+      // Map onto viewport
+      .map(point => OrbitalMechanics.AzAlt2ScreenPos(point))
+      // Remove culled points
+      .filter(pos => pos.display)
+      // Sort left to right
+      .sort((a, b) => a.left - b.left)
+      // close the loop without intersection
+      .concat([{ display: true, left: 1000, bottom: -100, scale: 1 }, { display: true, left: -1000, bottom: -100, scale: 1 }])
+      // join into path string
+      .map(({ left, bottom, scale }) => `${50 + left},${(90 - bottom)}`).join(' ');
   }
 
   public static get SUNRISE_SUNSET_START(): angle {
-    return Earth.HORIZON + 5 * CelestialBg.sun.angularDiameter;
+    return Earth.HORIZON + CelestialBg.sun.angularDiameter;
   }
 
   public static get HORIZON(): angle {
-    const a = MathUtil.fixAngle2(Math.round(CelestialBg.sun.azimuth));
-    const terrainLevel = CelestialBg.earth.terrainMap.find(([x, _]) => x === a)![1];
-    return terrainLevel * 10; // to account for SVG stretching
+    const a = MathUtil.fixAngle(Math.round(CelestialBg.sun.azimuth));
+    return CelestialBg.earth.terrainMap.find(({ azimuth }) => azimuth === a)!.altitude;
   }
 
   public static get SUNRISE_SUNSET(): angle {
-    return Earth.HORIZON - 5 * CelestialBg.sun.angularDiameter / 2;
+    return Earth.HORIZON - CelestialBg.sun.angularDiameter / 2;
   }
 
   public static get ASTRONOMICAL_DAWN_DUSK(): angle {
@@ -101,7 +101,6 @@ export class Earth {
 
   public updateTerrain() {
     const rng = new Random(AppComponent.instance.city.name);
-    const bearing: number = AppComponent.instance.bearing.angle;
 
     function displaceMidpoint(arr: Array<number>, idx1: number, idx2: number, roughness: number) {
       if (Math.abs(idx1 - idx2) <= 1) return;
@@ -115,13 +114,11 @@ export class Earth {
 
     // Generate terrain
     const hills: Array<number> = new Array(360).fill(undefined);
-    hills[0] = rng.between(0, 0.5);
+    hills[0] = rng.between(0, 1);
     hills[hills.length - 1] = hills[0];
     displaceMidpoint(hills, 0, hills.length - 1, 1);
 
-    // adjust for bearing
-    this.terrainMap = hills.map((y, x) => [MathUtil.fixAngle2(x + bearing), y]);
-    this.terrainMap.sort((a, b) => a[0] - b[0]);
+    this.terrainMap = hills.map((y, x) => ({ azimuth: x, altitude: y * 10 - 5 }));
   }
 
 }

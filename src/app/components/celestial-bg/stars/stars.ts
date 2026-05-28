@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { MathUtil } from 'src/app/util/math-util';
 import { Random } from 'src/app/util/random';
+import { Vector } from 'src/app/util/vector';
 import { angle, deg } from '../../../util/units';
 import { CelestialBg } from '../celestial-bg.component';
 import { CelestialBody } from '../celestial-body/celestial-body';
 import { Earth } from '../earth/earth';
-import { Vector } from 'src/app/util/vector';
 
 @Component({
   selector: Stars.ID,
@@ -66,12 +66,18 @@ class Star extends CelestialBody {
     const galacticPos = Vector.fromSpherical(galacticRA, galacticDec);
     const geocentricPos = galacticPos.rotate(Stars.INCLINATION, Stars.ZERO_LONG, 0);
     ({ rightAscension: this.rightAscension, declination: this.declination } = geocentricPos.toSpherical());
+
+    // Start animation after delay
+    // Using 'begin' attribute on <animate> doesn't work for some reason
+    setTimeout(() => {
+      document.getElementById('star-' + id)?.querySelector('animate')?.beginElement();
+    }, this.animationDelay * 1000);
   }
 
   public override readonly rightAscension: angle;
   public override readonly declination: angle;
-  public readonly diameter: number = MathUtil.clamp(0.2, this.rng.lognormal(1, 0.25), 2);
-  public readonly brightnessMax: number = MathUtil.clamp(0, this.rng.lognormal(0.5, 0.5), 1);
+  public readonly diameter: number = MathUtil.clamp(0.5, this.rng.lognormal(1, 0.5), 2);
+  public readonly brightnessMax: number = MathUtil.clamp(0, this.rng.lognormal(50, 50) / 100, 1);
   public readonly brightnessMin: number = this.rng.between(0.1, 0.9) * this.brightnessMax;
   public readonly animationDuration: number = this.rng.lognormal(5, 2);
   public readonly animationDelay: number = this.rng.lognormal(1, 1);

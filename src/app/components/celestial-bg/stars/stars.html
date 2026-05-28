@@ -1,18 +1,23 @@
 <svg viewBox="-50 -200 100 300" [style.opacity]="opacity" [style.z-index]="-99">
-  <circle *ngFor="let star of stars"
+  <line *ngFor="let star of stars"
     id="star-{{star.id}}"
     [style.display]="star.display ? 'inherit' : 'none'"
-    [attr.cx]="star.screenX"
-    [attr.cy]="90 - star.screenY"
-    [attr.r]="star.diameter / 2 * (5 / 54)"
-    fill="white"
+    [attr.x1]="star.screenX"
+    [attr.x2]="star.screenX"
+    [attr.y1]="90 - star.screenY"
+    [attr.y2]="90 - star.screenY"
+    stroke="white"
+    stroke-linecap="round"
+    [attr.stroke-width]="star.diameter"
+    vector-effect="non-scaling-stroke"
+    [attr.opacity]="star.brightnessMax"
   >
     <animate
       attributeName="opacity"
-      [attr.begin]="star.animationDelay + 's'"
-      [attr.dur]="star.animationDuration + 's'"
+      begin="indefinite"
+      [attr.dur]="star.animationDuration"
       [attr.values]="star.brightnessMax + ';' + star.brightnessMin + ';' + star.brightnessMax"
       repeatCount="indefinite"
     />
-  </circle>
+  </line>
 </svg>

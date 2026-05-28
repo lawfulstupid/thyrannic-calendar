@@ -33,12 +33,12 @@
   </select>
 </div>
 <div class="bearing ui">
-  <button class="clickable left" (click)="changeBearing(1)">
+  <app-holdable-button class="left" (output)="changeBearing(1)">
     <i class="arrow"></i>
-  </button>
-  <button class="clickable right" (click)="changeBearing(-1)">
+  </app-holdable-button>
+  <app-holdable-button class="right" (output)="changeBearing(-1)">
     <i class="arrow"></i>
-  </button>
+  </app-holdable-button>
 </div>
 <span class="footer ui">
   <a href="http://github.com/lawfulstupid/thyrannic-calendar">v{{environment.appVersion}}</a>

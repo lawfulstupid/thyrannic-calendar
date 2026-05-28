@@ -17,11 +17,12 @@ import { TDateTime } from './model/thyrannic-date-time';
 import { OrdinalPipe } from './pipes/ordinal';
 import { LocalValue } from './util/local-value';
 import { MathUtil } from './util/math-util';
+import { HoldableButtonComponent } from './components/holdable-button/holdable-button.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FontAwesomeModule, CelestialBgModule, OrdinalPipe, TimeUnitComponent, FormsModule, NgIf, NgFor, PinnedDateComponent],
+  imports: [FontAwesomeModule, CelestialBgModule, OrdinalPipe, TimeUnitComponent, FormsModule, NgIf, NgFor, PinnedDateComponent, HoldableButtonComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

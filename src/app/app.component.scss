@@ -69,18 +69,19 @@ app-celestial-bg {
   width: 100%;
   height: 100%;
   @include translucent();
-  button {
+  app-holdable-button {
     position: absolute;
     width: 1.5vmin;
     top: 40vh;
     bottom: 40vh;
+    background-color: whitesmoke;
     &.left {
       left: 1ch;
       .arrow {
         transform: rotate(-225deg);
         -webkit-transform: rotate(-225deg);
         top: calc(50% - 0.56569vmin);
-        left: calc(50% - 0.56569vmin + 0.1vmin);
+        left: calc(50% - 0.56569vmin + 0.1vw);
       }
     }
     &.right {
@@ -89,7 +90,7 @@ app-celestial-bg {
         transform: rotate(-45deg);
         -webkit-transform: rotate(-45deg);
         top: calc(50% - 0.56569vmin);
-        left: calc(50% - 0.56569vmin - 0.1vmin);
+        left: calc(50% - 0.56569vmin - 0.1vw);
       }
     }
   }

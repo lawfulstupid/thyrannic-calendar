@@ -11,9 +11,11 @@ import { Vector } from "./vector";
 
 export type DistLong = { distance: distance, trueLongitude: angle };
 export type Orbital = DistLong & { heliocentric: boolean, ascendingNodeLongitude: angle, inclination: angle };
-export type RaDec = { rightAscension: angle, declination: angle };
-export type AzAlt = { azimuth: angle, altitude: angle };
-export type ScreenPos = { display: true, bottom: number, left: number, scale: number } | { display: false };
+export type RaDec = { rightAscension: angle, declination: angle }; // position relative to earth
+export type AzAlt = { azimuth: angle, altitude: angle }; // position relative to observer on earth
+
+// units in vmin, centred at (50vw, 90vh) on screen
+export type ScreenPos = { display: true, screenY: number, screenX: number, scale: number } | { display: false };
 
 export class OrbitalMechanics {
 
@@ -143,8 +145,8 @@ export class OrbitalMechanics {
 
     return {
       display: true,
-      bottom: yi,
-      left: zi,
+      screenY: yi,
+      screenX: zi,
       scale: 1 / p.x
     }
     // x = cosine of angular distance between body and view direction (+x)
@@ -199,7 +201,7 @@ export class OrbitalMechanics {
 
       const screenPos = this.AzAlt2ScreenPos({ azimuth, altitude });
       if (screenPos.display) {
-        pathPoints.push(`${screenPos.left},${90-screenPos.bottom}`)
+        pathPoints.push(`${screenPos.screenX},${90-screenPos.screenY}`)
       }
       lastAz = azimuth;
     }

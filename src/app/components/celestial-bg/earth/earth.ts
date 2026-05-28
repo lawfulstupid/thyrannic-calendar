@@ -35,11 +35,11 @@ export class Earth {
       // Remove culled points
       .filter(pos => pos.display)
       // Sort left to right
-      .sort((a, b) => a.left - b.left)
+      .sort((a, b) => a.screenX - b.screenX)
       // close the loop without intersection
-      .concat([{ display: true, left: 1000, bottom: -100, scale: 1 }, { display: true, left: -1000, bottom: -100, scale: 1 }])
+      .concat([{ display: true, screenX: 1000, screenY: -100, scale: 1 }, { display: true, screenX: -1000, screenY: -100, scale: 1 }])
       // join into path string
-      .map(({ left, bottom, scale }) => `${50 + left},${(90 - bottom)}`).join(' ');
+      .map(({ screenX, screenY, scale }) => `${50 + screenX},${(90 - screenY)}`).join(' ');
   }
 
   public static get SUNRISE_SUNSET_START(): angle {

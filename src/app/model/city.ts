@@ -34,7 +34,7 @@ export class City {
     this.TAZENDOR,
     this.MAZOKHODRAK,
     this.DEDKA
-  ].sort((a,b) => a.name.localeCompare(b.name));
+  ].sort((a,b) => b.latitude - a.latitude); // sort by highest latitude first
 
   public static fromId(id: number): City | undefined {
     return this.values.find(city => city.id === id);

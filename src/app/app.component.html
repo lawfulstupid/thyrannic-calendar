@@ -25,7 +25,7 @@
   </button>
   <button class="clickable" (click)="updateSunPathMode()">Sun path: {{sunPathEnabled ? 'on' : 'off'}}</button>
   <select class="clickable" [(ngModel)]="_city" (ngModelChange)="changeCity()">
-    <option *ngFor="let city of cities" [ngValue]="city">{{city.name}}</option>
+    <option *ngFor="let city of cities" [ngValue]="city">{{city.name}} ({{city.latitude | degrees: 'minutes'}}, {{city.longitude | degrees: 'minutes'}})</option>
   </select>
   <select class="clickable" [(ngModel)]="bearing" (ngModelChange)="changeBearing()">
     <option *ngFor="let bearing of bearings" [ngValue]="bearing">Face {{bearing.name}}</option>

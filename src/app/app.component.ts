@@ -15,6 +15,7 @@ import { TemporalUnit } from './model/temporal-unit';
 import { TDate } from './model/thyrannic-date';
 import { TDateTime } from './model/thyrannic-date-time';
 import { OrdinalPipe } from './pipes/ordinal';
+import { DegreesPipe } from './pipes/degrees';
 import { LocalValue } from './util/local-value';
 import { MathUtil } from './util/math-util';
 import { HoldableButtonComponent } from './components/holdable-button/holdable-button.component';
@@ -22,7 +23,7 @@ import { HoldableButtonComponent } from './components/holdable-button/holdable-b
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FontAwesomeModule, CelestialBgModule, OrdinalPipe, TimeUnitComponent, FormsModule, NgIf, NgFor, PinnedDateComponent, HoldableButtonComponent],
+  imports: [FontAwesomeModule, CelestialBgModule, OrdinalPipe, DegreesPipe, TimeUnitComponent, FormsModule, NgIf, NgFor, PinnedDateComponent, HoldableButtonComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

@@ -52,6 +52,17 @@ svg {
   &.path {
     opacity: 20%;
   }
+  .lit-half {
+    @extend .lit;
+    clip-path: inset(0 0 0 50%);
+  }
+  .meridean {
+    // clip-path: ellipse(var(--eclipse-width) 50% at 50% 50%);
+    // background-color: inherit;
+  }
+  .lit {
+    filter: brightness(calc(var(--brightness) * 3));
+  }
 }
 
 polyline {

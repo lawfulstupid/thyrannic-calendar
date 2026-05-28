@@ -1,13 +1,37 @@
-<svg viewBox="-50 -200 100 300" [style.z-index]="zIndex">
+<svg viewBox="-50 -200 100 300" [style.z-index]="zIndex" *ngIf="display">
   <circle
-    [style.display]="display ? 'inherit' : 'none'"
+    class="bg"
     [attr.cx]="screenX"
     [attr.cy]="90 - screenY"
-    [attr.r]="angularDiameter * 3"
+    [attr.r]="angularDiameter * embiggenmentFactor * screenSf / 2"
+    [attr.fill]="celestialBodies.earth.skyColor"
+  />
+  <circle
+    class="lit-half"
+    [attr.cx]="screenX"
+    [attr.cy]="90 - screenY"
+    [attr.r]="angularDiameter * embiggenmentFactor * screenSf / 2"
     [attr.fill]="color"
+    [style.filter]="'brightness(calc(' + brightness + ' * 3))'"
+    [style.transform]="'rotate(' + illuminationDirection + 'deg)'"
+    [style.transform-origin]="'center'"
+    [style.transform-box]="'fill-box'"
+  />
+  <ellipse
+    class="meridean"
+    [class.lit]="equatorialIllumination > 0.5"
+    [style.--brightness]="brightness"
+    [attr.cx]="screenX"
+    [attr.cy]="90 - screenY"
+    [attr.rx]="(2 * equatorialIllumination - 1 | abs) * angularDiameter * embiggenmentFactor * screenSf / 2"
+    [attr.ry]="angularDiameter * embiggenmentFactor * screenSf / 2"
+    [attr.fill]="equatorialIllumination > 0.5 ? color : celestialBodies.earth.skyColor"
+    [style.transform]="'rotate(' + illuminationDirection + 'deg)'"
+    [style.transform-origin]="'center'"
+    [style.transform-box]="'fill-box'"
   />
 </svg>
-<div class="anchor"
+<div class="anchor" *ngIf="false"
   [style.display]="display ? 'inherit' : 'none'"
   [style.bottom]="'calc(10vmin + ' + screenY + 'vmin)'"
   [style.left]="'calc(50vw + ' + screenX + 'vmin)'"

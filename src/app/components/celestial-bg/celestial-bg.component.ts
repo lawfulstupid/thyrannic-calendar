@@ -21,7 +21,7 @@ export class CelestialBg {
     const loop = setInterval(() => {
       if (this.sun && this.earth && this.stars) {
         clearInterval(loop);
-        this.update();
+        this.updatePositions();
         this.initialized = true;
       }
     }, 1);
@@ -34,18 +34,26 @@ export class CelestialBg {
       this.bodies.push(body);
     }
     if (this.initialized) {
-      body.update();
+      // not called for sun, earth, or stars
+      body.updatePosition();
     }
   }
 
-  public static update() {
+  public static updatePositions() {
     // Always update sun first
-    this.sun.update();
-    this.earth.update();
-    this.stars.update();
+    this.sun.updatePosition();
+    this.stars.updatePosition();
     // Update other celestial bodies
     this.bodies.forEach(body => {
-      if (body !== this.sun) body.update();
+      if (body !== this.sun) body.updatePosition();
+    });
+  }
+
+  public static updateScreenPositions() {
+    this.sun.updateScreenPosition();
+    this.stars.updateScreenPosition();
+    this.bodies.forEach(body => {
+      if (body !== this.sun) body.updateScreenPosition();
     });
     this.setZIndices();
   }

@@ -22,8 +22,14 @@ export abstract class CelestialBody {
   scale: number = 1;
   zIndex: number = 0;
 
-  public update() {
+  // Called when time or location changes
+  public updatePosition() {
     ({ azimuth: this.azimuth, altitude: this.altitude } = OrbitalMechanics.RaDec2AzAlt(this, AppComponent.instance.datetime));
+    this.updateScreenPosition();
+  }
+
+  // Called when time, location, or bearing changes
+  public updateScreenPosition() {
     const pos = OrbitalMechanics.AzAlt2ScreenPos(this);
     if (this.display = pos.display) {
       ({ screenX: this.screenX, screenY: this.screenY, scale: this.scale } = pos);

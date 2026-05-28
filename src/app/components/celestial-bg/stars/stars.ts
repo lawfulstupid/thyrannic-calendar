@@ -37,9 +37,15 @@ export class Stars {
     }
   }
 
-  public update() {
+  public updatePosition() {
     this.stars.forEach(star => {
-      star.update();
+      star.updatePosition();
+    });
+  }
+
+  public updateScreenPosition() {
+    this.stars.forEach(star => {
+      star.updateScreenPosition();
     });
   }
 

@@ -24,7 +24,7 @@
     <fa-icon [icon]="faPause" *ngIf="playLoop"></fa-icon>
   </button>
   <button class="clickable" (click)="updateSunPathMode()">Sun path: {{sunPathEnabled ? 'on' : 'off'}}</button>
-  <select class="clickable" [(ngModel)]="_city" (ngModelChange)="changeCity()">
+  <select class="clickable" [(ngModel)]="city">
     <option *ngFor="let city of cities" [ngValue]="city">{{city.name}} ({{city.latitude | degrees: 'minutes'}}, {{city.longitude | degrees: 'minutes'}})</option>
   </select>
   <select class="clickable" [(ngModel)]="bearing" (ngModelChange)="changeBearing()">

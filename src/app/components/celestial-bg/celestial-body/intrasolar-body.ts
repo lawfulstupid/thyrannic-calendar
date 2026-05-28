@@ -54,11 +54,15 @@ export abstract class IntrasolarBody extends CelestialBody {
     CelestialBg.register(this);
   }
 
-  public override update() {
+  public override updatePosition() {
     ({ distance: this.distance, trueLongitude: this.trueLongitude } = OrbitalMechanics.computeDistLong(this, AppComponent.instance.datetime));
     ({ distance: this.distance, rightAscension: this.rightAscension, declination: this.declination } = OrbitalMechanics.DistLong2RaDec(this));
-    super.update();
+    super.updatePosition();
     if (this.occlude) OrbitalMechanics.updateOcclusion(this);
+  }
+
+  public override updateScreenPosition() {
+    super.updateScreenPosition();
     this.updatePath();
   }
 
@@ -116,7 +120,6 @@ export abstract class IntrasolarBody extends CelestialBody {
       day: OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, CelestialBg.sun.declination)
     }
   }
-
 }
 
 export abstract class GeocentricBody extends IntrasolarBody implements Orbital {

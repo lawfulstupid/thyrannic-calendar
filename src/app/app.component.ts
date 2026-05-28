@@ -51,16 +51,23 @@ export class AppComponent {
   protected set datetime(datetime: TDateTime) {
     this._datetime = datetime;
     LocalValue.CURRENT_DATETIME.put(datetime);
-    CelestialBg.update();
+    CelestialBg.updatePositions();
   }
 
   protected _city: City = LocalValue.CITY.get() || City.THYRANNOS;
   public get city(): City { return this._city; }
-  public bearing: Bearing = Bearing.SOUTH;
+  public set city(city: City) {
+    const longDiff = city.longitude - this._city.longitude;
+    this._city = city;
+    LocalValue.CITY.put(city);
+    this.datetime = this.datetime.add(Math.round(longDiff * 4), TemporalUnit.MINUTE); // triggers CelestialBg.updatePositions()
+    CelestialBg.earth.updateLocation();
+  }
+
+  public bearing: Bearing = this.city.latitude >= 0 ? Bearing.SOUTH : Bearing.NORTH;
 
   constructor() {
     AppComponent.instance = this;
-    this.resetBearing();
     CelestialBg.init();
   }
 
@@ -70,16 +77,6 @@ export class AppComponent {
     } catch (err) {
       console.error('Illegal operation:', err);
     }
-  }
-
-  public changeCity() {
-    const oldCity: City = LocalValue.CITY.get() || City.THYRANNOS;
-    const longDiff = this.city.longitude - oldCity.longitude;
-    this.datetime = this.datetime.add(Math.round(longDiff * 4), TemporalUnit.MINUTE);
-    LocalValue.CITY.put(this._city);
-    CelestialBg.update();
-    CelestialBg.sun.updatePath();
-    CelestialBg.earth.updateTerrain();
   }
 
   public updateSunPathMode() {
@@ -97,8 +94,8 @@ export class AppComponent {
         this.bearing = Bearing.custom(targetAngle);
       }
     }
-    CelestialBg.update();
-    CelestialBg.sun.updatePath();
+    CelestialBg.updateScreenPositions();
+    CelestialBg.earth.updateBearing();
   }
 
   playLoop: NodeJS.Timeout | undefined;
@@ -111,10 +108,6 @@ export class AppComponent {
       clearInterval(this.playLoop);
       this.playLoop = undefined;
     }
-  }
-
-  private resetBearing() {
-    this.bearing = this.city.latitude >= 0 ? Bearing.SOUTH : Bearing.NORTH;
   }
 
   protected get defaultTextColor(): string {

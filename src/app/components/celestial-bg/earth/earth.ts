@@ -39,7 +39,7 @@ export class Earth {
       // close the loop without intersection
       .concat([{ display: true, screenX: 1000, screenY: -100, scale: 1 }, { display: true, screenX: -1000, screenY: -100, scale: 1 }])
       // join into path string
-      .map(({ screenX, screenY, scale }) => `${screenX},${(90 - screenY)}`).join(' ');
+      .map(({ screenX, screenY }) => `${screenX},${(90 - screenY)}`).join(' ');
   }
 
   public static get SUNRISE_SUNSET_START(): angle {

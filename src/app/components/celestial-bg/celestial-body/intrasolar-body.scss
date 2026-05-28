@@ -52,16 +52,29 @@ svg {
   &.path {
     opacity: 20%;
   }
-  .lit-half {
-    @extend .lit;
-    clip-path: inset(0 0 0 50%);
+  circle {
+    r: var(--radius);
   }
-  .meridean {
-    // clip-path: ellipse(var(--eclipse-width) 50% at 50% 50%);
-    // background-color: inherit;
+  ellipse {
+    ry: var(--radius);
+    rx: calc(var(--radius) * abs(2 * var(--illumination) - 1));
   }
-  .lit {
-    filter: brightness(calc(var(--brightness) * 3));
+  circle,ellipse {
+    cx: var(--screenX);
+    cy: calc(90 - var(--screenY));
+    transform-origin: center;
+    transform-box: fill-box;
+    transform: rotate(calc(var(--rotation) * 1deg));
+    &.lit {
+      fill: var(--color);
+      filter: brightness(calc(var(--brightness) * 3));
+    }
+    &.dark {
+      fill: var(--skyColor);
+    }
+    &.half {
+      clip-path: inset(0 0 0 50%);
+    }
   }
 }
 

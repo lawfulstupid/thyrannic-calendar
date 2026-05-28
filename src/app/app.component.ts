@@ -88,7 +88,7 @@ export class AppComponent {
 
   public changeBearing(dir?: 1 | -1) {
     if (dir !== undefined) {
-      const targetAngle = MathUtil.fixAngle(this.bearing.angle + dir * 5);
+      const targetAngle = MathUtil.fixAngle(this.bearing.angle + dir);
       const targetBearing = Bearing.values.find(bearing => bearing.angle === targetAngle);
       if (targetBearing) {
         this.bearing = targetBearing;

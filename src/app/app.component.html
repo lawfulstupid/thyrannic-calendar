@@ -28,7 +28,8 @@
     <option *ngFor="let city of cities" [ngValue]="city">{{city.name}}</option>
   </select>
   <select class="clickable" [(ngModel)]="bearing" (ngModelChange)="changeBearing()">
-    <option *ngFor="let bearing of bearings" [ngValue]="bearing">Facing {{bearing.name}}</option>
+    <option *ngFor="let bearing of bearings" [ngValue]="bearing">Face {{bearing.name}}</option>
+    <option [ngValue]="bearing" class="hidden">{{bearing.name}}</option>
   </select>
 </div>
 <div class="bearing ui">

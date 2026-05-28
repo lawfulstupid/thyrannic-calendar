@@ -1,3 +1,6 @@
+import { MathUtil } from "../util/math-util";
+import { angle } from "../util/units";
+
 export class Bearing {
 
   public static readonly NORTH = new Bearing('North', 180);
@@ -24,5 +27,12 @@ export class Bearing {
     this.WEST,
     this.NORTHWEST
   ]
+
+  public static custom(bearing: angle): Bearing {
+    // Developed with South as the 000 bearing, East as 090
+    // Yes it's completely backwards but easier to just change the display here that try to fix the core
+    const display = MathUtil.fixAngle(180 - bearing).toFixed(0).padStart(3, '0');
+    return new Bearing(`${display}°`, bearing);
+  }
 
 }

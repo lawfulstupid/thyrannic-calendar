@@ -15,7 +15,7 @@ export type RaDec = { rightAscension: angle, declination: angle }; // position r
 export type AzAlt = { azimuth: angle, altitude: angle }; // position relative to observer on earth
 
 // units in vmin, centred at (50vw, 90vh) on screen
-export type ScreenPos = { display: true, screenY: number, screenX: number, scale: number } | { display: false };
+export type ScreenPos = { display: true, screenY: number, screenX: number, screenSf: number } | { display: false };
 
 export class OrbitalMechanics {
 
@@ -147,7 +147,7 @@ export class OrbitalMechanics {
       display: true,
       screenY: yi,
       screenX: zi,
-      scale: 1 / p.x
+      screenSf: 1 / p.x
     }
     // x = cosine of angular distance between body and view direction (+x)
     //   = cos(acos((x,y,z) . (1,0,0)))

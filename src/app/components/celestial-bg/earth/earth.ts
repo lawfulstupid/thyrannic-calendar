@@ -43,7 +43,7 @@ export class Earth {
   }
 
   public static get SUNRISE_SUNSET_START(): angle {
-    return Earth.HORIZON + CelestialBg.sun.angularDiameter;
+    return Earth.HORIZON + CelestialBg.sun.angularDiameter * CelestialBg.sun.embiggenmentFactor;
   }
 
   public static get HORIZON(): angle {
@@ -52,7 +52,7 @@ export class Earth {
   }
 
   public static get SUNRISE_SUNSET(): angle {
-    return Earth.HORIZON - CelestialBg.sun.angularDiameter / 2;
+    return Earth.HORIZON - CelestialBg.sun.angularDiameter * CelestialBg.sun.embiggenmentFactor / 2;
   }
 
   public static get ASTRONOMICAL_DAWN_DUSK(): angle {

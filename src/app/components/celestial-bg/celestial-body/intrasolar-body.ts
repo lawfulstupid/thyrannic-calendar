@@ -12,6 +12,9 @@ export abstract class IntrasolarBody extends CelestialBody {
   public static readonly templateUrl = '../celestial-body/intrasolar-body.html';
   public static readonly styleUrl = '../celestial-body/intrasolar-body.scss';
 
+  // Makes sun, moons, and planets bigger for visual clarity. Units: vmin
+  public static readonly EMBIGGENMENT_FACTOR = 3;
+
   // Visual options
   abstract color: string;
   abstract brightness: number;
@@ -62,6 +65,10 @@ export abstract class IntrasolarBody extends CelestialBody {
   // how many degrees in the sky it takes up
   get angularDiameter(): angle {
     return MathUtil.acos(1 - 2 * (this.radius/this.distance) ** 2);
+  }
+
+  get embiggenmentFactor(): number {
+    return IntrasolarBody.EMBIGGENMENT_FACTOR;
   }
 
   // mean anomaly (0 at periapsis; increases uniformly with time)

@@ -4,8 +4,7 @@
     height: 0;
 }
 
-$angular-diameter: var(--angularDiameter);
-$diameter: calc($angular-diameter * 3vmin); // enlarged for visual effect
+$diameter: calc(var(--angularDiameter) * var(--embiggenmentFactor) * 1vmin);
 $aura-radius: clamp(0px, calc($diameter * 10), 1px); // sf 10 seems to work well
 
 .body {

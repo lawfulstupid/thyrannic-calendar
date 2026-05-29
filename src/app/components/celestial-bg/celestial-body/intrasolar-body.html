@@ -10,14 +10,20 @@
   [style.--illumination]="equatorialIllumination"
 >
   <defs>
-    <radialGradient id="aura">
+    <radialGradient id="{{id}}-point">
       <stop stop-color="white" stop-opacity="1" offset="0%"/>
       <stop stop-color="white" stop-opacity="0" offset="100%"/>
     </radialGradient>
+    <radialGradient id="{{id}}-aura">
+      <stop [attr.stop-color]="color" stop-opacity="1" offset="0%"/>
+      <stop [attr.stop-color]="color" [attr.stop-opacity]="(2 * equatorialIllumination - 1) / 1.5" [attr.offset]="(2 * equatorialIllumination - 1) / 1.5"/>
+      <stop [attr.stop-color]="color" stop-opacity="0" [attr.offset]="equatorialIllumination | pow: 3"/>
+    </radialGradient>
   </defs>
-  <circle class="point" fill="url(#aura)" [attr.opacity]="pointOpacity"/>
-  <circle class="dark"/>
-  <circle class="lit half"/>
+  <circle class="point" [attr.fill]="'url(#' + id + '-point)'" [attr.opacity]="pointOpacity"/>
+  <circle class="dark" *ngIf="occlude"/>
+  <circle class="aura" [attr.fill]="'url(#' + id + '-aura)'"/>
+  <circle class="lit half" *ngIf="occlude"/>
   <ellipse class="{{equatorialIllumination > 0.5 ? 'lit' : 'dark'}}"/>
 </svg>
 <svg *ngIf="path.enabled" class="path" viewBox="-50 -200 100 300" [style.z-index]="zIndex+50">

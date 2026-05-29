@@ -12,6 +12,9 @@ svg.body {
     &.point {
       r: calc(sqrt(var(--radius)));
     }
+    &.aura {
+      r: calc(var(--radius) * 1.5);
+    }
   }
   ellipse {
     ry: var(--radius);
@@ -23,6 +26,9 @@ svg.body {
     transform-origin: center;
     transform-box: fill-box;
     transform: rotate(calc(var(--rotation) * 1deg));
+    &.aura {
+      filter: brightness(calc(var(--brightness) * 3));
+    }
     &.lit {
       fill: var(--color);
       filter: brightness(calc(var(--brightness) * 3));

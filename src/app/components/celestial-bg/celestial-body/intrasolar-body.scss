@@ -35,7 +35,7 @@ $aura-radius: clamp(0px, calc($diameter * 10), 1px); // sf 10 seems to work well
   }
 }
 
-.point {
+div.point {
   width: 0;
   height: 0;
   border-radius: 100%;
@@ -54,6 +54,9 @@ svg {
   }
   circle {
     r: var(--radius);
+    &.point {
+      r: calc(sqrt(var(--radius)));
+    }
   }
   ellipse {
     ry: var(--radius);
@@ -61,7 +64,7 @@ svg {
   }
   circle,ellipse {
     cx: var(--screenX);
-    cy: calc(90 - var(--screenY));
+    cy: var(--screenY);
     transform-origin: center;
     transform-box: fill-box;
     transform: rotate(calc(var(--rotation) * 1deg));

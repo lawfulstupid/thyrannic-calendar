@@ -1,7 +1,7 @@
 <svg viewBox="-50 -200 100 300" *ngIf="display"
   [style.z-index]="zIndex"
   [style.--screenX]="screenX"
-  [style.--screenY]="screenY"
+  [style.--screenY]="90 - screenY"
   [style.--radius]="angularDiameter * embiggenmentFactor * screenSf / 2"
   [style.--color]="color"
   [style.--skyColor]="celestialBodies.earth.skyColor"
@@ -9,6 +9,13 @@
   [style.--rotation]="illuminationDirection"
   [style.--illumination]="equatorialIllumination"
 >
+  <defs>
+    <radialGradient id="aura">
+      <stop stop-color="white" stop-opacity="1" offset="0%"/>
+      <stop stop-color="white" stop-opacity="0" offset="100%"/>
+    </radialGradient>
+  </defs>
+  <circle class="point" fill="url(#aura)" [attr.opacity]="pointOpacity"/>
   <circle class="dark"/>
   <circle class="lit half"/>
   <ellipse class="{{equatorialIllumination > 0.5 ? 'lit' : 'dark'}}"/>

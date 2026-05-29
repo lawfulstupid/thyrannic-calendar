@@ -18,7 +18,7 @@ export class Stars {
 
   // Generation parameters
   private static readonly SEED = 'dull';
-  private static readonly MAX_STARS: number = 3000;
+  private static readonly MAX_STARS: number = 5000;
   public static readonly SPREAD: number = 0.32; // how tightly packed stars are on galactic place
   public static readonly INCLINATION: angle = 77; // inclination between galactic and equatorial planes
   public static readonly ZERO_LONG: angle = 97; // longitude of intersection between galactic and equatorial planes

@@ -154,8 +154,9 @@ export class OrbitalMechanics {
   }
 
   public static updateOcclusion(body: IntrasolarBody) {
+    const sun = CelestialBg.sun;
     const earthToMoon = body.vectorFromEarth();
-    const earthToSun = CelestialBg.sun.vectorFromEarth();
+    const earthToSun = sun.vectorFromEarth();
     const moonToSun = earthToSun.minus(earthToMoon);
     const moonToEarth = earthToMoon.times(-1);
 
@@ -169,11 +170,11 @@ export class OrbitalMechanics {
     // 0 = illuminated from the right
     // 90 = illuminated from below
     // 180 = illuminated from the left
-    const moonToSunFlat = moonToSun.cross(earthToMoon).cross(earthToMoon);
-    const northFlat = new Vector(0,1,0).cross(earthToMoon).cross(earthToMoon);
-    const sunDirection = northFlat.signedAngleTo(moonToSunFlat, earthToMoon) - 90;
-    const latitudeAngle = 90 - AppComponent.instance.city.latitude;
-    body.illuminationDirection = MathUtil.fixAngle(sunDirection + latitudeAngle);
+    const delta = MathUtil.fixAngle2(sun.azimuth - body.azimuth);
+    body.illuminationDirection = -MathUtil.atan2(
+      MathUtil.cos(body.altitude) * MathUtil.tan(sun.altitude) - MathUtil.sin(body.altitude) * MathUtil.cos(delta),
+      MathUtil.sin(delta)
+    );
   }
 
   public static getDayLength(solarDeclination: angle): time {

@@ -6,3 +6,4 @@ Links found to be useful for development:
 - https://astro.dur.ac.uk/~ams/users/lunar_sid_syn.html
 - https://astrogreg.com/convert_ra_dec_to_alt_az.html
 - https://learn.64bitdragon.com/articles/computer-science/procedural-generation/midpoint-displacement-in-one-dimension
+- https://www.grad.hr/hdgg/kog_stranica/kog18/06myers-KoG18.pdf

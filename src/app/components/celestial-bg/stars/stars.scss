@@ -1,16 +1,7 @@
-.star {
-    position: absolute;
-    background-color: white;
-    width: var(--diameter);
-    height: var(--diameter);
-    transform: rotate(var(--rotation));
-    border-radius: 100%;
-    opacity: var(--brightness);
-    animation: blink ease-in-out infinite;
-}
-
-@keyframes blink {
-    50% {
-        opacity: var(--min-brightness);
-    }
+svg {
+  position: absolute;
+  bottom: 0;
+  height: 300vmin;
+  left: 0;
+  width: 100vw;
 }

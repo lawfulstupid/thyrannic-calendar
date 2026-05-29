@@ -1,29 +1,32 @@
-<div class="anchor"
-  [style.display]="display ? 'inherit' : 'none'"
-  [style.bottom]="'calc(10vmin + ' + screenY + 'vmin)'"
-  [style.left]="'calc(50vw + ' + screenX + 'vmin)'"
+<svg class="body" viewBox="-50 -200 100 300" *ngIf="display"
   [style.z-index]="zIndex"
+  [style.--screenX]="screenX"
+  [style.--screenY]="90 - screenY"
+  [style.--radius]="angularDiameter * embiggenmentFactor * screenSf / 2"
+  [style.--color]="color"
+  [style.--skyColor]="celestialBodies.earth.skyColor"
+  [style.--brightness]="brightness"
+  [style.--rotation]="illuminationDirection"
+  [style.--illumination]="equatorialIllumination"
 >
-  <div class="point"
-    [style.--angularDiameter]="angularDiameter"
-    [style.--embiggenmentFactor]="embiggenmentFactor"
-    [style.--point-opacity]="pointOpacity"
-  ></div>
-  <div class="body"
-    [style.--angularDiameter]="angularDiameter"
-    [style.--embiggenmentFactor]="embiggenmentFactor"
-    [style.--body-color]="color"
-    [style.--brightness]="brightness"
-    [style.--sky-color]="celestialBodies.earth.skyColor"
-    [style.--point-opacity]="pointOpacity"
-    [style.--eclipse-width]="equatorialIllumination - 0.5 | abs | percent"
-    [style.transform]="'rotate(' + illuminationDirection + 'deg) scale(' + scale + ')'"
-  >
-    <div class="lit-half"></div>
-    <div class="meridean" [class.lit]="equatorialIllumination > 0.5"></div>
-  </div>
-</div>
-<svg *ngIf="path.enabled" viewBox="-50 -200 100 300" [style.z-index]="zIndex+50">
+  <defs>
+    <radialGradient id="{{id}}-point">
+      <stop stop-color="white" stop-opacity="1" offset="0%"/>
+      <stop stop-color="white" stop-opacity="0" offset="100%"/>
+    </radialGradient>
+    <radialGradient id="{{id}}-aura">
+      <stop [attr.stop-color]="color" stop-opacity="1" offset="0%"/>
+      <stop [attr.stop-color]="color" [attr.stop-opacity]="(2 * equatorialIllumination - 1) / 1.5" [attr.offset]="(2 * equatorialIllumination - 1) / 1.5"/>
+      <stop [attr.stop-color]="color" stop-opacity="0" [attr.offset]="equatorialIllumination | pow: 3"/>
+    </radialGradient>
+  </defs>
+  <circle class="point" [attr.fill]="'url(#' + id + '-point)'" [attr.opacity]="pointOpacity"/>
+  <circle class="dark" *ngIf="occlude"/>
+  <circle class="aura" [attr.fill]="'url(#' + id + '-aura)'"/>
+  <circle class="lit half" *ngIf="occlude"/>
+  <ellipse class="{{equatorialIllumination > 0.5 ? 'lit' : 'dark'}}"/>
+</svg>
+<svg *ngIf="path.enabled" class="path" viewBox="-50 -200 100 300" [style.z-index]="zIndex+50">
   <polyline *ngFor="let path of path.max" [attr.points]="path" [attr.stroke]="color"/>
   <polyline *ngFor="let path of path.day" [attr.points]="path" [attr.stroke]="color"/>
   <polyline *ngFor="let path of path.min" [attr.points]="path" [attr.stroke]="color"/>

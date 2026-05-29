@@ -19,7 +19,7 @@ export abstract class CelestialBody {
   display: boolean = false;
   screenX: number = 0;
   screenY: number = 0;
-  scale: number = 1;
+  screenSf: number = 1; // scale factor from gnomonic projection
   zIndex: number = 0;
 
   // Called when time or location changes
@@ -32,7 +32,7 @@ export abstract class CelestialBody {
   public updateScreenPosition() {
     const pos = OrbitalMechanics.AzAlt2ScreenPos(this);
     if (this.display = pos.display) {
-      ({ screenX: this.screenX, screenY: this.screenY, scale: this.scale } = pos);
+      ({ screenX: this.screenX, screenY: this.screenY, screenSf: this.screenSf } = pos);
     }
   }
 

@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { MathUtil } from 'src/app/util/math-util';
 import { Random } from 'src/app/util/random';
+import { Vector } from 'src/app/util/vector';
 import { angle, deg } from '../../../util/units';
 import { CelestialBg } from '../celestial-bg.component';
 import { CelestialBody } from '../celestial-body/celestial-body';
 import { Earth } from '../earth/earth';
-import { Vector } from 'src/app/util/vector';
 
 @Component({
   selector: Stars.ID,
@@ -18,7 +18,7 @@ export class Stars {
 
   // Generation parameters
   private static readonly SEED = 'dull';
-  private static readonly MAX_STARS: number = 3000;
+  private static readonly MAX_STARS: number = 5000;
   public static readonly SPREAD: number = 0.32; // how tightly packed stars are on galactic place
   public static readonly INCLINATION: angle = 77; // inclination between galactic and equatorial planes
   public static readonly ZERO_LONG: angle = 97; // longitude of intersection between galactic and equatorial planes
@@ -32,9 +32,17 @@ export class Stars {
   constructor() {
     CelestialBg.register(this);
     const rng = new Random(Stars.SEED);
-    for (let i = 0; i < Stars.MAX_STARS; i++) {
+    for (let i = 1; i <= Stars.MAX_STARS; i++) {
       this.stars.push(new Star(i, rng));
     }
+    const initLoop = setInterval(() => {
+      if (!document.getElementById('star-1')) return;
+      this.stars.forEach(star => {
+        const animateElm = <SVGAnimationElement>document.querySelector('#star-' + star.id + '>animate');
+        animateElm.beginElementAt(star.animationDelay);
+      });
+      clearInterval(initLoop);
+    }, 1);
   }
 
   public updatePosition() {
@@ -70,10 +78,10 @@ class Star extends CelestialBody {
 
   public override readonly rightAscension: angle;
   public override readonly declination: angle;
-  public readonly diameter: number = this.rng.lognormal(1, 0.25);
-  public readonly brightnessMax: number = this.rng.lognormal(50, 50);
-  public readonly brightnessMin: number = this.rng.between(0.1, 0.9) * this.brightnessMax;
-  public readonly animationDuration: number = this.rng.lognormal(5, 2);
+  public readonly diameter: number = MathUtil.clamp(0.5, this.rng.lognormal(1, 0.5), 2);
+  public readonly brightnessMax: number = MathUtil.clamp(0, this.rng.lognormal(50, 50) / 100, 1);
+  public readonly brightnessMin: number = this.rng.between(0.1, 0.7) * this.brightnessMax;
+  public readonly animationDuration: number = this.rng.lognormal(4, 2);
   public readonly animationDelay: number = this.rng.lognormal(1, 1);
   public readonly rotation: number = this.rng.between(0 * deg, 360 * deg);
 

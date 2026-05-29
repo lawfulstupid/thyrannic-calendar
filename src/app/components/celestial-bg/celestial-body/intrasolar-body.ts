@@ -12,6 +12,10 @@ export abstract class IntrasolarBody extends CelestialBody {
   public static readonly templateUrl = '../celestial-body/intrasolar-body.html';
   public static readonly styleUrl = '../celestial-body/intrasolar-body.scss';
 
+  get id(): string {
+    return (<any>this.constructor).ID;
+  }
+
   // Makes sun, moons, and planets bigger for visual clarity. Units: vmin
   public static readonly EMBIGGENMENT_FACTOR = 3;
 

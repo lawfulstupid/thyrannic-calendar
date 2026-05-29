@@ -1,12 +1,12 @@
-svg.body {
+svg {
   position: absolute;
   bottom: 0;
   height: 300vmin;
   left: 0;
   width: 100vw;
-  &.path {
-    opacity: 20%;
-  }
+}
+
+svg.body {
   circle {
     r: var(--radius);
     &.point {
@@ -43,6 +43,7 @@ svg.body {
 }
 
 svg.path {
+  opacity: 20%;
   polyline {
     stroke-width: 0.5;
     fill: none;

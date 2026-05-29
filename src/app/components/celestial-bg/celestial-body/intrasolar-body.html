@@ -18,12 +18,15 @@
       <stop [attr.stop-color]="color" [attr.stop-opacity]="(2 * equatorialIllumination - 1) / 1.5" [attr.offset]="(2 * equatorialIllumination - 1) / 1.5"/>
       <stop [attr.stop-color]="color" stop-opacity="0" [attr.offset]="equatorialIllumination | pow: 3"/>
     </radialGradient>
+    <mask id="{{id}}-occlusion">
+      <rect width="100%" height="100%" fill="white"></rect>
+      <ellipse [attr.fill]="equatorialIllumination > 0.5 ? 'white' : 'black'"/>
+    </mask>
   </defs>
   <circle class="point" [attr.fill]="'url(#' + id + '-point)'" [attr.opacity]="pointOpacity"/>
-  <circle class="dark" *ngIf="occlude"/>
+  <circle class="disc bg"></circle>
   <circle class="aura" [attr.fill]="'url(#' + id + '-aura)'"/>
-  <circle class="lit half" *ngIf="occlude"/>
-  <ellipse class="{{equatorialIllumination > 0.5 ? 'lit' : 'dark'}}"/>
+  <circle class="disc fg" [attr.mask]="'url(#' + id + '-occlusion)'"></circle>
 </g>
 <svg:g class="path" *ngIf="path.enabled">
   <polyline *ngFor="let path of path.max" [attr.points]="path" [attr.stroke]="color"/>

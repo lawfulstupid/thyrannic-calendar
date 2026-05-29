@@ -32,9 +32,17 @@ export class Stars {
   constructor() {
     CelestialBg.register(this);
     const rng = new Random(Stars.SEED);
-    for (let i = 0; i < Stars.MAX_STARS; i++) {
+    for (let i = 1; i <= Stars.MAX_STARS; i++) {
       this.stars.push(new Star(i, rng));
     }
+    const initLoop = setInterval(() => {
+      if (!document.getElementById('star-1')) return;
+      this.stars.forEach(star => {
+        const animateElm = <SVGAnimationElement>document.querySelector('#star-' + star.id + '>animate');
+        animateElm.beginElementAt(star.animationDelay);
+      });
+      clearInterval(initLoop);
+    }, 1);
   }
 
   public updatePosition() {
@@ -66,20 +74,14 @@ class Star extends CelestialBody {
     const galacticPos = Vector.fromSpherical(galacticRA, galacticDec);
     const geocentricPos = galacticPos.rotate(Stars.INCLINATION, Stars.ZERO_LONG, 0);
     ({ rightAscension: this.rightAscension, declination: this.declination } = geocentricPos.toSpherical());
-
-    // Start animation after delay
-    // Using 'begin' attribute on <animate> doesn't work for some reason
-    setTimeout(() => {
-      document.getElementById('star-' + id)?.querySelector('animate')?.beginElement();
-    }, this.animationDelay * 1000);
   }
 
   public override readonly rightAscension: angle;
   public override readonly declination: angle;
   public readonly diameter: number = MathUtil.clamp(0.5, this.rng.lognormal(1, 0.5), 2);
   public readonly brightnessMax: number = MathUtil.clamp(0, this.rng.lognormal(50, 50) / 100, 1);
-  public readonly brightnessMin: number = this.rng.between(0.1, 0.9) * this.brightnessMax;
-  public readonly animationDuration: number = this.rng.lognormal(5, 2);
+  public readonly brightnessMin: number = this.rng.between(0.1, 0.7) * this.brightnessMax;
+  public readonly animationDuration: number = this.rng.lognormal(4, 2);
   public readonly animationDelay: number = this.rng.lognormal(1, 1);
   public readonly rotation: number = this.rng.between(0 * deg, 360 * deg);
 

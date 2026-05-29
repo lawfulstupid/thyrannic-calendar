@@ -5,7 +5,7 @@ import { CelestialBg } from '../celestial-bg.component';
 import { GeocentricBody, IntrasolarBody } from '../celestial-body/intrasolar-body';
 
 @Component({
-  selector: Losit.ID,
+  selector: 'g#' + Losit.ID,
   templateUrl: IntrasolarBody.templateUrl,
   styleUrl: IntrasolarBody.styleUrl
 })

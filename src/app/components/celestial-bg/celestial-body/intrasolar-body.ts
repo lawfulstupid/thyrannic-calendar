@@ -121,7 +121,7 @@ export abstract class IntrasolarBody extends CelestialBody {
       enabled: true,
       max: OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, decMax),
       min: OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, decMin),
-      day: OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, CelestialBg.sun.declination)
+      day: OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, this.declination)
     }
   }
 }

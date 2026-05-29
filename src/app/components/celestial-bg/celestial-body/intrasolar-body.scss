@@ -1,51 +1,57 @@
-svg {
-  position: absolute;
-  bottom: 0;
-  height: 300vmin;
-  left: 0;
-  width: 100vw;
+@mixin brighten {
+  filter: brightness(calc(var(--brightness) * 3));
 }
 
-svg.body {
-  circle {
-    r: var(--radius);
-    &.point {
-      r: calc(sqrt(var(--radius)));
-    }
-    &.aura {
-      r: calc(var(--radius) * 1.5);
-    }
+circle,ellipse {
+  cx: var(--screenX);
+  cy: var(--screenY);
+}
+
+circle.disc {
+  r: var(--radius);
+  transform-origin: center;
+  transform-box: fill-box;
+  transform: rotate(calc(var(--rotation) * 1deg));
+  &.fg {
+    fill: var(--color);
+    @include brighten;
   }
+  &.bg {
+    fill: var(--skyColor);
+  }
+}
+
+circle.aura {
+  r: calc(var(--radius) * 1.5);
+  @include brighten;
+}
+
+circle.point {
+  r: calc(sqrt(var(--radius)));
+}
+
+mask {
   ellipse {
     ry: var(--radius);
     rx: calc(var(--radius) * abs(2 * var(--illumination) - 1));
   }
-  circle,ellipse {
-    cx: var(--screenX);
-    cy: var(--screenY);
-    transform-origin: center;
-    transform-box: fill-box;
-    transform: rotate(calc(var(--rotation) * 1deg));
-    &.aura {
-      filter: brightness(calc(var(--brightness) * 3));
-    }
-    &.lit {
-      fill: var(--color);
-      filter: brightness(calc(var(--brightness) * 3));
-    }
-    &.dark {
-      fill: var(--skyColor);
-    }
-    &.half {
-      clip-path: inset(0 0 0 50%);
-    }
+  rect {
+    x: var(--screenX);
+    y: calc(var(--screenY) - var(--radius));
   }
 }
 
-svg.path {
-  opacity: 20%;
+.path {
   polyline {
+    stroke: var(--color);
+    @include brighten;
     stroke-width: 0.5;
     fill: none;
+  }
+  .day {
+    opacity: 20%;
+  }
+  .lim {
+    opacity: 10%;
   }
 }

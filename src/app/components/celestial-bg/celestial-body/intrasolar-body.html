@@ -1,4 +1,4 @@
-<svg:g class="body" *ngIf="display"
+<svg:g *ngIf="display"
   [style.--screenX]="screenX"
   [style.--screenY]="90 - screenY"
   [style.--radius]="angularDiameter * embiggenmentFactor * screenSf / 2"
@@ -23,13 +23,13 @@
       <ellipse [attr.fill]="equatorialIllumination > 0.5 ? 'white' : 'black'"/>
     </mask>
   </defs>
+  <svg:g class="path" *ngIf="path.enabled">
+    <polyline *ngFor="let path of path.max" [attr.points]="path" class="lim"/>
+    <polyline *ngFor="let path of path.day" [attr.points]="path" class="day"/>
+    <polyline *ngFor="let path of path.min" [attr.points]="path" class="lim"/>
+  </g>
   <circle class="point" [attr.fill]="'url(#' + id + '-point)'" [attr.opacity]="pointOpacity"/>
   <circle class="disc bg"></circle>
   <circle class="aura" [attr.fill]="'url(#' + id + '-aura)'"/>
   <circle class="disc fg" [attr.mask]="'url(#' + id + '-occlusion)'"></circle>
-</g>
-<svg:g class="path" *ngIf="path.enabled">
-  <polyline *ngFor="let path of path.max" [attr.points]="path" [attr.stroke]="color"/>
-  <polyline *ngFor="let path of path.day" [attr.points]="path" [attr.stroke]="color"/>
-  <polyline *ngFor="let path of path.min" [attr.points]="path" [attr.stroke]="color"/>
 </g>

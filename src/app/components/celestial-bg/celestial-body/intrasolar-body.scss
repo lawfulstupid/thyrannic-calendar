@@ -1,44 +1,57 @@
-.body {
+@mixin brighten {
+  filter: brightness(calc(var(--brightness) * 3));
+}
+
+circle,ellipse {
+  cx: var(--screenX);
+  cy: var(--screenY);
+}
+
+circle.disc {
+  r: var(--radius);
   transform-origin: center;
   transform-box: fill-box;
   transform: rotate(calc(var(--rotation) * 1deg));
-  * {
-    cx: var(--screenX);
-    cy: var(--screenY);
+  &.fg {
+    fill: var(--color);
+    @include brighten;
   }
-  circle.disc {
-    r: var(--radius);
-    &.fg {
-      fill: var(--color);
-      filter: brightness(calc(var(--brightness) * 3));
-    }
-    &.bg {
-      fill: var(--skyColor);
-    }
+  &.bg {
+    fill: var(--skyColor);
   }
-  circle.aura {
-    r: calc(var(--radius) * 1.5);
-    filter: brightness(calc(var(--brightness) * 3));
+}
+
+circle.aura {
+  r: calc(var(--radius) * 1.5);
+  @include brighten;
+}
+
+circle.point {
+  r: calc(sqrt(var(--radius)));
+}
+
+mask {
+  ellipse {
+    ry: var(--radius);
+    rx: calc(var(--radius) * abs(2 * var(--illumination) - 1));
   }
-  circle.point {
-    r: calc(sqrt(var(--radius)));
-  }
-  mask {
-    ellipse {
-      ry: var(--radius);
-      rx: calc(var(--radius) * abs(2 * var(--illumination) - 1));
-    }
-    rect {
-      x: var(--screenX);
-      y: calc(var(--screenY) - var(--radius));
-    }
+  rect {
+    x: var(--screenX);
+    y: calc(var(--screenY) - var(--radius));
   }
 }
 
 .path {
-  opacity: 20%;
   polyline {
+    stroke: var(--color);
+    @include brighten;
     stroke-width: 0.5;
     fill: none;
+  }
+  .day {
+    opacity: 20%;
+  }
+  .lim {
+    opacity: 10%;
   }
 }

@@ -1,4 +1,4 @@
-<svg viewBox="-50 -200 100 300" *ngIf="display"
+<svg class="body" viewBox="-50 -200 100 300" *ngIf="display"
   [style.z-index]="zIndex"
   [style.--screenX]="screenX"
   [style.--screenY]="90 - screenY"
@@ -20,31 +20,6 @@
   <circle class="lit half"/>
   <ellipse class="{{equatorialIllumination > 0.5 ? 'lit' : 'dark'}}"/>
 </svg>
-<div class="anchor" *ngIf="false"
-  [style.display]="display ? 'inherit' : 'none'"
-  [style.bottom]="'calc(10vmin + ' + screenY + 'vmin)'"
-  [style.left]="'calc(50vw + ' + screenX + 'vmin)'"
-  [style.z-index]="zIndex"
->
-  <div class="point"
-    [style.--angularDiameter]="angularDiameter"
-    [style.--embiggenmentFactor]="embiggenmentFactor"
-    [style.--point-opacity]="pointOpacity"
-  ></div>
-  <div class="body"
-    [style.--angularDiameter]="angularDiameter"
-    [style.--embiggenmentFactor]="embiggenmentFactor"
-    [style.--body-color]="color"
-    [style.--brightness]="brightness"
-    [style.--sky-color]="celestialBodies.earth.skyColor"
-    [style.--point-opacity]="pointOpacity"
-    [style.--eclipse-width]="equatorialIllumination - 0.5 | abs | percent"
-    [style.transform]="'rotate(' + illuminationDirection + 'deg) scale(' + screenSf + ')'"
-  >
-    <div class="lit-half"></div>
-    <div class="meridean" [class.lit]="equatorialIllumination > 0.5"></div>
-  </div>
-</div>
 <svg *ngIf="path.enabled" class="path" viewBox="-50 -200 100 300" [style.z-index]="zIndex+50">
   <polyline *ngFor="let path of path.max" [attr.points]="path" [attr.stroke]="color"/>
   <polyline *ngFor="let path of path.day" [attr.points]="path" [attr.stroke]="color"/>

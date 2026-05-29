@@ -1,49 +1,4 @@
-.anchor {
-    position: absolute;
-    width: 0;
-    height: 0;
-}
-
-$diameter: calc(var(--angularDiameter) * var(--embiggenmentFactor) * 1vmin);
-$aura-radius: clamp(0px, calc($diameter * 10), 1px); // sf 10 seems to work well
-
-.body {
-  width: $diameter;
-  height: $diameter;
-  position: absolute;
-  left: calc($diameter / -2);
-  top: calc($diameter / -2);
-  border-radius: 100%;
-  background-color: var(--sky-color);
-  * {
-    position: inherit;
-    height: 100%;
-    width: 100%;
-    border-radius: inherit;
-  }
-  .lit-half {
-    @extend .lit;
-    clip-path: inset(0 0 0 50%);
-  }
-  .meridean {
-    clip-path: ellipse(var(--eclipse-width) 50% at 50% 50%);
-    background-color: inherit;
-  }
-  .lit {
-    background-color: var(--body-color);
-    filter: brightness(calc(var(--brightness) * 3));
-  }
-}
-
-div.point {
-  width: 0;
-  height: 0;
-  border-radius: 100%;
-  box-shadow: white 0 0 $aura-radius $aura-radius;
-  opacity: var(--point-opacity);
-}
-
-svg {
+svg.body {
   position: absolute;
   bottom: 0;
   height: 300vmin;
@@ -81,7 +36,9 @@ svg {
   }
 }
 
-polyline {
-  stroke-width: 0.5;
-  fill: none;
+svg.path {
+  polyline {
+    stroke-width: 0.5;
+    fill: none;
+  }
 }

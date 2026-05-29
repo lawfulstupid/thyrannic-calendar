@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { MathUtil } from 'src/app/util/math-util';
 import { AU, days, deg, km } from '../../../util/units';
-import { GeocentricBody, IntrasolarBody } from '../celestial-body/intrasolar-body';
 import { CelestialBg } from '../celestial-bg.component';
+import { GeocentricBody, IntrasolarBody } from '../celestial-body/intrasolar-body';
 
 @Component({
-  selector: Sun.ID,
+  selector: 'g#' + Sun.ID,
   templateUrl: IntrasolarBody.templateUrl,
   styleUrl: IntrasolarBody.styleUrl
 })

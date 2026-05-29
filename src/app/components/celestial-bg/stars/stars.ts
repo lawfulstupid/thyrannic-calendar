@@ -8,9 +8,8 @@ import { CelestialBody } from '../celestial-body/celestial-body';
 import { Earth } from '../earth/earth';
 
 @Component({
-  selector: Stars.ID,
-  templateUrl: './stars.html',
-  styleUrl: './stars.scss'
+  selector: 'g#' + Stars.ID,
+  templateUrl: './stars.html'
 })
 export class Stars {
 

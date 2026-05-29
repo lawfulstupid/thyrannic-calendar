@@ -20,7 +20,6 @@ export abstract class CelestialBody {
   screenX: number = 0;
   screenY: number = 0;
   screenSf: number = 1; // scale factor from gnomonic projection
-  zIndex: number = 0;
 
   // Called when time or location changes
   public updatePosition() {

@@ -8,9 +8,8 @@ import { angle, deg } from '../../../util/units';
 import { CelestialBg } from '../celestial-bg.component';
 
 @Component({
-  selector: Earth.ID,
-  templateUrl: './earth.html',
-  styleUrl: './earth.scss'
+  selector: 'g#' + Earth.ID,
+  templateUrl: './earth.html'
 })
 export class Earth {
 
@@ -67,7 +66,7 @@ export class Earth {
     const solarAltitude = CelestialBg.sun.altitude;
 
     // Compute Rayleigh scattering
-    const p = 60/8000; // ratio between atmosphere thickness and planet radius
+    const p = 60 / 8000; // ratio between atmosphere thickness and planet radius
     const sin = MathUtil.sin(solarAltitude);
     const scattering = - sin + Math.sqrt(sin ** 2 + p * 2 + p ** 2);
     const red = MathUtil.tween(p, scattering, Math.sqrt(p * 2 + p ** 2));

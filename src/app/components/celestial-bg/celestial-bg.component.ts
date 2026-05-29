@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IntrasolarBody } from './celestial-body/intrasolar-body';
 import { Earth } from "./earth/earth";
+import { Sky } from './sky/sky';
 import { Stars } from "./stars/stars";
 import { Sun } from "./sun/sun";
 
@@ -11,6 +12,7 @@ import { Sun } from "./sun/sun";
 export class CelestialBg {
 
   public static earth: Earth;
+  public static sky: Sky;
   public static stars: Stars;
   public static sun: Sun;
 
@@ -19,7 +21,7 @@ export class CelestialBg {
 
   public static init() {
     const loop = setInterval(() => {
-      if (this.sun && this.earth && this.stars) {
+      if (this.sun && this.earth && this.stars && this.sky) {
         clearInterval(loop);
         this.updatePositions();
         this.initialized = true;
@@ -27,7 +29,7 @@ export class CelestialBg {
     }, 1);
   }
 
-  public static register(body: any & { constructor: { ID: string }}) {
+  public static register(body: any & { constructor: { ID: string } }) {
     console.debug('Registering', body.constructor.ID);
     (<any>CelestialBg)[body.constructor.ID] = body;
     if (body instanceof IntrasolarBody) {
@@ -55,14 +57,20 @@ export class CelestialBg {
     this.bodies.forEach(body => {
       if (body !== this.sun) body.updateScreenPosition();
     });
-    this.setZIndices();
+    this.updateLayers();
   }
 
-  private static setZIndices() {
-    this.bodies.sort((a,b) => b.distance - a.distance);
-    this.bodies.forEach((body, idx) => {
-      body.zIndex = idx;
-    });
+  // Sort intrasolar bodies in DOM
+  private static updateLayers() {
+    const wrapper = <SVGGElement>document.querySelector('g#solar-system');
+    const bodies = wrapper.children;
+    function getDist(id: string) {
+      return CelestialBg.bodies.find(body => body.id === id)?.distance || 0;
+    }
+
+    Array.prototype.slice.call(bodies)
+      .sort((a,b) => getDist(b.id) - getDist(a.id))
+      .forEach(body => wrapper.appendChild(body));
   }
 
 }

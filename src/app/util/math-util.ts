@@ -82,8 +82,12 @@ export class MathUtil {
     return ('0'.repeat(digits) + n).substr(-digits);
   }
 
-  public static tween(a: number, c: number, b: number): number {
-    return this.clamp(0, (c - a) / (b - a), 1);
+  public static tween(min: number, x: number, max: number): number {
+    return this.clamp(0, (x - min) / (max - min), 1);
+  }
+
+  public static untween(min: number, p: number, max: number): number {
+    return p * (max - min) + min;
   }
 
 }

@@ -163,6 +163,9 @@ export class OrbitalMechanics {
     const cx = i.minus(f).dot(xDir);
     const cy = i.minus(f).dot(yDir);
 
+    // Error protection
+    if (isNaN(cx) || isNaN(cy)) return { display: false };
+
     // Occlusion culling
     if (Math.abs(cy) > 500 || Math.abs(cx) > 500) return { display: false };
 

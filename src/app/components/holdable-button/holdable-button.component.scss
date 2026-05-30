@@ -6,9 +6,36 @@
   &:active {
     opacity: 50%;
   }
-  .clickable {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
+}
+
+.clickable {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background-color: whitesmoke;
+  position: relative;
+}
+
+.arrow {
+  border: solid darkgrey;
+  border-width: 0 0.5vmin 0.5vmin 0;
+  display: inline-block;
+  padding: 0.3vmin;
+  position: absolute;
+  left: calc(50% -  0.56569vmin);
+  margin: auto;
+}
+
+svg {
+  position: absolute;
+  width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1/1;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+polyline {
+  stroke: darkgrey;
 }

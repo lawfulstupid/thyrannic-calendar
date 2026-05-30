@@ -1,15 +1,20 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-holdable-button',
   standalone: true,
   templateUrl: './holdable-button.component.html',
-  styleUrl: './holdable-button.component.scss'
+  styleUrl: './holdable-button.component.scss',
+  imports: [NgIf]
 })
 export class HoldableButtonComponent {
 
   private static readonly MAX_INTERVAL: number = 100;
   private static readonly MIN_INTERVAL: number = 20;
+
+  @Input()
+  arrow?: 'up' | 'down' | 'left' | 'right';
 
   @Output()
   output: EventEmitter<void> = new EventEmitter();

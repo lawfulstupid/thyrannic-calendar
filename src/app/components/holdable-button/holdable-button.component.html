@@ -1,3 +1,8 @@
 <div class="clickable" (click)="output.emit()" (mousedown)="down()" (mouseup)="up()" (mouseleave)="up()" (touchstart)="down()" (touchend)="up()">
-  <ng-content></ng-content>
+  <svg viewBox="0 0 100 100" *ngIf="arrow">
+    <polyline points="0,75 50,25 100,75" *ngIf="arrow === 'up'"/>
+    <polyline points="25,0 75,50 25,100" *ngIf="arrow === 'right'"/>
+    <polyline points="0,25 50,75 100,25" *ngIf="arrow === 'down'"/>
+    <polyline points="75,0 25,50 75,100" *ngIf="arrow === 'left'"/>
+  </svg>
 </div>

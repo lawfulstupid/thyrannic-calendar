@@ -1,9 +1,5 @@
 <span class="root">
   <span class="clickable" (click)="setValue()"><ng-content></ng-content></span>
-  <app-holdable-button class="up" (output)="changeValue(1)">
-    <i class="arrow"></i>
-  </app-holdable-button>
-  <app-holdable-button class="down" (output)="changeValue(-1)">
-    <i class="arrow"></i>
-  </app-holdable-button>
+  <app-holdable-button arrow="up" (output)="changeValue(1)"/>
+  <app-holdable-button arrow="down" (output)="changeValue(-1)"/>
 </span>

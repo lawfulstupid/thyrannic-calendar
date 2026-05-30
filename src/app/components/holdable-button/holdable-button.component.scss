@@ -16,16 +16,6 @@
   position: relative;
 }
 
-.arrow {
-  border: solid darkgrey;
-  border-width: 0 0.5vmin 0.5vmin 0;
-  display: inline-block;
-  padding: 0.3vmin;
-  position: absolute;
-  left: calc(50% -  0.56569vmin);
-  margin: auto;
-}
-
 svg {
   position: absolute;
   width: 100%;

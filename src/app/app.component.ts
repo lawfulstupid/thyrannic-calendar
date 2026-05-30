@@ -95,7 +95,6 @@ export class AppComponent {
       }
     }
     CelestialBg.updateScreenPositions();
-    CelestialBg.earth.updateBearing();
   }
 
   playLoop: NodeJS.Timeout | undefined;

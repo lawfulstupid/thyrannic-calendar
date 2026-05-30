@@ -27,7 +27,6 @@ export class Earth {
   snowCoverage: number = 0;
 
   terrainMap!: Array<AzAlt>;
-  terrainPath: string = '';
 
   public static get SUNRISE_SUNSET_START(): angle {
     return Earth.HORIZON + CelestialBg.sun.angularDiameter * CelestialBg.sun.embiggenmentFactor;
@@ -55,11 +54,6 @@ export class Earth {
   // Should be called when selected city changes
   public updateLocation() {
     this.generateTerrainMap();
-  }
-
-  // Should be called when bearing changes
-  public updateBearing() {
-    this.updateTerrainPath();
   }
 
   private updateSky() {
@@ -117,21 +111,6 @@ export class Earth {
     displaceMidpoint(hills, 0, hills.length - 1, 1);
 
     this.terrainMap = hills.map((y, x) => ({ azimuth: x, altitude: y * 10 - 5 }));
-    this.updateTerrainPath();
-  }
-
-  private updateTerrainPath() {
-    this.terrainPath = this.terrainMap
-      // Map onto viewport
-      .map(point => OrbitalMechanics.AzAlt2ScreenPos(point))
-      // Remove culled points
-      .filter(pos => pos.display)
-      // Sort left to right
-      .sort((a, b) => a.screenX - b.screenX)
-      // close the loop without intersection
-      .concat([{ display: true, screenX: 1000, screenY: -100, screenSf: 1 }, { display: true, screenX: -1000, screenY: -100, screenSf: 1 }])
-      // join into path string
-      .map(({ screenX, screenY }) => `${screenX},${(90 - screenY)}`).join(' ');
   }
 
 }

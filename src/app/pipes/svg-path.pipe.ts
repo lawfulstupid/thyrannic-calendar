@@ -10,7 +10,7 @@ import { AzAlt, OrbitalMechanics, ScreenPos } from "../util/orbital-mechanics";
 export class SvgPathPipe implements PipeTransform {
 
   transform(path: Array<AzAlt> = [], fill: boolean = false): string {
-    let points = path.map(point => OrbitalMechanics.AzAlt2ScreenPos(point)); // Map onto viewport
+    const points = path.map(point => OrbitalMechanics.AzAlt2ScreenPos(point)); // Map onto viewport
 
     // Find first displayable point
     const firstPoint = points.findIndex(point => point.display);
@@ -18,7 +18,7 @@ export class SvgPathPipe implements PipeTransform {
       return ''; // nothing to render
     } else if (firstPoint > 0) {
       // Move leading gap to end
-      points = points.splice(firstPoint);
+      points.splice(0, firstPoint);
       points.push({ display: false });
     }
 

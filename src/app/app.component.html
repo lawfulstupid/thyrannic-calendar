@@ -32,9 +32,11 @@
     <option [ngValue]="bearing" class="hidden">{{bearing.name}}</option>
   </select>
 </div>
-<div class="bearing ui">
-  <app-holdable-button arrow="left" (output)="changeBearing(1)"/>
-  <app-holdable-button arrow="right" (output)="changeBearing(-1)"/>
+<div class="direction ui">
+  <app-holdable-button class="bearing" arrow="left" (output)="changeBearing(1)"/>
+  <app-holdable-button class="bearing" arrow="right" (output)="changeBearing(-1)"/>
+  <app-holdable-button class="elevation" arrow="up" (output)="changeElevation(1)" *ngIf="elevation.angle < elevation.max"/>
+  <app-holdable-button class="elevation" arrow="down" (output)="changeElevation(-1)" *ngIf="elevation.angle > elevation.min"/>
 </div>
 <span class="footer ui">
   <a href="http://github.com/lawfulstupid/thyrannic-calendar">v{{environment.appVersion}}</a>

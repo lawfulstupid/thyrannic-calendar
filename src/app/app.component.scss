@@ -62,7 +62,7 @@ app-celestial-bg {
   @include translucent();
 }
 
-.bearing {
+.direction {
   position: absolute;
   top: 0;
   left: 0;
@@ -71,14 +71,27 @@ app-celestial-bg {
   @include translucent();
   app-holdable-button {
     position: absolute;
-    width: 1.5vmin;
-    top: 40vh;
-    bottom: 40vh;
+    &.bearing {
+      width: 1.5vmin;
+      height: 20vh;
+      top: calc(50% - 10vh);
+    }
+    &.elevation {
+      height: 1.5vmin;
+      width: 20vh;
+      left: calc(50% - 10vh);
+    }
     &[arrow=left] {
-      left: 1ch;
+      left: 1.5ch;
     }
     &[arrow=right] {
-      right: 1ch;
+      right: 1.5ch;
+    }
+    &[arrow=up] {
+      top: 1.5ch;
+    }
+    &[arrow=down] {
+      bottom: 1.5ch;
     }
   }
 }

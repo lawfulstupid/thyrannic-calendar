@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { CelestialBg } from './components/celestial-bg/celestial-bg.component';
 import { CelestialBgModule } from './components/celestial-bg/celestial-bg.module';
 import { Earth } from './components/celestial-bg/earth/earth';
+import { HoldableButtonComponent } from './components/holdable-button/holdable-button.component';
 import { PinnedDateComponent } from "./components/pinned-date/pinned-date.component";
 import { TimeUnitComponent } from './components/time-unit/time-unit.component';
 import { Bearing } from './model/bearing';
@@ -14,11 +15,11 @@ import { City } from './model/city';
 import { TemporalUnit } from './model/temporal-unit';
 import { TDate } from './model/thyrannic-date';
 import { TDateTime } from './model/thyrannic-date-time';
-import { OrdinalPipe } from './pipes/ordinal.pipe';
 import { DegreesPipe } from './pipes/degrees.pipe';
+import { OrdinalPipe } from './pipes/ordinal.pipe';
 import { LocalValue } from './util/local-value';
 import { MathUtil } from './util/math-util';
-import { HoldableButtonComponent } from './components/holdable-button/holdable-button.component';
+import { angle } from './util/units';
 
 @Component({
   selector: 'app-root',
@@ -65,9 +66,11 @@ export class AppComponent {
   }
 
   public bearing: Bearing = this.city.latitude >= 0 ? Bearing.SOUTH : Bearing.NORTH;
+  public elevation: { min: angle, max: angle, angle: angle } = { min: this.environment.mobile ? 30 : 40, max: 90, angle: 0 };
 
   constructor() {
     AppComponent.instance = this;
+    this.elevation.angle = this.elevation.min;
     CelestialBg.init();
   }
 
@@ -93,6 +96,11 @@ export class AppComponent {
         this.bearing = Bearing.custom(targetAngle);
       }
     }
+    CelestialBg.updateScreenPositions();
+  }
+
+  public changeElevation(dir: 1 | -1) {
+    this.elevation.angle = MathUtil.clamp(this.elevation.min, this.elevation.angle + dir * 5, this.elevation.max);
     CelestialBg.updateScreenPositions();
   }
 

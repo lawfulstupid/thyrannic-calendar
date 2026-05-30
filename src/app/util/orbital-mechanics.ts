@@ -137,7 +137,7 @@ export class OrbitalMechanics {
 
     // Compute observer's focal vector
     const ELEVATION = 40; // arbitrary angle above horizon
-    const f = Vector.fromSpherical(-AppComponent.instance.bearing.angle, ELEVATION, d);
+    const f = Vector.fromSpherical(-AppComponent.instance.bearing.angle, AppComponent.instance.elevation.angle, d);
     // plane perpendicular to F and passing through the tip of F is given by (X - F) ⋅ F = 0
     // where X = (x,y,z) is a point in space
 

@@ -23,10 +23,10 @@
       <ellipse [attr.fill]="equatorialIllumination > 0.5 ? 'white' : 'black'"/>
     </mask>
   </defs>
-  <svg:g class="path" *ngIf="path.enabled">
-    <polyline *ngFor="let path of path.max" [attr.points]="path" class="lim"/>
-    <polyline *ngFor="let path of path.day" [attr.points]="path" class="day"/>
-    <polyline *ngFor="let path of path.min" [attr.points]="path" class="lim"/>
+  <svg:g class="path" *ngIf="skyPath.enabled">
+    <polyline [attr.points]="skyPath.max | svgPoints" class="lim"/>
+    <polyline [attr.points]="skyPath.day | svgPoints" class="day"/>
+    <polyline [attr.points]="skyPath.min | svgPoints" class="lim"/>
   </g>
   <g *ngIf="display">
     <circle class="point" [attr.fill]="'url(#' + id + '-point)'" [attr.opacity]="pointOpacity"/>

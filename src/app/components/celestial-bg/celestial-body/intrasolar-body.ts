@@ -1,6 +1,7 @@
 import { AppComponent } from "src/app/app.component";
+import { TDate } from "src/app/model/thyrannic-date";
 import { MathUtil } from "src/app/util/math-util";
-import { Orbital, OrbitalMechanics } from "src/app/util/orbital-mechanics";
+import { AzAlt, Orbital, OrbitalMechanics } from "src/app/util/orbital-mechanics";
 import { Vector } from "src/app/util/vector";
 import { angle, distance, time } from "../../../util/units";
 import { CelestialBg } from "../celestial-bg.component";
@@ -24,7 +25,13 @@ export abstract class IntrasolarBody extends CelestialBody {
   abstract brightness: number;
   abstract occlude: boolean;
 
-  path: { enabled: boolean, min?: Array<string>, max?: Array<string>, day?: Array<string> } = { enabled: false };
+  skyPath: {
+    enabled: boolean,
+    min: Array<AzAlt>,
+    max: Array<AzAlt>,
+    day: Array<AzAlt>,
+    date: TDate
+  } | { enabled: null } = { enabled: null };
 
   // Occlusion variables
   equatorialIllumination: number = 1;
@@ -72,7 +79,7 @@ export abstract class IntrasolarBody extends CelestialBody {
 
   // how many degrees in the sky it takes up
   get angularDiameter(): angle {
-    return MathUtil.acos(1 - 2 * (this.radius/this.distance) ** 2);
+    return MathUtil.acos(1 - 2 * (this.radius / this.distance) ** 2);
   }
 
   get embiggenmentFactor(): number {
@@ -114,14 +121,26 @@ export abstract class IntrasolarBody extends CelestialBody {
     return Vector.fromSpherical(this.rightAscension, this.declination, this.distance);
   }
 
-  updatePath() {
-    if (!this.path.enabled) return;
+  updatePath(state: boolean | null = this.skyPath.enabled) {
+    if (!state) return;
+
+    // Try to get current values to avoid recalculation
+    let min, max, day: Array<AzAlt> | undefined = undefined;
+    if (this.skyPath.enabled !== null) {
+      min = this.skyPath.min;
+      max = this.skyPath.max;
+      if (AppComponent.instance.datetime.date.diff(this.skyPath.date) === 0) {
+        day = this.skyPath.day;
+      }
+    }
+
     const [decMin, decMax] = this.declinationMinMax();
-    this.path = {
+    this.skyPath = {
       enabled: true,
-      max: OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, decMax),
-      min: OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, decMin),
-      day: OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, this.declination)
+      min: min || OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, decMin),
+      max: max || OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, decMax),
+      day: day || OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, this.declination),
+      date: AppComponent.instance.datetime.date
     }
   }
 }

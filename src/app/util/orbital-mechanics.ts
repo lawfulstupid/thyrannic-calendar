@@ -185,29 +185,17 @@ export class OrbitalMechanics {
     return (sunset - sunrise) / 15;
   }
 
-  public static skyPath(rightAscension: angle, declination: angle): Array<string> {
-    const paths: Array<string> = [];
-    let pathPoints: Array<string> = [];
+  public static skyPath(rightAscension: angle, declination: angle): Array<AzAlt> {
+    const path: Array<AzAlt> = [];
     const dt = TDate.fromDate().at(12, 0);
     const minutesPerDay = TemporalUnit.DAY.as(TemporalUnit.MINUTE);
 
-    let lastAz = 0;
     for (let u = 0; u <= minutesPerDay; u++) {
       const { azimuth, altitude } = this.RaDec2AzAlt({ rightAscension, declination }, dt.add(u, TemporalUnit.MINUTE));
-      if (Math.abs(azimuth - lastAz) > 90) {
-        // split paths at asymptotes
-        paths.push(pathPoints.join(' '));
-        pathPoints = [];
-      }
-
-      const screenPos = this.AzAlt2ScreenPos({ azimuth, altitude });
-      if (screenPos.display) {
-        pathPoints.push(`${screenPos.screenX},${90-screenPos.screenY}`)
-      }
-      lastAz = azimuth;
+      path.push({ azimuth, altitude });
     }
-    paths.push(pathPoints.join(' '));
-    return paths;
+
+    return path;
   }
 
 }

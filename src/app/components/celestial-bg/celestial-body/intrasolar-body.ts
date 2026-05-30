@@ -122,7 +122,10 @@ export abstract class IntrasolarBody extends CelestialBody {
   }
 
   updatePath(state: boolean | null = this.skyPath.enabled) {
-    if (!state) return;
+    if (!state) {
+      if (this.skyPath.enabled) this.skyPath.enabled = false;
+      return;
+    }
 
     // Try to get current values to avoid recalculation
     let min, max, day: Array<AzAlt> | undefined = undefined;

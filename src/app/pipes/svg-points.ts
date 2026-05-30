@@ -20,9 +20,9 @@ export class SvgPointsPipe implements PipeTransform {
       // Discard unused properties
       .map(({ screenX, screenY }) => ({ screenX, screenY }))
       // close the loop without intersection if fill=true
-      .concat(fill ? [{ screenX: 1000, screenY: -100 }, { screenX: -1000, screenY: -100 }] : [])
+      .concat(fill ? [{ screenX: 1000, screenY: 100 }, { screenX: -1000, screenY: 100 }] : [])
       // join into path string
-      .map(({ screenX, screenY }) => `${screenX},${(90 - screenY)}`).join(' ');
+      .map(({ screenX, screenY }) => `${screenX},${screenY}`).join(' ');
   }
 
 }

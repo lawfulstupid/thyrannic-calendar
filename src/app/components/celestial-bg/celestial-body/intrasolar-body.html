@@ -1,4 +1,4 @@
-<svg:g *ngIf="display"
+<svg:g
   [style.--screenX]="screenX"
   [style.--screenY]="90 - screenY"
   [style.--radius]="angularDiameter * embiggenmentFactor * screenSf / 2"
@@ -28,8 +28,10 @@
     <polyline *ngFor="let path of path.day" [attr.points]="path" class="day"/>
     <polyline *ngFor="let path of path.min" [attr.points]="path" class="lim"/>
   </g>
-  <circle class="point" [attr.fill]="'url(#' + id + '-point)'" [attr.opacity]="pointOpacity"/>
-  <circle class="disc bg"></circle>
-  <circle class="aura" [attr.fill]="'url(#' + id + '-aura)'"/>
-  <circle class="disc fg" [attr.mask]="'url(#' + id + '-occlusion)'"></circle>
+  <g *ngIf="display">
+    <circle class="point" [attr.fill]="'url(#' + id + '-point)'" [attr.opacity]="pointOpacity"/>
+    <circle class="disc bg"></circle>
+    <circle class="aura" [attr.fill]="'url(#' + id + '-aura)'"/>
+    <circle class="disc fg" [attr.mask]="'url(#' + id + '-occlusion)'"></circle>
+  </g>
 </g>

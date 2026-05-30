@@ -127,30 +127,51 @@ export class OrbitalMechanics {
      * The viewport is a rectangle on the plane x = d where d is the distance of the viewport from the observer
      * We draw a line from the origin to the body and see where it insersects the viewport
      * That gives us the coordinates of the body as rendered on the viewport
+     *
+     * Amendment: observer is looking at centre of viewport, slightly above horizon
+     * Viewport is now a plane at a similar angle to the y-axis
      */
 
-    // Compute position of body on unit sphere
-    const p = Vector.fromSpherical(body.azimuth + AppComponent.instance.bearing.angle, body.altitude);
-    if (p.x <= 0) return { display: false } // body is behind observer
-
-    // Compute distance to viewport (50 = half viewport width)
+    // Compute distance to viewport (50 = half viewport width in vmin)
     const d = 50 / MathUtil.tan(AppComponent.FOV / 2);
 
-    // Line to body intersects viewport at (d,yi,zi)
-    const yi = d * p.y / p.x;
-    const zi = d * p.z / p.x;
+    // Compute observer's focal vector
+    const ELEVATION = 0; // arbitrary angle above horizon
+    const f = Vector.fromSpherical(-AppComponent.instance.bearing.angle, ELEVATION, d);
+    // plane perpendicular to F and passing through the tip of F is given by (X - F) ⋅ F = 0
+    // where X = (x,y,z) is a point in space
+
+    // New bases that form (x,y) coords of viewport
+    const xDir = f.cross(new Vector(0,1,0)).normal();
+    const yDir = xDir.cross(f).normal();
+
+    // Compute position of body on unit sphere
+    const p = Vector.fromSpherical(body.azimuth, body.altitude);
+    // this is distanceless i.e. a ray given by X = sP for some s > 0
+
+    // These intersect where both equations are simultaneously true:
+    // (sP - F) ⋅ F = 0
+    // => sP⋅F - F⋅F = 0
+    // => s = F⋅F / P⋅F
+    const s = f.dot(f) / p.dot(f);
+    if (s <= 0) return { display: false } // body is behind observer
+
+    // Line to body intersects viewport at X = sP
+    const i = p.times(s);
+
+    // Project 3d space onto 2d viewport plane
+    const cx = i.minus(f).dot(xDir);
+    const cy = i.minus(f).dot(yDir);
 
     // Occlusion culling
-    if (Math.abs(yi) > 1000 || Math.abs(zi) > 1000) return { display: false };
+    if (Math.abs(cy) > 1000 || Math.abs(cx) > 1000) return { display: false };
 
     return {
       display: true,
-      screenY: yi,
-      screenX: zi,
-      screenSf: 1 / p.x
+      screenY: cy,
+      screenX: cx,
+      screenSf: 1 / MathUtil.cos(i.angleTo(f))
     }
-    // x = cosine of angular distance between body and view direction (+x)
-    //   = cos(acos((x,y,z) . (1,0,0)))
   }
 
   public static updateOcclusion(body: IntrasolarBody) {

@@ -164,7 +164,7 @@ export class OrbitalMechanics {
     const cy = i.minus(f).dot(yDir);
 
     // Occlusion culling
-    if (Math.abs(cy) > 1000 || Math.abs(cx) > 1000) return { display: false };
+    if (Math.abs(cy) > 500 || Math.abs(cx) > 500) return { display: false };
 
     return {
       display: true,

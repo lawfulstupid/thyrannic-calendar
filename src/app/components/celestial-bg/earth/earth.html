@@ -4,4 +4,4 @@
     <stop [attr.offset]="snowCoverage + '%'" stop-color="green"/>
   </linearGradient>
 </defs>
-<svg:polygon [attr.points]="terrainMap | svgPoints: true" fill="url(#snowGrad)" [style.filter]="'brightness(' + groundBrightness + ')'"></polygon>
+<svg:path [attr.d]="terrainMap | svgPath: true" fill="url(#snowGrad)" [style.filter]="'brightness(' + groundBrightness + ')'"/>

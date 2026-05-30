@@ -41,8 +41,8 @@ mask {
   }
 }
 
-.path {
-  polyline {
+.sky-paths {
+  path {
     stroke: var(--color);
     @include brighten;
     stroke-width: 0.5;

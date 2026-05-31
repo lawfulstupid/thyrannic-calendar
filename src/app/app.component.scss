@@ -34,10 +34,14 @@ app-celestial-bg {
 @mixin translucent {
   select,button,fa-icon {
     opacity: 50%;
-    &:hover {
+    &.clickable:hover {
       opacity: 75%;
     }
   }
+}
+
+.unclickable {
+  pointer-events: none;
 }
 
 .menubar {

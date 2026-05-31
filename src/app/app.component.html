@@ -37,8 +37,9 @@
   </select>
   <select class="clickable hidable" [(ngModel)]="bearing" (ngModelChange)="changeBearing()">
     <option *ngFor="let bearing of bearings" [ngValue]="bearing">Face {{bearing.name}}</option>
-    <option [ngValue]="bearing" class="hidden">{{bearing.name}}</option>
+    <option [ngValue]="bearing" class="hidden">Bearing: {{bearing.name}}</option>
   </select>
+  <button class="unclickable hidable">Elevation: {{elevation.angle | degrees}}</button>
 </div>
 <div class="menu ui" [class.hidden]="!menuOpen">
   <button class="clickable hidable" (click)="dragToLookEnabled = !dragToLookEnabled">Drag to look: {{dragToLookEnabled ? 'on' : 'off'}}</button>

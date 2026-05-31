@@ -34,10 +34,14 @@ app-celestial-bg {
 @mixin translucent {
   select,button,fa-icon {
     opacity: 50%;
-    &:hover {
+    &.clickable:hover {
       opacity: 75%;
     }
   }
+}
+
+.unclickable {
+  pointer-events: none;
 }
 
 .menubar {
@@ -80,6 +84,16 @@ app-celestial-bg {
   width: fit-content;
   >* {
     height: 4ch;
+  }
+}
+
+.menu,.menubar {
+  select,button {
+    background-color: white;
+    border-color: rgb(118, 118, 118);
+    border-width: 0.8px;
+    padding-block: 0;
+    text-align-last: center;
   }
 }
 
@@ -126,4 +140,13 @@ app-celestial-bg {
     color: inherit;
     text-decoration: none;
   }
+}
+
+.drag-sphere {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  touch-action: none;
 }

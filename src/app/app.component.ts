@@ -20,6 +20,7 @@ import { OrdinalPipe } from './pipes/ordinal.pipe';
 import { LocalValue } from './util/local-value';
 import { MathUtil } from './util/math-util';
 import { angle } from './util/units';
+import { AzAlt, ScreenPos } from './util/orbital-mechanics';
 
 @Component({
   selector: 'app-root',
@@ -44,10 +45,10 @@ export class AppComponent {
   protected readonly units = TemporalUnit;
   protected readonly cities: Array<City> = City.values;
   protected readonly bearings: Array<Bearing> = Bearing.values;
-  protected get sunPathEnabled() { return !!CelestialBg.sun.skyPath.enabled; }
   protected dateUiOpacity: 0 | 50 | 100 = 100;
 
   public static readonly FOV = 90;
+  private static readonly ANGLE_INCREMENT = 5;
 
   // Load datetime from local storage
   private _datetime: TDateTime = LocalValue.CURRENT_DATETIME.get() || TDate.fromDate().at(12, 0);
@@ -91,8 +92,9 @@ export class AppComponent {
     }
   }
 
-  public updateSunPathMode() {
-    CelestialBg.sun.updatePath(!CelestialBg.sun.skyPath.enabled);
+  protected get sunPathEnabled() { return !!CelestialBg.sun.skyPath.enabled; }
+  protected set sunPathEnabled(state: boolean) {
+    CelestialBg.sun.updatePath(state);
   }
 
   public updateDateUiOpacity() {
@@ -105,7 +107,7 @@ export class AppComponent {
 
   public changeBearing(dir?: 1 | -1) {
     if (dir !== undefined) {
-      const targetAngle = MathUtil.fixAngle(this.bearing.angle + dir * 5);
+      const targetAngle = MathUtil.fixAngle(this.changeAngle(this.bearing.angle, dir));
       const targetBearing = Bearing.values.find(bearing => bearing.angle === targetAngle);
       if (targetBearing) {
         this.bearing = targetBearing;
@@ -117,8 +119,19 @@ export class AppComponent {
   }
 
   public changeElevation(dir: 1 | -1) {
-    this.elevation.angle = MathUtil.clamp(this.elevation.min, this.elevation.angle + dir * 5, this.elevation.max);
+    this.elevation.angle = MathUtil.clamp(
+      this.elevation.min,
+      this.changeAngle(this.elevation.angle, dir),
+      this.elevation.max
+    );
     CelestialBg.updateScreenPositions();
+  }
+
+  private changeAngle(angle: angle, dir: 1 | -1): angle {
+    // Apply change
+    const target = angle + dir * AppComponent.ANGLE_INCREMENT;
+    // Snap to grid
+    return AppComponent.ANGLE_INCREMENT * Math.round(target / AppComponent.ANGLE_INCREMENT);
   }
 
   playLoop: NodeJS.Timeout | undefined;
@@ -138,11 +151,51 @@ export class AppComponent {
   }
 
   private moveToMenu() {
-    const menuItems = document.querySelectorAll('.menubar > .hidable');
+    const menuBarItems = document.querySelectorAll('.menubar > .hidable');
+    const menuItems = document.querySelectorAll('.menu > *');
     const menu = <HTMLDivElement>document.querySelector('.menu');
+    Array.prototype.slice.call(menuBarItems).forEach(menuItem => {
+      menu.appendChild(menuItem);
+    });
     Array.prototype.slice.call(menuItems).forEach(menuItem => {
       menu.appendChild(menuItem);
     });
+  }
+
+  private static readonly DRAG_REDUCTION_FACTOR = 10;
+  private static readonly DRAG_UPDATE_MS = 10;
+  protected dragToLookEnabled: boolean = true;
+  private dragOrigin?: { clientX: number, clientY: number, bearing: angle, elevation: angle };
+  private dragLatest?: { clientX: number, clientY: number };
+  private dragUpdateLoop?: NodeJS.Timeout;
+
+  protected dragStart({ clientX, clientY }: MouseEvent | PointerEvent) {
+    this.menuOpen = false;
+    if (!this.dragToLookEnabled) return;
+    this.dragOrigin = {
+      clientX,
+      clientY,
+      bearing: this.bearing.angle,
+      elevation: this.elevation.angle
+    };
+    this.dragUpdateLoop = setInterval(() => {
+      if (this.dragOrigin === undefined) return this.dragEnd(); // cancel
+      if (this.dragLatest === undefined) return; // wait
+
+      this.bearing = Bearing.custom(this.dragOrigin.bearing + (this.dragLatest.clientX - this.dragOrigin.clientX) / AppComponent.DRAG_REDUCTION_FACTOR);
+      this.elevation.angle = MathUtil.clamp(this.elevation.min, this.dragOrigin.elevation + (this.dragLatest.clientY - this.dragOrigin.clientY) / AppComponent.DRAG_REDUCTION_FACTOR, this.elevation.max);
+      CelestialBg.updateScreenPositions();
+    }, AppComponent.DRAG_UPDATE_MS);
+  }
+
+  protected dragEnd() {
+    this.dragOrigin = undefined;
+    clearInterval(this.dragUpdateLoop);
+  }
+
+  protected drag(event: MouseEvent | PointerEvent) {
+    if (!this.dragToLookEnabled || !this.dragOrigin) return; //ignore
+    this.dragLatest = event;
   }
 
 }

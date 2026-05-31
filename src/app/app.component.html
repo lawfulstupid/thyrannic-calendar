@@ -16,32 +16,43 @@
   <span>{{' '}}</span>
   <app-time-unit [unit]="units.HALF_DAY" [value]="datetime.isAfternoon() ? 1 : 0" (change)="changeDateTime($event)">{{datetime.getAmPm()}}</app-time-unit>
 </div>
-<div class="direction ui">
+<div class="direction ui" *ngIf="!dragToLookEnabled">
   <app-holdable-button class="bearing" arrow="left" (output)="changeBearing(1)"/>
   <app-holdable-button class="bearing" arrow="right" (output)="changeBearing(-1)"/>
   <app-holdable-button class="elevation" arrow="up" (output)="changeElevation(1)" *ngIf="elevation.angle < elevation.max"/>
   <app-holdable-button class="elevation" arrow="down" (output)="changeElevation(-1)" *ngIf="elevation.angle > elevation.min"/>
 </div>
 <div class="menubar ui">
-  <fa-icon class="clickable" [icon]="menuOpen ? icons.close : icons.menu" (click)="menuOpen = !menuOpen" *ngIf="environment.mobile"/>
+  <fa-icon class="clickable" [icon]="menuOpen ? icons.close : icons.menu" (click)="menuOpen = !menuOpen"/>
   <app-pinned-date class="hidable" [datetime]="datetime" (setDate)="datetime = $event"></app-pinned-date>
   <span class="separator"></span>
   <button class="clickable square" (click)="togglePlayPause()">
     <fa-icon [icon]="icons.play" *ngIf="!playLoop"></fa-icon>
     <fa-icon [icon]="icons.pause" *ngIf="playLoop"></fa-icon>
   </button>
-  <button class="clickable hidable" (click)="updateSunPathMode()">Sun path: {{sunPathEnabled ? 'on' : 'off'}}</button>
-  <button class="clickable hidable" (click)="updateDateUiOpacity()">Date: {{ dateUiOpacity === 100 ? 'visible' : dateUiOpacity === 0 ? 'hidden' : dateUiOpacity + '%' }}</button>
-  <select class="clickable hidable" [(ngModel)]="city">
-    <option *ngFor="let city of cities" [ngValue]="city">{{city.name}} ({{city.latitude | degrees: 'minutes'}}, {{city.longitude | degrees: 'minutes'}})</option>
-  </select>
+  <button class="clickable hidable" (click)="sunPathEnabled = !sunPathEnabled">Sun path: {{sunPathEnabled ? 'on' : 'off'}}</button>
   <select class="clickable hidable" [(ngModel)]="bearing" (ngModelChange)="changeBearing()">
     <option *ngFor="let bearing of bearings" [ngValue]="bearing">Face {{bearing.name}}</option>
-    <option [ngValue]="bearing" class="hidden">{{bearing.name}}</option>
+    <option [ngValue]="bearing" class="hidden">Bearing: {{bearing.name}}</option>
   </select>
+  <button class="unclickable hidable">Elevation: {{elevation.angle | degrees}}</button>
 </div>
-<div class="menu ui" [class.hidden]="!menuOpen"></div>
+<div class="menu ui" [class.hidden]="!menuOpen">
+  <select class="clickable" [(ngModel)]="city">
+    <option *ngFor="let city of cities" [ngValue]="city">{{city.name}} ({{city.latitude | degrees: 'minutes'}}, {{city.longitude | degrees: 'minutes'}})</option>
+  </select>
+  <button class="clickable" (click)="dragToLookEnabled = !dragToLookEnabled">Drag to look: {{dragToLookEnabled ? 'on' : 'off'}}</button>
+  <button class="clickable" (click)="updateDateUiOpacity()">Date: {{ dateUiOpacity === 100 ? 'visible' : dateUiOpacity === 0 ? 'hidden' : dateUiOpacity + '%' }}</button>
+</div>
 <span class="footer ui">
   <a href="http://github.com/lawfulstupid/thyrannic-calendar">v{{environment.appVersion}}</a>
 </span>
+<div class="drag-sphere"
+  (mousedown)="dragStart($event)"
+  (mousemove)="drag($event)"
+  (mouseup)="dragEnd()"
+  (pointerdown)="dragStart($event)"
+  (pointermove)="drag($event)"
+  (pointerup)="dragEnd()"
+></div>
 </div>

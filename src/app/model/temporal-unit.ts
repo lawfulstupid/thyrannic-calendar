@@ -1,18 +1,20 @@
+import { TDay } from "./thyrannic-day";
+
 export class TemporalUnit {
 
-  public static readonly MINUTE: TemporalUnit = new TemporalUnit('Minute');
-  public static readonly HOUR: TemporalUnit = new TemporalUnit('Hour', [60, this.MINUTE]);
-  public static readonly HALF_DAY: TemporalUnit = new TemporalUnit('Half Day', [12, this.HOUR]);
-  public static readonly DAY: TemporalUnit = new TemporalUnit('Day', [24, this.HOUR]);
-  public static readonly WEEK: TemporalUnit = new TemporalUnit('Week', [6, this.DAY]);
-  public static readonly QUARTER: TemporalUnit = new TemporalUnit('Quarter', [14, this.WEEK]);
-  public static readonly SHORT_YEAR: TemporalUnit = new TemporalUnit('Short Year', [4, this.QUARTER]);
-  public static readonly LONG_YEAR: TemporalUnit = new TemporalUnit('Long Year', [5, this.QUARTER]);
-  public static readonly STD_PERIOD: TemporalUnit = new TemporalUnit('Period', [19, this.SHORT_YEAR], [1, this.LONG_YEAR]);
-  public static readonly STD_EPOCH: TemporalUnit = new TemporalUnit('Epoch', [10, this.STD_PERIOD], [-1, this.WEEK]);
+  public static readonly MINUTE: TemporalUnit = new TemporalUnit('Minute', parseInt);
+  public static readonly HOUR: TemporalUnit = new TemporalUnit('Hour', parseInt, [60, this.MINUTE]);
+  public static readonly HALF_DAY: TemporalUnit = new TemporalUnit('Half Day', parseHalfDay, [12, this.HOUR]);
+  public static readonly DAY: TemporalUnit = new TemporalUnit('Day', parseDay, [24, this.HOUR]);
+  public static readonly WEEK: TemporalUnit = new TemporalUnit('Week', parseInt, [6, this.DAY]);
+  public static readonly QUARTER: TemporalUnit = new TemporalUnit('Quarter', parseInt, [14, this.WEEK]);
+  public static readonly SHORT_YEAR: TemporalUnit = new TemporalUnit('Short Year', parseInt, [4, this.QUARTER]);
+  public static readonly LONG_YEAR: TemporalUnit = new TemporalUnit('Long Year', parseInt, [5, this.QUARTER]);
+  public static readonly STD_PERIOD: TemporalUnit = new TemporalUnit('Period', parseInt, [19, this.SHORT_YEAR], [1, this.LONG_YEAR]);
+  public static readonly STD_EPOCH: TemporalUnit = new TemporalUnit('Epoch', parseInt, [10, this.STD_PERIOD], [-1, this.WEEK]);
 
-  public static readonly YEAR: TemporalUnit = new TemporalUnit('Year');
-  public static readonly EPOCH: TemporalUnit = new TemporalUnit('Epoch', [200, this.YEAR]);
+  public static readonly YEAR: TemporalUnit = new TemporalUnit('Year', parseInt);
+  public static readonly EPOCH: TemporalUnit = new TemporalUnit('Epoch', parseInt, [200, this.YEAR]);
 
   private readonly parts: Array<{
     baseUnit: TemporalUnit,
@@ -21,6 +23,7 @@ export class TemporalUnit {
 
   private constructor(
     readonly name: string,
+    public parser: (str: string) => number,
     ...baseUnits: Array<[number, TemporalUnit]>
   ) {
     this.parts = baseUnits.map(([n, u]) => ({
@@ -47,3 +50,21 @@ export class TemporalUnit {
 
 }
 
+/* Parsers */
+
+function parseInt(str: string): number {
+  if (/^[0-9]+$/i.test(str)) {
+    const value = Number.parseInt(str);
+  }
+  throw new Error('Failed to parse');
+}
+
+function parseHalfDay(str: string): number {
+  if (/^AM$/i.test(str)) return 0;
+  if (/^PM$/i.test(str)) return 1;
+  throw new Error('Failed to parse');
+}
+
+function parseDay(str: string): number {
+  return TDay.parse(str).id;
+}

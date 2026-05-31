@@ -38,13 +38,12 @@ export class TimeUnitComponent {
 
     this.dialogMgr.open(InputDialog, config).afterClosed()
       .pipe(filter(x => x !== undefined))
-      .subscribe((modifier: string) => {
-        if (modifier.match(/^[+-][0-9]+$/)) {
-          this.changeValue(Number(modifier));
-        } else if (modifier.match(/^[0-9]+$/)) {
-          this.changeValue(Number(modifier) - this.value);
+      .subscribe((str: string) => {
+        if (str.match(/^[+-][0-9]+$/)) {
+          this.changeValue(Number(str));
         } else {
-          console.error('Invalid value:', modifier);
+          const value = this.unit.parser(str);
+          this.changeValue(value - this.value);
         }
       });
   }

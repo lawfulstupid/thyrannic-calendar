@@ -22,4 +22,13 @@ export class TDay {
     return TDay.values.find(day => day.valueOf() === value);
   }
 
+  public static parse(str: string): TDay {
+    const id = /^[0-9]+$/.test(str) ? Number.parseInt(str) : -1;
+    for (const day of this.values) {
+      const regex = new RegExp('^' + day.name.replace('Ś', '(Ś|S|TH)').replace('gos', '(gos)?') + '$', 'i');
+      if (regex.test(str) || day.id === id) return day;
+    }
+    throw new Error('Failed to parse');
+  }
+
 }

@@ -11,13 +11,13 @@
     [attr.stroke-width]="star.diameter"
     vector-effect="non-scaling-stroke"
     [attr.opacity]="star.brightnessMax"
-    >
+  >
     <animate
-    attributeName="opacity"
-    begin="indefinite"
-    [attr.dur]="star.animationDuration"
-    [attr.values]="star.brightnessMax + ';' + star.brightnessMin + ';' + star.brightnessMax"
-    repeatCount="indefinite"
+      attributeName="opacity"
+      begin="indefinite"
+      [attr.dur]="star.animationDuration"
+      [attr.values]="star.brightnessMax + ';' + star.brightnessMin + ';' + star.brightnessMax"
+      repeatCount="indefinite"
     />
   </line>
 </g>

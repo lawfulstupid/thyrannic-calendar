@@ -27,6 +27,7 @@ export class Earth {
   snowCoverage: number = 0;
 
   terrainMap!: Array<AzAlt>;
+  waterMap: Array<AzAlt> = new Array(36).fill(undefined).map((_, x) => ({ azimuth: x * 10, altitude: 0 }));
 
   public static get SUNRISE_SUNSET_START(): angle {
     return Earth.HORIZON + CelestialBg.sun.angularDiameter * CelestialBg.sun.embiggenmentFactor;
@@ -110,7 +111,7 @@ export class Earth {
     hills[hills.length - 1] = hills[0];
     displaceMidpoint(hills, 0, hills.length - 1, 1);
 
-    this.terrainMap = hills.map((y, x) => ({ azimuth: x, altitude: y * 10 - 5 }));
+    this.terrainMap = hills.map((y, x) => ({ azimuth: x, altitude: MathUtil.untween(-3, y, 6) }));
   }
 
 }

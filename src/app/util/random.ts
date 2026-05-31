@@ -10,7 +10,7 @@ export class Random {
   }
 
   public between(min: number, max: number): number {
-    return this.rng.next() * (max - min) + min;
+    return MathUtil.untween(min, this.rng.next(), max);
   }
 
   // Box-Muller transform

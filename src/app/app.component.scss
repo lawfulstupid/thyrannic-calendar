@@ -32,7 +32,7 @@ app-celestial-bg {
 }
 
 @mixin translucent {
-  select,button {
+  select,button,fa-icon {
     opacity: 50%;
     &:hover {
       opacity: 75%;
@@ -40,13 +40,15 @@ app-celestial-bg {
   }
 }
 
-.menu {
+.menubar {
+  @include translucent();
   padding: 1ch;
   padding-right: 0;
   text-align: right;
   height: 4ch;
   display: flex;
   flex-direction: row;
+  overflow: hidden;
   .square {
     width: 4ch;
     text-align: center;
@@ -59,10 +61,29 @@ app-celestial-bg {
     width: 0;
     margin: 0 auto;
   }
-  @include translucent();
+  >fa-icon {
+    padding-top: 0.4em;
+    width: 2ch;
+    text-align: center;
+  }
 }
 
-.bearing {
+.menu {
+  background-color: rgba(100, 100, 100, 0.5);
+  display: flex;
+  flex-direction: column;
+  padding: 1ch;
+  margin-left: 1ch;
+  margin-top: -1ch;
+  gap: 1ch;
+  border-radius: 1vmin;
+  width: fit-content;
+  >* {
+    height: 4ch;
+  }
+}
+
+.direction {
   position: absolute;
   top: 0;
   left: 0;
@@ -71,39 +92,29 @@ app-celestial-bg {
   @include translucent();
   app-holdable-button {
     position: absolute;
-    width: 1.5vmin;
-    top: 40vh;
-    bottom: 40vh;
-    background-color: whitesmoke;
-    &.left {
-      left: 1ch;
-      .arrow {
-        transform: rotate(-225deg);
-        -webkit-transform: rotate(-225deg);
-        top: calc(50% - 0.56569vmin);
-        left: calc(50% - 0.56569vmin + 0.1vw);
-      }
+    &.bearing {
+      width: 1.5vh;
+      height: 20vh;
+      top: calc(50% - 10vh);
     }
-    &.right {
-      right: 1ch;
-      .arrow {
-        transform: rotate(-45deg);
-        -webkit-transform: rotate(-45deg);
-        top: calc(50% - 0.56569vmin);
-        left: calc(50% - 0.56569vmin - 0.1vw);
-      }
+    &.elevation {
+      height: 1.5vh;
+      width: 20vh;
+      left: calc(50% - 10vh);
+    }
+    &[arrow=left] {
+      left: 1.5ch;
+    }
+    &[arrow=right] {
+      right: 1.5ch;
+    }
+    &[arrow=up] {
+      top: 1.5ch;
+    }
+    &[arrow=down] {
+      bottom: 1.5ch;
     }
   }
-}
-
-.arrow {
-  border: solid darkgrey;
-  border-width: 0 0.5vmin 0.5vmin 0;
-  display: inline-block;
-  padding: 0.3vmin;
-  position: absolute;
-  left: calc(50% - 0.56569vmin);
-  margin: auto;
 }
 
 .footer {

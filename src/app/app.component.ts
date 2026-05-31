@@ -2,11 +2,12 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faClose, faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { environment } from 'src/environments/environment';
 import { CelestialBg } from './components/celestial-bg/celestial-bg.component';
 import { CelestialBgModule } from './components/celestial-bg/celestial-bg.module';
 import { Earth } from './components/celestial-bg/earth/earth';
+import { HoldableButtonComponent } from './components/holdable-button/holdable-button.component';
 import { PinnedDateComponent } from "./components/pinned-date/pinned-date.component";
 import { TimeUnitComponent } from './components/time-unit/time-unit.component';
 import { Bearing } from './model/bearing';
@@ -14,11 +15,11 @@ import { City } from './model/city';
 import { TemporalUnit } from './model/temporal-unit';
 import { TDate } from './model/thyrannic-date';
 import { TDateTime } from './model/thyrannic-date-time';
-import { OrdinalPipe } from './pipes/ordinal.pipe';
 import { DegreesPipe } from './pipes/degrees.pipe';
+import { OrdinalPipe } from './pipes/ordinal.pipe';
 import { LocalValue } from './util/local-value';
 import { MathUtil } from './util/math-util';
-import { HoldableButtonComponent } from './components/holdable-button/holdable-button.component';
+import { angle } from './util/units';
 
 @Component({
   selector: 'app-root',
@@ -31,14 +32,20 @@ export class AppComponent {
 
   public static instance: AppComponent;
 
-  readonly faPlay = faPlay;
-  readonly faPause = faPause;
+  protected readonly icons = {
+    play: faPlay,
+    pause: faPause,
+    menu: faBars,
+    close: faClose
+  }
 
   protected readonly environment = environment;
+  protected menuOpen: boolean = false;
   protected readonly units = TemporalUnit;
   protected readonly cities: Array<City> = City.values;
   protected readonly bearings: Array<Bearing> = Bearing.values;
   protected get sunPathEnabled() { return !!CelestialBg.sun.skyPath.enabled; }
+  protected dateUiOpacity: 0 | 50 | 100 = 100;
 
   public static readonly FOV = 90;
 
@@ -65,10 +72,15 @@ export class AppComponent {
   }
 
   public bearing: Bearing = this.city.latitude >= 0 ? Bearing.SOUTH : Bearing.NORTH;
+  public elevation: { min: angle, max: angle, angle: angle } = { min: this.environment.mobile ? 30 : 40, max: 90, angle: 0 };
 
   constructor() {
     AppComponent.instance = this;
+    this.elevation.angle = this.elevation.min;
     CelestialBg.init();
+    if (environment.mobile) {
+      setTimeout(() => this.moveToMenu(), 0);
+    }
   }
 
   public changeDateTime([quantity, unit]: [number, TemporalUnit]) {
@@ -83,6 +95,14 @@ export class AppComponent {
     CelestialBg.sun.updatePath(!CelestialBg.sun.skyPath.enabled);
   }
 
+  public updateDateUiOpacity() {
+    switch (this.dateUiOpacity) {
+      case 100: this.dateUiOpacity = 50; break;
+      case 50: this.dateUiOpacity = 0; break;
+      case 0: this.dateUiOpacity = 100; break;
+    }
+  }
+
   public changeBearing(dir?: 1 | -1) {
     if (dir !== undefined) {
       const targetAngle = MathUtil.fixAngle(this.bearing.angle + dir * 5);
@@ -93,6 +113,11 @@ export class AppComponent {
         this.bearing = Bearing.custom(targetAngle);
       }
     }
+    CelestialBg.updateScreenPositions();
+  }
+
+  public changeElevation(dir: 1 | -1) {
+    this.elevation.angle = MathUtil.clamp(this.elevation.min, this.elevation.angle + dir * 5, this.elevation.max);
     CelestialBg.updateScreenPositions();
   }
 
@@ -110,6 +135,14 @@ export class AppComponent {
 
   protected get defaultTextColor(): string {
     return CelestialBg.sun.altitude > Earth.HORIZON ? 'black' : 'whitesmoke';
+  }
+
+  private moveToMenu() {
+    const menuItems = document.querySelectorAll('.menubar > .hidable');
+    const menu = <HTMLDivElement>document.querySelector('.menu');
+    Array.prototype.slice.call(menuItems).forEach(menuItem => {
+      menu.appendChild(menuItem);
+    });
   }
 
 }

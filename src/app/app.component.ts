@@ -20,7 +20,6 @@ import { OrdinalPipe } from './pipes/ordinal.pipe';
 import { LocalValue } from './util/local-value';
 import { MathUtil } from './util/math-util';
 import { angle } from './util/units';
-import { AzAlt, ScreenPos } from './util/orbital-mechanics';
 
 @Component({
   selector: 'app-root',
@@ -162,7 +161,7 @@ export class AppComponent {
     });
   }
 
-  private static readonly DRAG_REDUCTION_FACTOR = 10;
+  private static readonly DRAG_REDUCTION_FACTOR = 5;
   private static readonly DRAG_UPDATE_MS = 10;
   protected dragToLookEnabled: boolean = true;
   private dragOrigin?: { clientX: number, clientY: number, bearing: angle, elevation: angle };
@@ -178,6 +177,7 @@ export class AppComponent {
       bearing: this.bearing.angle,
       elevation: this.elevation.angle
     };
+    this.dragLatest = undefined;
     this.dragUpdateLoop = setInterval(() => {
       if (this.dragOrigin === undefined) return this.dragEnd(); // cancel
       if (this.dragLatest === undefined) return; // wait

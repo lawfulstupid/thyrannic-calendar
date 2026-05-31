@@ -20,6 +20,7 @@ import { OrdinalPipe } from './pipes/ordinal.pipe';
 import { LocalValue } from './util/local-value';
 import { MathUtil } from './util/math-util';
 import { angle } from './util/units';
+import { AzAlt, ScreenPos } from './util/orbital-mechanics';
 
 @Component({
   selector: 'app-root',
@@ -143,6 +144,39 @@ export class AppComponent {
     Array.prototype.slice.call(menuItems).forEach(menuItem => {
       menu.appendChild(menuItem);
     });
+  }
+
+  private static readonly DRAG_REDUCTION_FACTOR = 10;
+  private static readonly DRAG_UPDATE_MS = 10;
+  private dragOrigin?: { clientX: number, clientY: number, bearing: angle, elevation: angle };
+  private dragLatest?: { clientX: number, clientY: number };
+  private dragUpdateLoop?: NodeJS.Timeout;
+
+  protected dragStart({ clientX, clientY }: MouseEvent | PointerEvent) {
+    this.dragOrigin = {
+      clientX,
+      clientY,
+      bearing: this.bearing.angle,
+      elevation: this.elevation.angle
+    };
+    this.dragUpdateLoop = setInterval(() => {
+      if (this.dragOrigin === undefined) return this.dragEnd(); // cancel
+      if (this.dragLatest === undefined) return; // wait
+
+      this.bearing = Bearing.custom(this.dragOrigin.bearing + (this.dragLatest.clientX - this.dragOrigin.clientX) / AppComponent.DRAG_REDUCTION_FACTOR);
+      this.elevation.angle = MathUtil.clamp(this.elevation.min, this.dragOrigin.elevation + (this.dragLatest.clientY - this.dragOrigin.clientY) / AppComponent.DRAG_REDUCTION_FACTOR, this.elevation.max);
+      CelestialBg.updateScreenPositions();
+    }, AppComponent.DRAG_UPDATE_MS);
+  }
+
+  protected dragEnd() {
+    this.dragOrigin = undefined;
+    clearInterval(this.dragUpdateLoop);
+  }
+
+  protected drag(event: MouseEvent | PointerEvent) {
+    if (!this.dragOrigin) return; //ignore
+    this.dragLatest = event;
   }
 
 }

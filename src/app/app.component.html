@@ -44,4 +44,12 @@
 <span class="footer ui">
   <a href="http://github.com/lawfulstupid/thyrannic-calendar">v{{environment.appVersion}}</a>
 </span>
+<div class="drag-sphere"
+  (mousedown)="dragStart($event)"
+  (mousemove)="drag($event)"
+  (mouseup)="dragEnd()"
+  (pointerdown)="dragStart($event)"
+  (pointermove)="drag($event)"
+  (pointerup)="dragEnd()"
+></div>
 </div>

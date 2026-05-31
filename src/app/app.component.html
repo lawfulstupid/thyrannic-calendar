@@ -16,7 +16,7 @@
   <span>{{' '}}</span>
   <app-time-unit [unit]="units.HALF_DAY" [value]="datetime.isAfternoon() ? 1 : 0" (change)="changeDateTime($event)">{{datetime.getAmPm()}}</app-time-unit>
 </div>
-<div class="direction ui">
+<div class="direction ui" *ngIf="!dragToLookEnabled">
   <app-holdable-button class="bearing" arrow="left" (output)="changeBearing(1)"/>
   <app-holdable-button class="bearing" arrow="right" (output)="changeBearing(-1)"/>
   <app-holdable-button class="elevation" arrow="up" (output)="changeElevation(1)" *ngIf="elevation.angle < elevation.max"/>

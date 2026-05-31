@@ -2,7 +2,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faClose, faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { environment } from 'src/environments/environment';
 import { CelestialBg } from './components/celestial-bg/celestial-bg.component';
 import { CelestialBgModule } from './components/celestial-bg/celestial-bg.module';
@@ -32,10 +32,15 @@ export class AppComponent {
 
   public static instance: AppComponent;
 
-  readonly faPlay = faPlay;
-  readonly faPause = faPause;
+  protected readonly icons = {
+    play: faPlay,
+    pause: faPause,
+    menu: faBars,
+    close: faClose
+  }
 
   protected readonly environment = environment;
+  protected menuOpen: boolean = false;
   protected readonly units = TemporalUnit;
   protected readonly cities: Array<City> = City.values;
   protected readonly bearings: Array<Bearing> = Bearing.values;
@@ -72,6 +77,9 @@ export class AppComponent {
     AppComponent.instance = this;
     this.elevation.angle = this.elevation.min;
     CelestialBg.init();
+    if (environment.mobile) {
+      setTimeout(() => this.moveToMenu(), 0);
+    }
   }
 
   public changeDateTime([quantity, unit]: [number, TemporalUnit]) {
@@ -118,6 +126,14 @@ export class AppComponent {
 
   protected get defaultTextColor(): string {
     return CelestialBg.sun.altitude > Earth.HORIZON ? 'black' : 'whitesmoke';
+  }
+
+  private moveToMenu() {
+    const menuItems = document.querySelectorAll('.menubar > .hidable');
+    const menu = <HTMLDivElement>document.querySelector('.menu');
+    Array.prototype.slice.call(menuItems).forEach(menuItem => {
+      menu.appendChild(menuItem);
+    });
   }
 
 }

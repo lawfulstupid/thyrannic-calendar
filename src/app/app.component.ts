@@ -48,6 +48,7 @@ export class AppComponent {
   protected dateUiOpacity: 0 | 50 | 100 = 100;
 
   public static readonly FOV = 90;
+  private static readonly ANGLE_INCREMENT = 5;
 
   // Load datetime from local storage
   private _datetime: TDateTime = LocalValue.CURRENT_DATETIME.get() || TDate.fromDate().at(12, 0);
@@ -106,7 +107,7 @@ export class AppComponent {
 
   public changeBearing(dir?: 1 | -1) {
     if (dir !== undefined) {
-      const targetAngle = MathUtil.fixAngle(this.bearing.angle + dir * 5);
+      const targetAngle = MathUtil.fixAngle(this.changeAngle(this.bearing.angle, dir));
       const targetBearing = Bearing.values.find(bearing => bearing.angle === targetAngle);
       if (targetBearing) {
         this.bearing = targetBearing;
@@ -118,8 +119,19 @@ export class AppComponent {
   }
 
   public changeElevation(dir: 1 | -1) {
-    this.elevation.angle = MathUtil.clamp(this.elevation.min, this.elevation.angle + dir * 5, this.elevation.max);
+    this.elevation.angle = MathUtil.clamp(
+      this.elevation.min,
+      this.changeAngle(this.elevation.angle, dir),
+      this.elevation.max
+    );
     CelestialBg.updateScreenPositions();
+  }
+
+  private changeAngle(angle: angle, dir: 1 | -1): angle {
+    // Apply change
+    const target = angle + dir * AppComponent.ANGLE_INCREMENT;
+    // Snap to grid
+    return AppComponent.ANGLE_INCREMENT * Math.round(target / AppComponent.ANGLE_INCREMENT);
   }
 
   playLoop: NodeJS.Timeout | undefined;

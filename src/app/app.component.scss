@@ -72,12 +72,12 @@ app-celestial-bg {
   app-holdable-button {
     position: absolute;
     &.bearing {
-      width: 1.5vmin;
+      width: 1.5vh;
       height: 20vh;
       top: calc(50% - 10vh);
     }
     &.elevation {
-      height: 1.5vmin;
+      height: 1.5vh;
       width: 20vh;
       left: calc(50% - 10vh);
     }

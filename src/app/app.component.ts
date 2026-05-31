@@ -148,11 +148,13 @@ export class AppComponent {
 
   private static readonly DRAG_REDUCTION_FACTOR = 10;
   private static readonly DRAG_UPDATE_MS = 10;
+  protected dragToLookEnabled: boolean = true;
   private dragOrigin?: { clientX: number, clientY: number, bearing: angle, elevation: angle };
   private dragLatest?: { clientX: number, clientY: number };
   private dragUpdateLoop?: NodeJS.Timeout;
 
   protected dragStart({ clientX, clientY }: MouseEvent | PointerEvent) {
+    if (!this.dragToLookEnabled) return;
     this.dragOrigin = {
       clientX,
       clientY,
@@ -175,7 +177,7 @@ export class AppComponent {
   }
 
   protected drag(event: MouseEvent | PointerEvent) {
-    if (!this.dragOrigin) return; //ignore
+    if (!this.dragToLookEnabled || !this.dragOrigin) return; //ignore
     this.dragLatest = event;
   }
 

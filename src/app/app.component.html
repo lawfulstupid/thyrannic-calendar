@@ -23,7 +23,7 @@
   <app-holdable-button class="elevation" arrow="down" (output)="changeElevation(-1)" *ngIf="elevation.angle > elevation.min"/>
 </div>
 <div class="menubar ui">
-  <fa-icon class="clickable" [icon]="menuOpen ? icons.close : icons.menu" (click)="menuOpen = !menuOpen" *ngIf="environment.mobile"/>
+  <fa-icon class="clickable" [icon]="menuOpen ? icons.close : icons.menu" (click)="menuOpen = !menuOpen"/>
   <app-pinned-date class="hidable" [datetime]="datetime" (setDate)="datetime = $event"></app-pinned-date>
   <span class="separator"></span>
   <button class="clickable square" (click)="togglePlayPause()">
@@ -40,7 +40,9 @@
     <option [ngValue]="bearing" class="hidden">{{bearing.name}}</option>
   </select>
 </div>
-<div class="menu ui" [class.hidden]="!menuOpen"></div>
+<div class="menu ui" [class.hidden]="!menuOpen">
+  <button class="clickable hidable" (click)="dragToLookEnabled = !dragToLookEnabled">Drag to look: {{dragToLookEnabled ? 'on' : 'off'}}</button>
+</div>
 <span class="footer ui">
   <a href="http://github.com/lawfulstupid/thyrannic-calendar">v{{environment.appVersion}}</a>
 </span>

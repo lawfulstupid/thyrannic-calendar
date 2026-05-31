@@ -45,7 +45,8 @@ mask {
   path {
     stroke: var(--color);
     @include brighten;
-    stroke-width: 0.5;
+    stroke-width: 0.5vmin;
+    vector-effect: non-scaling-stroke;
     fill: none;
   }
   .day {

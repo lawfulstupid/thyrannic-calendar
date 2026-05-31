@@ -17,7 +17,7 @@ export abstract class IntrasolarBody extends CelestialBody {
     return (<any>this.constructor).ID;
   }
 
-  // Makes sun, moons, and planets bigger for visual clarity. Units: vmin
+  // Makes sun, moons, and planets bigger for visual clarity
   public static readonly EMBIGGENMENT_FACTOR = 3;
 
   // Visual options

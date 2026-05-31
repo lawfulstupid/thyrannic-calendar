@@ -14,7 +14,8 @@ export type Orbital = DistLong & { heliocentric: boolean, ascendingNodeLongitude
 export type RaDec = { rightAscension: angle, declination: angle }; // position relative to earth
 export type AzAlt = { azimuth: angle, altitude: angle }; // position relative to observer on earth
 
-// units in vmin, centred at (50vw, 90vh) on screen
+// Units in vmin, centred at (50vw, 50vh) on desktop viewport
+// +x = right, +y = up
 export type ScreenPos = { display: true, screenY: number, screenX: number, screenSf: number } | { display: false };
 
 export class OrbitalMechanics {
@@ -141,8 +142,8 @@ export class OrbitalMechanics {
     // where X = (x,y,z) is a point in space
 
     // New bases that form (x,y) coords of viewport
-    const xDir = f.cross(new Vector(0, 1, 0)).normal();
-    const yDir = xDir.cross(f).normal();
+    const xDir = f.cross(new Vector(0, 1, 0)).normal(); // points right
+    const yDir = f.cross(xDir).normal(); // points down (because viewport Y is reversed)
 
     // Compute position of body on unit sphere
     const p = Vector.fromSpherical(body.azimuth, body.altitude);
@@ -170,7 +171,7 @@ export class OrbitalMechanics {
 
     return {
       display: true,
-      screenY: 50 - cy,
+      screenY: cy,
       screenX: cx,
       screenSf: 1 / MathUtil.cos(i.angleTo(f))
     }

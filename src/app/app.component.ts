@@ -72,11 +72,14 @@ export class AppComponent {
   }
 
   public bearing: Bearing = this.city.latitude >= 0 ? Bearing.SOUTH : Bearing.NORTH;
-  public elevation: { min: angle, max: angle, angle: angle } = { min: this.environment.mobile ? 30 : 40, max: 90, angle: 0 };
+  public elevation = {
+    angle: this.environment.mobile ? 15 : 40,
+    min: 0,
+    max: 90
+  };
 
   constructor() {
     AppComponent.instance = this;
-    this.elevation.angle = this.elevation.min;
     CelestialBg.init();
     if (environment.mobile) {
       setTimeout(() => this.moveToMenu(), 0);

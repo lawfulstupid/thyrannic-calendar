@@ -139,8 +139,12 @@ export class AppComponent {
   }
 
   private moveToMenu() {
-    const menuItems = document.querySelectorAll('.menubar > .hidable');
+    const menuBarItems = document.querySelectorAll('.menubar > .hidable');
+    const menuItems = document.querySelectorAll('.menu > *');
     const menu = <HTMLDivElement>document.querySelector('.menu');
+    Array.prototype.slice.call(menuBarItems).forEach(menuItem => {
+      menu.appendChild(menuItem);
+    });
     Array.prototype.slice.call(menuItems).forEach(menuItem => {
       menu.appendChild(menuItem);
     });

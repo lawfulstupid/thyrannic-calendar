@@ -54,7 +54,7 @@ export class TemporalUnit {
 
 function parseInt(str: string): number {
   if (/^[0-9]+$/i.test(str)) {
-    const value = Number.parseInt(str);
+    return Number.parseInt(str);
   }
   throw new Error('Failed to parse');
 }

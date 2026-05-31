@@ -1,6 +1,6 @@
 <div [style.color]="defaultTextColor">
 <app-celestial-bg></app-celestial-bg>
-<div class="date ui">
+<div class="date ui" [style.opacity]="dateUiOpacity + '%'">
   <app-time-unit [unit]="units.WEEK" [value]="datetime.date.week" (change)="changeDateTime($event)">{{datetime.date.week | ordinal}}</app-time-unit>
   <span>{{' '}}</span>
   <app-time-unit [unit]="units.DAY" [value]="datetime.date.day.id" (change)="changeDateTime($event)">{{datetime.date.day.name}}</app-time-unit>
@@ -9,7 +9,7 @@
   <span>,</span>
   <app-time-unit [unit]="units.YEAR" [value]="datetime.date.year.year" (change)="changeDateTime($event)">{{datetime.date.year.year}}</app-time-unit>
 </div>
-<div class="time ui">
+<div class="time ui" [style.opacity]="dateUiOpacity + '%'">
   <app-time-unit [unit]="units.HOUR" [value]="datetime.hour" (change)="changeDateTime($event)">{{datetime.getDisplayHour()}}</app-time-unit>
   <span>{{':'}}</span>
   <app-time-unit [unit]="units.MINUTE" [value]="datetime.minute" (change)="changeDateTime($event)">{{datetime.getDisplayMinute()}}</app-time-unit>
@@ -31,6 +31,7 @@
     <fa-icon [icon]="icons.pause" *ngIf="playLoop"></fa-icon>
   </button>
   <button class="clickable hidable" (click)="updateSunPathMode()">Sun path: {{sunPathEnabled ? 'on' : 'off'}}</button>
+  <button class="clickable hidable" (click)="updateDateUiOpacity()">Date: {{ dateUiOpacity === 100 ? 'visible' : dateUiOpacity === 0 ? 'hidden' : dateUiOpacity + '%' }}</button>
   <select class="clickable hidable" [(ngModel)]="city">
     <option *ngFor="let city of cities" [ngValue]="city">{{city.name}} ({{city.latitude | degrees: 'minutes'}}, {{city.longitude | degrees: 'minutes'}})</option>
   </select>

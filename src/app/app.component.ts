@@ -45,7 +45,6 @@ export class AppComponent {
   protected readonly units = TemporalUnit;
   protected readonly cities: Array<City> = City.values;
   protected readonly bearings: Array<Bearing> = Bearing.values;
-  protected get sunPathEnabled() { return !!CelestialBg.sun.skyPath.enabled; }
   protected dateUiOpacity: 0 | 50 | 100 = 100;
 
   public static readonly FOV = 90;
@@ -92,8 +91,9 @@ export class AppComponent {
     }
   }
 
-  public updateSunPathMode() {
-    CelestialBg.sun.updatePath(!CelestialBg.sun.skyPath.enabled);
+  protected get sunPathEnabled() { return !!CelestialBg.sun.skyPath.enabled; }
+  protected set sunPathEnabled(state: boolean) {
+    CelestialBg.sun.updatePath(state);
   }
 
   public updateDateUiOpacity() {

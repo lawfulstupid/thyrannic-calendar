@@ -30,7 +30,7 @@
     <fa-icon [icon]="icons.play" *ngIf="!playLoop"></fa-icon>
     <fa-icon [icon]="icons.pause" *ngIf="playLoop"></fa-icon>
   </button>
-  <button class="clickable hidable" (click)="updateSunPathMode()">Sun path: {{sunPathEnabled ? 'on' : 'off'}}</button>
+  <button class="clickable hidable" (click)="sunPathEnabled = !sunPathEnabled">Sun path: {{sunPathEnabled ? 'on' : 'off'}}</button>
   <button class="clickable hidable" (click)="updateDateUiOpacity()">Date: {{ dateUiOpacity === 100 ? 'visible' : dateUiOpacity === 0 ? 'hidden' : dateUiOpacity + '%' }}</button>
   <select class="clickable hidable" [(ngModel)]="city">
     <option *ngFor="let city of cities" [ngValue]="city">{{city.name}} ({{city.latitude | degrees: 'minutes'}}, {{city.longitude | degrees: 'minutes'}})</option>

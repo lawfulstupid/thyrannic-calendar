@@ -15,7 +15,7 @@ export class InputDialog {
 
   constructor(
     private matDialogRef: MatDialogRef<InputDialog>,
-    @Inject(MAT_DIALOG_DATA) readonly data: { title: string, options?: Array<any> }
+    @Inject(MAT_DIALOG_DATA) readonly data: { title: string, options?: Array<any>, error?: string }
   ) {
     document.querySelector('input')?.focus();
     document.querySelector('select')?.focus();

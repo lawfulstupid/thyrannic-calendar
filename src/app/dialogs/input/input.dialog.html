@@ -4,6 +4,7 @@
   <select [(ngModel)]="value" *ngIf="data.options" (keydown)="onKeyDown($event)">
     <option *ngFor="let option of data.options" [value]="option.id">{{option.name}}</option>
   </select>
+  <p class="error" *ngIf="data.error">{{data.error}}</p>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-raised-button [mat-dialog-close]="value">Submit</button>

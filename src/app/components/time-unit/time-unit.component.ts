@@ -29,10 +29,11 @@ export class TimeUnitComponent {
     this.change.emit([amount, this.unit]);
   }
 
-  public setValue() {
+  public setValue(error?: string) {
     const config = {
       data: {
-        title: 'Set the ' + this.unit.toString().toLowerCase()
+        title: 'Set the ' + this.unit.toString().toLowerCase(),
+        error
       }
     }
 
@@ -41,9 +42,11 @@ export class TimeUnitComponent {
       .subscribe((str: string) => {
         if (str.match(/^[+-][0-9]+$/)) {
           this.changeValue(Number(str));
-        } else {
+        } else try {
           const value = this.unit.parser(str);
           this.changeValue(value - this.value);
+        } catch (err: any) {
+          this.setValue(err.message);
         }
       });
   }

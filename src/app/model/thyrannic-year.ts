@@ -10,9 +10,9 @@ export class TYear {
     readonly epoch: number,
     readonly year: number
   ) {
-      if (epoch < 1) throw new Error('epoch less than 1');
-      if (year < 1) throw new Error('year less than 1');
-      if (year > 200) throw new Error('year greater than 200');
+    if (epoch < 1) throw new Error('epoch less than 1');
+    if (year < 1) throw new Error('year less than 1');
+    if (year > 200) throw new Error('year greater than 200');
   }
 
   public static fromValue(seq: number): TYear {
@@ -24,13 +24,13 @@ export class TYear {
   public static fromDate(date: Date = new Date()): TYear {
     return TDate.fromDate(date).year;
   }
-  
+
   public on(week: number, day: TDay): TDate {
     return new TDate(this, week, day);
   }
 
   public valueOf(): number {
-      return 200 * (this.epoch - 1) + this.year;
+    return 200 * (this.epoch - 1) + this.year;
   }
 
   public getWeeks(): number {
@@ -54,7 +54,7 @@ export class TYear {
       return new TDate(this).add(quantity, unit);
     }
   }
-  
+
   public diff(that: TYear, unit: TemporalUnit = TemporalUnit.YEAR): number {
     if (TemporalUnit.YEAR.defines(unit)) {
       return Math.trunc((this.valueOf() - that.valueOf()) / unit.as(TemporalUnit.YEAR));

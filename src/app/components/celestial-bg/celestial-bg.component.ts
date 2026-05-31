@@ -69,7 +69,7 @@ export class CelestialBg {
     }
 
     Array.prototype.slice.call(bodies)
-      .sort((a,b) => getDist(b.id) - getDist(a.id))
+      .sort((a, b) => getDist(b.id) - getDist(a.id))
       .forEach(body => wrapper.appendChild(body));
   }
 

@@ -3,7 +3,7 @@ export class TDay {
   private constructor(
     readonly id: number,
     readonly name: string
-  ) {}
+  ) { }
 
   public static readonly DOLGOS: TDay = new TDay(1, 'Dolgos');
   public static readonly NAUGOS: TDay = new TDay(2, 'Naugos');

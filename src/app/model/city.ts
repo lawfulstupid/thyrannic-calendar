@@ -7,7 +7,7 @@ export class City {
     readonly name: string,
     readonly latitude: number,
     readonly longitude: number = 0
-  ) {}
+  ) { }
 
   public static readonly THYRANNOS = new City('Śyrannos', 25.29, 83.565);
   public static readonly MORA = new City('Mora', 35.19, 83.07);
@@ -34,7 +34,7 @@ export class City {
     this.TAZENDOR,
     this.MAZOKHODRAK,
     this.DEDKA
-  ].sort((a,b) => b.latitude - a.latitude); // sort by highest latitude first
+  ].sort((a, b) => b.latitude - a.latitude); // sort by highest latitude first
 
   public static fromId(id: number): City | undefined {
     return this.values.find(city => city.id === id);

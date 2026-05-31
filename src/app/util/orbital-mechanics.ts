@@ -19,10 +19,10 @@ export type ScreenPos = { display: true, screenY: number, screenX: number, scree
 
 export class OrbitalMechanics {
 
-  private constructor() {}
+  private constructor() { }
 
   public static synodicToSiderealPeriod(p: time): time {
-    return 1 / (1/p + 1/CelestialBg.sun.orbitalPeriod);
+    return 1 / (1 / p + 1 / CelestialBg.sun.orbitalPeriod);
   }
 
   // Computes true longitude + distance to an object
@@ -37,11 +37,11 @@ export class OrbitalMechanics {
 
     // Compute distance, true anomaly, true longitude
     const xv = MathUtil.cos(eccentricAnomaly) - body.eccentricity;
-    const yv = Math.sqrt(1.0 - body.eccentricity**2) * MathUtil.sin(eccentricAnomaly);
+    const yv = Math.sqrt(1.0 - body.eccentricity ** 2) * MathUtil.sin(eccentricAnomaly);
     const trueAnomaly = MathUtil.fixAngle(MathUtil.atan2(yv, xv));
 
     return {
-      distance: Math.sqrt(xv**2 + yv**2) * body.meanDistance,
+      distance: Math.sqrt(xv ** 2 + yv ** 2) * body.meanDistance,
       trueLongitude: trueAnomaly + body.periapsisArgument
     }
   }
@@ -78,8 +78,8 @@ export class OrbitalMechanics {
     // Compute right ascension and declination (and updated distance)
     return {
       rightAscension: MathUtil.fixAngle(MathUtil.atan2(ye, xe)),
-      declination: MathUtil.fixAngle(MathUtil.atan2(ze, Math.sqrt(xe**2 + ye**2))),
-      distance: Math.sqrt(xe**2 + ye**2 + ze**2)
+      declination: MathUtil.fixAngle(MathUtil.atan2(ze, Math.sqrt(xe ** 2 + ye ** 2))),
+      distance: Math.sqrt(xe ** 2 + ye ** 2 + ze ** 2)
     }
   }
 
@@ -142,7 +142,7 @@ export class OrbitalMechanics {
     // where X = (x,y,z) is a point in space
 
     // New bases that form (x,y) coords of viewport
-    const xDir = f.cross(new Vector(0,1,0)).normal();
+    const xDir = f.cross(new Vector(0, 1, 0)).normal();
     const yDir = xDir.cross(f).normal();
 
     // Compute position of body on unit sphere

@@ -8,7 +8,7 @@ export class Vector {
     readonly x: number, // axis of longitude
     readonly y: number, // vertical axis
     readonly z: number
-  ) {}
+  ) { }
 
   public static fromSpherical(azimuth: angle, altitude: angle, distance: number = 1): Vector {
     const hDist = distance * MathUtil.cos(altitude);
@@ -37,7 +37,7 @@ export class Vector {
   }
 
   public normal(): Vector {
-    return this.times(1/this.norm());
+    return this.times(1 / this.norm());
   }
 
   public plus(that: Vector): Vector {
@@ -61,14 +61,14 @@ export class Vector {
   }
 
   public dot(that: Vector): number {
-    return this.x*that.x + this.y*that.y + this.z*that.z;
+    return this.x * that.x + this.y * that.y + this.z * that.z;
   }
 
   public cross(that: Vector): Vector {
     return new Vector(
-      this.y*that.z - this.z*that.y,
-      this.z*that.x - this.x*that.z,
-      this.x*that.y - this.y*that.x
+      this.y * that.z - this.z * that.y,
+      this.z * that.x - this.x * that.z,
+      this.x * that.y - this.y * that.x
     );
   }
 

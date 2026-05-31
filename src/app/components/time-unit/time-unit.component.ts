@@ -23,7 +23,7 @@ export class TimeUnitComponent {
   @Output()
   change: EventEmitter<[number, TemporalUnit]> = new EventEmitter();
 
-  constructor(private dialogMgr: MatDialog) {}
+  constructor(private dialogMgr: MatDialog) { }
 
   public changeValue(amount: number) {
     this.change.emit([amount, this.unit]);

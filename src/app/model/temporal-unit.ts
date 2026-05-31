@@ -23,7 +23,7 @@ export class TemporalUnit {
     readonly name: string,
     ...baseUnits: Array<[number, TemporalUnit]>
   ) {
-    this.parts = baseUnits.map(([n,u]) => ({
+    this.parts = baseUnits.map(([n, u]) => ({
       baseUnit: u,
       length: n
     }));
@@ -34,7 +34,7 @@ export class TemporalUnit {
     if (!this.parts || !this.parts.length) {
       return 1.0 / unit.as(this);
     }
-    return this.parts.map(part => part.baseUnit.as(unit) * part.length).reduce((a,b) => a+b, 0.0);
+    return this.parts.map(part => part.baseUnit.as(unit) * part.length).reduce((a, b) => a + b, 0.0);
   }
 
   public defines(unit: TemporalUnit): boolean {

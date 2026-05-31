@@ -1,6 +1,6 @@
 
 import { Pipe, PipeTransform } from "@angular/core";
-import { AzAlt, OrbitalMechanics, ScreenPos } from "../util/orbital-mechanics";
+import { AzAlt, OrbitalMechanics } from "../util/orbital-mechanics";
 
 @Pipe({
   name: 'svgPath',

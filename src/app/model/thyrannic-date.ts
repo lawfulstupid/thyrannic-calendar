@@ -17,17 +17,17 @@ export class TDate {
 
   public static fromValue(seq: number): TDate {
     seq = Math.floor(seq);
-    let e,p,y,w,d,r;
-    [e,r] = MathUtil.divMod(seq, TemporalUnit.STD_EPOCH.as(TemporalUnit.DAY));
-    [p,r] = MathUtil.divMod(r, TemporalUnit.STD_PERIOD.as(TemporalUnit.DAY));
-    [y,r] = MathUtil.divMod(r, TemporalUnit.SHORT_YEAR.as(TemporalUnit.DAY));
+    let e, p, y, w, d, r;
+    [e, r] = MathUtil.divMod(seq, TemporalUnit.STD_EPOCH.as(TemporalUnit.DAY));
+    [p, r] = MathUtil.divMod(r, TemporalUnit.STD_PERIOD.as(TemporalUnit.DAY));
+    [y, r] = MathUtil.divMod(r, TemporalUnit.SHORT_YEAR.as(TemporalUnit.DAY));
     if (y === 20) {
       r += TemporalUnit.SHORT_YEAR.as(TemporalUnit.DAY);
-      [y,r] = [19, MathUtil.mod(r, TemporalUnit.LONG_YEAR.as(TemporalUnit.DAY))];
+      [y, r] = [19, MathUtil.mod(r, TemporalUnit.LONG_YEAR.as(TemporalUnit.DAY))];
     }
-    [w,r] = MathUtil.divMod(r, TemporalUnit.WEEK.as(TemporalUnit.DAY));
+    [w, r] = MathUtil.divMod(r, TemporalUnit.WEEK.as(TemporalUnit.DAY));
     d = TDay.fromValue(r);
-    return new TDate(new TYear(e+1, 20*p+y+1), w+1, d);
+    return new TDate(new TYear(e + 1, 20 * p + y + 1), w + 1, d);
   }
 
   public static fromDate(date: Date = new Date()): TDate {

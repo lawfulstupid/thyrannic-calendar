@@ -17,41 +17,41 @@ import { LocalValue } from 'src/app/util/local-value';
   styleUrl: './pinned-date.component.scss'
 })
 export class PinnedDateComponent {
-  
+
   readonly faBookmarkOpen = faBookmarkOpen;
   readonly faBookmarkClosed = faBookmarkClosed;
   readonly units = [TemporalUnit.MINUTE, TemporalUnit.HOUR, TemporalUnit.DAY, TemporalUnit.WEEK, TemporalUnit.QUARTER, TemporalUnit.YEAR, TemporalUnit.EPOCH];
-  
+
   protected pinnedDate?: TDateTime = LocalValue.PINNED_DATETIME.get() || undefined;
   protected comparisonUnit: TemporalUnit = TemporalUnit.DAY;
   protected comparisonDist?: number;
   protected comparisonDir?: 'ago' | 'ahead';
-  
+
   @Input('datetime')
   set setDateTime(datetime: TDateTime) {
     this.update(datetime);
   }
-  
+
   @Output()
   setDate: EventEmitter<TDateTime> = new EventEmitter();
-  
+
   public pin() {
     this.pinnedDate = AppComponent.instance.datetime;
     this.update();
     LocalValue.PINNED_DATETIME.put(this.pinnedDate);
   }
-  
+
   public unpin() {
     this.pinnedDate = undefined;
     LocalValue.PINNED_DATETIME.clear();
   }
-  
+
   public update(datetime: TDateTime = AppComponent.instance.datetime) {
     const diff = this.pinnedDate?.diff(datetime, this.comparisonUnit) || 0;
     this.comparisonDist = Math.abs(diff);
     this.comparisonDir = Math.sign(diff) > 0 ? 'ahead' : 'ago';
   }
-  
+
   public resetDate() {
     this.setDate.emit(this.pinnedDate);
   }

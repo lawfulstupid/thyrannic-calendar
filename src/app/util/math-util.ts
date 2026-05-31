@@ -2,7 +2,7 @@ import { angle } from "./units";
 
 export class MathUtil {
 
-  private constructor() {}
+  private constructor() { }
 
   public static mod(a: number, b: number): number {
     let m = a % b;
@@ -10,11 +10,11 @@ export class MathUtil {
   }
 
   public static divMod(a: number, b: number): [number, number] {
-    return [Math.floor(a/b), MathUtil.mod(a, b)];
+    return [Math.floor(a / b), MathUtil.mod(a, b)];
   }
 
   public static fixAngle(a: angle): angle {
-    if (a < 0 || a >= 360) return this.fixAngle(a - 360 * Math.floor(a/360));
+    if (a < 0 || a >= 360) return this.fixAngle(a - 360 * Math.floor(a / 360));
     return a;
   }
 

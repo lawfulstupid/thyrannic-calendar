@@ -4,11 +4,11 @@ import { TDate } from './thyrannic-date';
 
 export class TDateTime {
 
-  constructor (
+  constructor(
     readonly date: TDate,
     readonly hour: number = 0,
     readonly minute: number = 0
-  ) {}
+  ) { }
 
   public static fromValue(seq: number): TDateTime {
     seq = Math.floor(seq);
@@ -54,7 +54,7 @@ export class TDateTime {
       return new TDateTime(<TDate>this.date.add(quantity, unit), this.hour);
     }
   }
-  
+
   public diff(that: TDateTime, unit: TemporalUnit = TemporalUnit.DAY): number {
     if (TemporalUnit.MINUTE.defines(unit)) {
       return Math.trunc((this.valueOf() - that.valueOf()) / unit.as(TemporalUnit.MINUTE));

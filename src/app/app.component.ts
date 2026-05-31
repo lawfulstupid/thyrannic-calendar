@@ -154,6 +154,7 @@ export class AppComponent {
   private dragUpdateLoop?: NodeJS.Timeout;
 
   protected dragStart({ clientX, clientY }: MouseEvent | PointerEvent) {
+    this.menuOpen = false;
     if (!this.dragToLookEnabled) return;
     this.dragOrigin = {
       clientX,

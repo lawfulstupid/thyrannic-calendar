@@ -83,6 +83,16 @@ app-celestial-bg {
   }
 }
 
+.menu,.menubar {
+  select,button {
+    background-color: white;
+    border-color: rgb(118, 118, 118);
+    border-width: 0.8px;
+    padding-block: 0;
+    text-align-last: center;
+  }
+}
+
 .direction {
   position: absolute;
   top: 0;

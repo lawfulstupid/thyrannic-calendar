@@ -1,7 +1,7 @@
 <svg:g [style.opacity]="opacity">
   <line *ngFor="let star of stars"
     id="star-{{star.id}}"
-    [style.display]="star.display ? 'inherit' : 'none'"
+    [class.hidden]="!star.display"
     [attr.x1]="star.screenX"
     [attr.x2]="star.screenX"
     [attr.y1]="star.screenY"

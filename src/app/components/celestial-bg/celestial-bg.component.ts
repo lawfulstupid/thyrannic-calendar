@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { Viewport } from 'src/app/util/viewport';
+import { AppComponent } from 'src/app/app.component';
+import { OrbitalMechanics } from 'src/app/util/orbital-mechanics';
+import { angle, AzAlt } from 'src/app/util/units';
 import { IntrasolarBody } from './celestial-body/intrasolar-body';
 import { Earth } from "./earth/earth";
 import { Sky } from './sky/sky';
@@ -8,7 +10,8 @@ import { Sun } from "./sun/sun";
 
 @Component({
   selector: 'app-celestial-bg',
-  templateUrl: './celestial-bg.component.html'
+  templateUrl: './celestial-bg.component.html',
+  styleUrl: './celestial-bg.component.scss'
 })
 export class CelestialBg {
 
@@ -19,6 +22,8 @@ export class CelestialBg {
 
   public static bodies: Array<IntrasolarBody> = [];
   private static initialized = false;
+
+  get latLongEnabled() { return AppComponent.instance.latLongEnabled; }
 
   public static init() {
     const loop = setInterval(() => {
@@ -73,6 +78,22 @@ export class CelestialBg {
     Array.prototype.slice.call(bodies)
       .sort((a, b) => getDist(b.id) - getDist(a.id))
       .forEach(body => wrapper.appendChild(body));
+  }
+
+  protected long(long: angle): Array<AzAlt> {
+    const path: Array<AzAlt> = [];
+    for (let lat = -90; lat <= 90; lat++) {
+      path.push(OrbitalMechanics.RaDec2AzAlt({ rightAscension: long, declination: lat }));
+    }
+    return path;
+  }
+
+  protected lat(lat: angle): Array<AzAlt> {
+    const path: Array<AzAlt> = [];
+    for (let long = 0; long < 360; long++) {
+      path.push(OrbitalMechanics.RaDec2AzAlt({ rightAscension: long, declination: lat }));
+    }
+    return path;
   }
 
 }

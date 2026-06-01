@@ -46,6 +46,7 @@ export class AppComponent {
   protected readonly cities: Array<City> = City.values;
   protected readonly bearings: Array<Bearing> = Bearing.values;
   protected dateUiOpacity: 0 | 50 | 100 = 100;
+  public latLongEnabled: boolean = false;
 
   public static readonly FOV = 90;
   private static readonly ANGLE_INCREMENT = 5;

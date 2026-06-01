@@ -15,7 +15,7 @@ export class OrbitalMechanics {
   }
 
   // Computes true longitude + distance to an object
-  public static computeDistLong(body: IntrasolarBody, datetime: TDateTime): DistLong {
+  public static computeDistLong(body: IntrasolarBody, datetime: TDateTime = AppComponent.instance.datetime): DistLong {
     const d = datetime.valueOf() * minutes;
     const meanAnomaly = body.meanAnomaly(d);
     const eccentricAnomaly = MathUtil.fixAngle(meanAnomaly + MathUtil.rad2deg(
@@ -84,7 +84,7 @@ export class OrbitalMechanics {
   }
 
   // Converts right ascension + declination to azimuth + altitude
-  public static RaDec2AzAlt(body: RaDec, datetime: TDateTime): AzAlt {
+  public static RaDec2AzAlt(body: RaDec, datetime: TDateTime = AppComponent.instance.datetime): AzAlt {
     const fractionalDay = (12 + datetime.hour + datetime.minute / 60) / 24;
     // 12PM -> solar right ascension
     // 06PM -> SRA + 90

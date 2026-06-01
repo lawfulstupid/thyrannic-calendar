@@ -8,6 +8,10 @@
     <g id="arukma"/>
     <g id="losit"/>
   </g>
+  <g class="lat-long" *ngIf="latLongEnabled">
+    <path [attr.d]="long(a) | svgPath" *ngFor="let a of [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330]"/>
+    <path [attr.d]="lat(a) | svgPath" *ngFor="let a of [-90, -60, -30, 0, 30, 60, 90]"/>
+  </g>
   <g id="foreground">
     <g id="earth"/>
   </g>

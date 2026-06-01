@@ -41,6 +41,7 @@
   <select class="clickable" [(ngModel)]="city">
     <option *ngFor="let city of cities" [ngValue]="city">{{city.name}} ({{city.latitude | degrees: 'minutes'}}, {{city.longitude | degrees: 'minutes'}})</option>
   </select>
+  <button class="clickable" (click)="latLongEnabled = !latLongEnabled">Lat/Long lines: {{latLongEnabled ? 'on' : 'off'}}</button>
   <button class="clickable" (click)="dragToLookEnabled = !dragToLookEnabled">Drag to look: {{dragToLookEnabled ? 'on' : 'off'}}</button>
   <button class="clickable" (click)="updateDateUiOpacity()">Date: {{ dateUiOpacity === 100 ? 'visible' : dateUiOpacity === 0 ? 'hidden' : dateUiOpacity + '%' }}</button>
 </div>

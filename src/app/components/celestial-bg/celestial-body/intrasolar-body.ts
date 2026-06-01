@@ -68,7 +68,7 @@ export abstract class IntrasolarBody extends CelestialBody implements DistLong {
   }
 
   public override updatePosition() {
-    ({ distance: this.distance, trueLongitude: this.trueLongitude } = OrbitalMechanics.computeDistLong(this, AppComponent.instance.datetime));
+    ({ distance: this.distance, trueLongitude: this.trueLongitude } = OrbitalMechanics.computeDistLong(this));
     ({ distance: this.distance, rightAscension: this.rightAscension, declination: this.declination } = OrbitalMechanics.DistLong2RaDec(this));
     super.updatePosition();
     if (this.occlude) OrbitalMechanics.updateOcclusion(this);

@@ -89,7 +89,7 @@ export class Earth {
     // It takes time for change in daylight hours to affect temperature
     const { declination } = OrbitalMechanics.computeRaDec(CelestialBg.sun, AppComponent.instance.datetime.add(-4, TemporalUnit.WEEK));
     const dayLength = OrbitalMechanics.getDayLength(declination);
-    this.snowCoverage = MathUtil.tween(10, dayLength, 0) * 500;
+    this.snowCoverage = MathUtil.tween(10, dayLength, 6);
   }
 
   private generateTerrainMap() {

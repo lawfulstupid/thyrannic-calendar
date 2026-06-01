@@ -1,8 +1,2 @@
-<svg:defs>
-  <linearGradient id="snowGrad" y1="0%" y2="1000%">
-    <stop offset="0%" stop-color="snow"/>
-    <stop [attr.offset]="snowCoverage + '%'" stop-color="green"/>
-  </linearGradient>
-</defs>
 <svg:path [attr.d]="waterMap | svgPath: true" fill="royalblue" [style.filter]="'brightness(clamp(0.2,' + groundBrightness + ',1))'"/>
-<svg:path [attr.d]="terrainMap | svgPath: true" fill="url(#snowGrad)" [style.filter]="'brightness(' + groundBrightness + ')'"/>
+<svg:path [attr.d]="terrainMap | svgPath: true" [attr.fill]="'color-mix(in xyz, green, ' + snowCoverage * 100 + '% snow)'" [style.filter]="'brightness(' + groundBrightness + ')'"/>

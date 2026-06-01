@@ -130,7 +130,7 @@ export class OrbitalMechanics {
     );
   }
 
-  public static getDayLength(solarDeclination: angle): time {
+  public static getDayLength(solarDeclination: angle): time /* hours */ {
     const latitude = AppComponent.instance.city.latitude;
     const cos = MathUtil.tan(latitude) * MathUtil.tan(solarDeclination);
     const sunrise = MathUtil.acos(cos); // this only works because acos is clamped

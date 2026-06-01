@@ -1,4 +1,5 @@
 import { AppComponent } from "src/app/app.component";
+import { City } from "src/app/model/city";
 import { TDate } from "src/app/model/thyrannic-date";
 import { MathUtil } from "src/app/util/math-util";
 import { OrbitalMechanics } from "src/app/util/orbital-mechanics";
@@ -31,7 +32,7 @@ export abstract class IntrasolarBody extends CelestialBody implements DistLong {
     min: Array<AzAlt>,
     max: Array<AzAlt>,
     day: Array<AzAlt>,
-    date: TDate
+    params: { date: TDate, city: City }
   } | { enabled: null } = { enabled: null };
 
   // Occlusion variables
@@ -129,11 +130,13 @@ export abstract class IntrasolarBody extends CelestialBody implements DistLong {
     }
 
     // Try to get current values to avoid recalculation
-    let min, max, day: Array<AzAlt> | undefined = undefined;
+    let min, max, day;
     if (this.skyPath.enabled !== null) {
-      min = this.skyPath.min;
-      max = this.skyPath.max;
-      if (AppComponent.instance.datetime.date.diff(this.skyPath.date) === 0) {
+      if (AppComponent.instance.city.id === this.skyPath.params.city.id) {
+        min = this.skyPath.min;
+        max = this.skyPath.max;
+      }
+      if (AppComponent.instance.datetime.date.diff(this.skyPath.params.date) === 0) {
         day = this.skyPath.day;
       }
     }
@@ -144,7 +147,10 @@ export abstract class IntrasolarBody extends CelestialBody implements DistLong {
       min: min || Viewport.skyPath(CelestialBg.sun.rightAscension, decMin),
       max: max || Viewport.skyPath(CelestialBg.sun.rightAscension, decMax),
       day: day || Viewport.skyPath(CelestialBg.sun.rightAscension, this.declination),
-      date: AppComponent.instance.datetime.date
+      params: {
+        date: AppComponent.instance.datetime.date,
+        city: AppComponent.instance.city
+      }
     }
   }
 }

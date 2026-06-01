@@ -83,7 +83,8 @@ export class Viewport {
     const cy = iRelF.dot(Viewport.y.axis);
 
     // Error protection
-    if (isNaN(cx) || isNaN(cy)) return { display: false };
+    if (isNaN(cx) || isNaN(cy) || cx > Number.MAX_SAFE_INTEGER || cy > Number.MAX_SAFE_INTEGER || cx < Number.MIN_SAFE_INTEGER || cy < Number.MIN_SAFE_INTEGER)
+      return { display: false };
 
     return {
       display: true,

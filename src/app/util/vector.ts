@@ -1,6 +1,5 @@
 import { MathUtil } from "./math-util";
-import { AzAlt, RaDec } from "./orbital-mechanics";
-import { angle } from "./units";
+import { angle, AzAlt, RaDec } from "./units";
 
 export class Vector {
 

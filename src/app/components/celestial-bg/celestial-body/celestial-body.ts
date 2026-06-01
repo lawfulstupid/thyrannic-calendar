@@ -1,9 +1,10 @@
 import { AppComponent } from "src/app/app.component";
 import { OrbitalMechanics } from "src/app/util/orbital-mechanics";
-import { angle } from "../../../util/units";
+import { Viewport } from "src/app/util/viewport";
+import { angle, AzAlt, RaDec } from "../../../util/units";
 import { CelestialBg } from "../celestial-bg.component";
 
-export abstract class CelestialBody {
+export abstract class CelestialBody implements RaDec, AzAlt {
 
   protected readonly celestialBodies = CelestialBg;
 
@@ -29,7 +30,7 @@ export abstract class CelestialBody {
 
   // Called when time, location, or bearing changes
   public updateScreenPosition() {
-    const pos = OrbitalMechanics.AzAlt2ScreenPos(this);
+    const pos = Viewport.AzAlt2ScreenPos(this);
     if (this.display = pos.display) {
       ({ screenX: this.screenX, screenY: this.screenY, screenSf: this.screenSf } = pos);
     }

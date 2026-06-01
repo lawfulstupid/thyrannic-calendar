@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { AppComponent } from 'src/app/app.component';
 import { TemporalUnit } from 'src/app/model/temporal-unit';
 import { MathUtil } from 'src/app/util/math-util';
-import { AzAlt, OrbitalMechanics } from 'src/app/util/orbital-mechanics';
+import { OrbitalMechanics } from 'src/app/util/orbital-mechanics';
 import { Random } from 'src/app/util/random';
-import { angle, deg } from '../../../util/units';
+import { angle, AzAlt, deg } from '../../../util/units';
 import { CelestialBg } from '../celestial-bg.component';
 
 @Component({

@@ -1,14 +1,15 @@
 import { AppComponent } from "src/app/app.component";
 import { TDate } from "src/app/model/thyrannic-date";
 import { MathUtil } from "src/app/util/math-util";
-import { AzAlt, Orbital, OrbitalMechanics } from "src/app/util/orbital-mechanics";
+import { OrbitalMechanics } from "src/app/util/orbital-mechanics";
 import { Vector } from "src/app/util/vector";
-import { angle, distance, time } from "../../../util/units";
+import { Viewport } from "src/app/util/viewport";
+import { angle, AzAlt, distance, DistLong, Orbital, time } from "../../../util/units";
 import { CelestialBg } from "../celestial-bg.component";
 import { Earth } from "../earth/earth";
 import { CelestialBody } from "./celestial-body";
 
-export abstract class IntrasolarBody extends CelestialBody {
+export abstract class IntrasolarBody extends CelestialBody implements DistLong {
 
   public static readonly templateUrl = '../celestial-body/intrasolar-body.html';
   public static readonly styleUrl = '../celestial-body/intrasolar-body.scss';
@@ -140,9 +141,9 @@ export abstract class IntrasolarBody extends CelestialBody {
     const [decMin, decMax] = this.declinationMinMax();
     this.skyPath = {
       enabled: true,
-      min: min || OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, decMin),
-      max: max || OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, decMax),
-      day: day || OrbitalMechanics.skyPath(CelestialBg.sun.rightAscension, this.declination),
+      min: min || Viewport.skyPath(CelestialBg.sun.rightAscension, decMin),
+      max: max || Viewport.skyPath(CelestialBg.sun.rightAscension, decMax),
+      day: day || Viewport.skyPath(CelestialBg.sun.rightAscension, this.declination),
       date: AppComponent.instance.datetime.date
     }
   }

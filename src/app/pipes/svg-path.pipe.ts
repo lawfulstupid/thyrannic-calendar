@@ -1,6 +1,7 @@
 
 import { Pipe, PipeTransform } from "@angular/core";
-import { AzAlt, OrbitalMechanics, ScreenPos } from "../util/orbital-mechanics";
+import { AzAlt } from "../util/units";
+import { ScreenPos, Viewport } from "../util/viewport";
 
 @Pipe({
   name: 'svgPath',
@@ -10,7 +11,7 @@ import { AzAlt, OrbitalMechanics, ScreenPos } from "../util/orbital-mechanics";
 export class SvgPathPipe implements PipeTransform {
 
   transform(path: Array<AzAlt> = [], fill: boolean = false): string {
-    const points = path.map(point => OrbitalMechanics.AzAlt2ScreenPos(point)); // Map onto viewport
+    const points = path.map(point => Viewport.AzAlt2ScreenPos(point)); // Map onto viewport
 
     const width: number = window.innerWidth;
     const height: number = window.innerHeight;

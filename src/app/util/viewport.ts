@@ -6,16 +6,21 @@ import { OrbitalMechanics } from "./orbital-mechanics";
 import { angle, AzAlt } from "./units";
 import { Vector } from "./vector";
 
-// Units in vmin, centred at (50vw, 50vh) on desktop viewport
-// +x = right, +y = up
+// Units in vmin, centred at (50vw, 50vh) on desktop viewport (+x = right, +y = up)
 export type ScreenPos = { display: true, screenY: number, screenX: number, screenSf: number } | { display: false };
+type ScreenDim = { min: number, max: number, axis: Vector };
 
 export class Viewport {
 
+  private static focus: Vector;
+  private static focusNormSq: number;
+  private static x: ScreenDim;
+  private static y: ScreenDim;
+
   private constructor() { }
 
-  // Converts azimuth + altitude to screen position calc
-  public static AzAlt2ScreenPos(body: AzAlt): ScreenPos {
+  // Relcalculates constants on viewport update
+  public static update() {
     /* GNOMONIC/RECTILINEAR PROJECTION
      * Assume observer is at the origin of a unit sphere
      * The body we want to render is on the surface of the sphere
@@ -30,16 +35,33 @@ export class Viewport {
      */
 
     // Compute distance to viewport (50 = half viewport width in vmin)
-    const d = 50 / MathUtil.tan(AppComponent.FOV / 2);
+    const focalLength = 50 / MathUtil.tan(AppComponent.FOV / 2);
 
     // Compute observer's focal vector
-    const f = Vector.fromSpherical(-AppComponent.instance.bearing.angle, AppComponent.instance.elevation.angle, d);
-    // plane perpendicular to F and passing through the tip of F is given by (X - F) ⋅ F = 0
+    Viewport.focus = Vector.fromSpherical(-AppComponent.instance.bearing.angle, AppComponent.instance.elevation.angle, focalLength);
+    Viewport.focusNormSq = Viewport.focus.dot(Viewport.focus);
+    // plane perpendicular to F and passing through the tip of F is given by (X - focus) ⋅ focus = 0
     // where X = (x,y,z) is a point in space
 
     // New bases that form (x,y) coords of viewport
-    const xDir = f.cross(new Vector(0, 1, 0)).normal(); // points right
-    const yDir = f.cross(xDir).normal(); // points down (because viewport Y is reversed)
+    const xDir = Viewport.focus.cross(new Vector(0, 1, 0)).normal(); // points right
+    const yDir = Viewport.focus.cross(xDir).normal(); // points down (because viewport Y is reversed)
+
+    // Compute viewport boundaries for occlusion culling
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const vmin = Math.min(width, height) / 100;
+    const maxX = width < height ? 50 : width / (2 * vmin);
+    const maxY = width < height ? height / vmin - 50 : 50;
+
+    // continued in AzAlt2ScreenPos()...
+    Viewport.x = { min: -maxX, max: maxX, axis: xDir }
+    Viewport.y = { max: 50, min: -maxY, axis: yDir }
+  }
+
+  // Converts azimuth + altitude to screen position calc
+  public static AzAlt2ScreenPos(body: AzAlt): ScreenPos {
+    // ...continued from update()
 
     // Compute position of body on unit sphere
     const p = Vector.fromSpherical(body.azimuth, body.altitude);
@@ -49,15 +71,16 @@ export class Viewport {
     // (sP - F) ⋅ F = 0
     // => sP⋅F - F⋅F = 0
     // => s = F⋅F / P⋅F
-    const s = f.dot(f) / p.dot(f);
+    const s = Viewport.focusNormSq / Viewport.focus.dot(p);
     if (s <= 0) return { display: false } // body is behind observer
 
     // Line to body intersects viewport at X = sP
     const i = p.times(s);
 
     // Project 3d space onto 2d viewport plane
-    const cx = i.minus(f).dot(xDir);
-    const cy = i.minus(f).dot(yDir);
+    const iRelF = i.minus(Viewport.focus);
+    const cx = iRelF.dot(Viewport.x.axis);
+    const cy = iRelF.dot(Viewport.y.axis);
 
     // Error protection
     if (isNaN(cx) || isNaN(cy)) return { display: false };
@@ -66,7 +89,7 @@ export class Viewport {
       display: true,
       screenY: cy,
       screenX: cx,
-      screenSf: 1 / MathUtil.cos(i.angleTo(f))
+      screenSf: 1 / MathUtil.cos(i.angleTo(Viewport.focus))
     }
   }
 
@@ -81,6 +104,13 @@ export class Viewport {
     }
 
     return path;
+  }
+
+  public static inBounds(point: ScreenPos): boolean {
+    if (!point.display) return false;
+    if (!Viewport.x || !Viewport.y) return false;
+    return Viewport.x.min <= point.screenX && point.screenX <= Viewport.x.max
+      && Viewport.y.min <= point.screenY && point.screenY <= Viewport.y.max;
   }
 
 }

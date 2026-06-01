@@ -25,7 +25,6 @@ export abstract class CelestialBody implements RaDec, AzAlt {
   // Called when time or location changes
   public updatePosition() {
     ({ azimuth: this.azimuth, altitude: this.altitude } = OrbitalMechanics.RaDec2AzAlt(this, AppComponent.instance.datetime));
-    this.updateScreenPosition();
   }
 
   // Called when time, location, or bearing changes

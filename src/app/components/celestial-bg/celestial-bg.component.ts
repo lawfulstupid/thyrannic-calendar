@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Viewport } from 'src/app/util/viewport';
 import { IntrasolarBody } from './celestial-body/intrasolar-body';
 import { Earth } from "./earth/earth";
 import { Sky } from './sky/sky';
@@ -49,6 +50,7 @@ export class CelestialBg {
     this.bodies.forEach(body => {
       if (body !== this.sun) body.updatePosition();
     });
+    CelestialBg.updateScreenPositions();
   }
 
   public static updateScreenPositions() {

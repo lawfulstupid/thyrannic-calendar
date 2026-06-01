@@ -1,7 +1,7 @@
 
 import { Pipe, PipeTransform } from "@angular/core";
 import { AzAlt } from "../util/units";
-import { ScreenPos, Viewport } from "../util/viewport";
+import { Viewport } from "../util/viewport";
 
 @Pipe({
   name: 'svgPath',
@@ -13,21 +13,8 @@ export class SvgPathPipe implements PipeTransform {
   transform(path: Array<AzAlt> = [], fill: boolean = false): string {
     const points = path.map(point => Viewport.AzAlt2ScreenPos(point)); // Map onto viewport
 
-    const width: number = window.innerWidth;
-    const height: number = window.innerHeight;
-    const vmin: number = Math.min(width, height) / 100;
-    const maxX: number = width < height ? 50 : width / (2 * vmin);
-    const maxY: number = width < height ? height / vmin - 50 : 50;
-
-    function inBounds(point: ScreenPos): boolean {
-      if (!point.display) return false;
-      return Math.abs(point.screenX) <= maxX
-        && point.screenY >= - maxY
-        && point.screenY <= 50;
-    }
-
     // Find first displayable point
-    const firstPoint = points.findIndex(inBounds);
+    const firstPoint = points.findIndex(Viewport.inBounds);
     if (firstPoint === -1) {
       return ''; // nothing to render
     } else if (firstPoint > 0) {

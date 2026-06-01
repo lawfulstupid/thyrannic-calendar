@@ -20,6 +20,7 @@ import { OrdinalPipe } from './pipes/ordinal.pipe';
 import { LocalValue } from './util/local-value';
 import { MathUtil } from './util/math-util';
 import { angle } from './util/units';
+import { Viewport } from './util/viewport';
 
 @Component({
   selector: 'app-root',
@@ -80,6 +81,7 @@ export class AppComponent {
 
   constructor() {
     AppComponent.instance = this;
+    Viewport.update();
     CelestialBg.init();
     if (environment.mobile) {
       setTimeout(() => this.moveToMenu(), 0);
@@ -117,6 +119,7 @@ export class AppComponent {
         this.bearing = Bearing.custom(targetAngle);
       }
     }
+    Viewport.update();
     CelestialBg.updateScreenPositions();
   }
 
@@ -126,6 +129,7 @@ export class AppComponent {
       this.changeAngle(this.elevation.angle, dir),
       this.elevation.max
     );
+    Viewport.update();
     CelestialBg.updateScreenPositions();
   }
 
@@ -187,6 +191,7 @@ export class AppComponent {
 
       this.bearing = Bearing.custom(this.dragOrigin.bearing + (this.dragLatest.clientX - this.dragOrigin.clientX) / AppComponent.DRAG_REDUCTION_FACTOR);
       this.elevation.angle = MathUtil.clamp(this.elevation.min, this.dragOrigin.elevation + (this.dragLatest.clientY - this.dragOrigin.clientY) / AppComponent.DRAG_REDUCTION_FACTOR, this.elevation.max);
+      Viewport.update();
       CelestialBg.updateScreenPositions();
     }, AppComponent.DRAG_UPDATE_MS);
   }

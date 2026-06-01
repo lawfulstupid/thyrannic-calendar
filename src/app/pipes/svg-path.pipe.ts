@@ -1,6 +1,6 @@
 
 import { Pipe, PipeTransform } from "@angular/core";
-import { AzAlt, OrbitalMechanics } from "../util/orbital-mechanics";
+import { AzAlt, OrbitalMechanics, ScreenPos } from "../util/orbital-mechanics";
 
 @Pipe({
   name: 'svgPath',
@@ -12,14 +12,26 @@ export class SvgPathPipe implements PipeTransform {
   transform(path: Array<AzAlt> = [], fill: boolean = false): string {
     const points = path.map(point => OrbitalMechanics.AzAlt2ScreenPos(point)); // Map onto viewport
 
+    const width: number = window.innerWidth;
+    const height: number = window.innerHeight;
+    const vmin: number = Math.min(width, height) / 100;
+    const maxX: number = width < height ? 50 : width / (2 * vmin);
+    const maxY: number = width < height ? height / vmin - 50 : 50;
+
+    function inBounds(point: ScreenPos): boolean {
+      if (!point.display) return false;
+      return Math.abs(point.screenX) <= maxX
+        && point.screenY >= - maxY
+        && point.screenY <= 50;
+    }
+
     // Find first displayable point
-    const firstPoint = points.findIndex(point => point.display);
+    const firstPoint = points.findIndex(inBounds);
     if (firstPoint === -1) {
       return ''; // nothing to render
     } else if (firstPoint > 0) {
       // Move leading gap to end
-      points.splice(0, firstPoint);
-      points.push({ display: false });
+      points.push(...points.splice(0, firstPoint));
     }
 
     // Form a loop

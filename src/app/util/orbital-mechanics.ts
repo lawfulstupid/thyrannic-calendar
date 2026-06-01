@@ -166,9 +166,6 @@ export class OrbitalMechanics {
     // Error protection
     if (isNaN(cx) || isNaN(cy)) return { display: false };
 
-    // Occlusion culling
-    if (Math.abs(cy) > 500 || Math.abs(cx) > 500) return { display: false };
-
     return {
       display: true,
       screenY: cy,

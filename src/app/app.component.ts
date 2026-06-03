@@ -182,6 +182,7 @@ export class AppComponent {
   private dragOrigin?: { clientX: number, clientY: number, bearing: angle, elevation: angle };
   private dragLatest?: { clientX: number, clientY: number };
   private dragUpdateLoop?: NodeJS.Timeout;
+  protected get isDragging() { return this.dragOrigin !== undefined; }
 
   protected dragStart({ clientX, clientY }: MouseEvent | PointerEvent) {
     this.menu = undefined; // close any open menu

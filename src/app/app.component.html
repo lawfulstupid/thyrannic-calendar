@@ -86,7 +86,7 @@
 <span class="footer ui">
   <a href="http://github.com/lawfulstupid/thyrannic-calendar">v{{environment.appVersion}}</a>
 </span>
-<div class="drag-sphere"
+<div class="drag-sphere" [style.zIndex]="isDragging ? 101 : 99"
   (pointerdown)="dragStart($event)"
   (pointermove)="drag($event)"
   (pointerup)="dragEnd()"

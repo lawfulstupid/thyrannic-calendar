@@ -2,7 +2,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faBars, faClose, faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faClose, faInfoCircle, faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { environment } from 'src/environments/environment';
 import { CelestialBg } from './components/celestial-bg/celestial-bg.component';
 import { CelestialBgModule } from './components/celestial-bg/celestial-bg.module';
@@ -37,11 +37,18 @@ export class AppComponent {
     play: faPlay,
     pause: faPause,
     menu: faBars,
-    close: faClose
+    close: faClose,
+    info: faInfoCircle
+  }
+
+  protected _menu?: 'options' | 'info' = undefined;
+  get menu() { return this._menu; }
+  set menu(value) {
+    this._menu = this.menu === value ? undefined : value;
   }
 
   protected readonly environment = environment;
-  protected menuOpen: boolean = false;
+  protected readonly today = TDateTime.fromDate();
   protected readonly units = TemporalUnit;
   protected readonly cities: Array<City> = City.values;
   protected readonly bearings: Array<Bearing> = Bearing.values;
@@ -177,7 +184,7 @@ export class AppComponent {
   private dragUpdateLoop?: NodeJS.Timeout;
 
   protected dragStart({ clientX, clientY }: MouseEvent | PointerEvent) {
-    this.menuOpen = false;
+    this.menu = undefined; // close any open menu
     if (!this.dragToLookEnabled) return;
     this.dragOrigin = {
       clientX,

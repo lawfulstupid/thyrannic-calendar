@@ -23,7 +23,8 @@
   <app-holdable-button class="elevation" arrow="down" (output)="changeElevation(-1)" *ngIf="elevation.angle > elevation.min"/>
 </div>
 <div class="menubar ui">
-  <fa-icon class="clickable" [icon]="menuOpen ? icons.close : icons.menu" (click)="menuOpen = !menuOpen"/>
+  <fa-icon class="clickable" [icon]="menu === 'options' ? icons.close : icons.menu" (click)="menu = 'options'"/>
+  <fa-icon class="clickable" [icon]="menu === 'info' ? icons.close : icons.info" (click)="menu = 'info'"/>
   <app-pinned-date class="hidable" [datetime]="datetime" (setDate)="datetime = $event"></app-pinned-date>
   <span class="separator"></span>
   <button class="clickable square" (click)="togglePlayPause()">
@@ -37,13 +38,50 @@
   </select>
   <button class="unclickable hidable">Elevation: {{elevation.angle | degrees}}</button>
 </div>
-<div class="menu ui" [class.hidden]="!menuOpen">
+<div class="menu ui" [class.hidden]="menu !== 'options'">
   <select class="clickable" [(ngModel)]="city">
     <option *ngFor="let city of cities" [ngValue]="city">{{city.name}} ({{city.latitude | degrees: 'minutes'}}, {{city.longitude | degrees: 'minutes'}})</option>
   </select>
   <button class="clickable" (click)="latLongEnabled = !latLongEnabled">Lat/Long lines: {{latLongEnabled ? 'on' : 'off'}}</button>
   <button class="clickable" (click)="dragToLookEnabled = !dragToLookEnabled">Drag to look: {{dragToLookEnabled ? 'on' : 'off'}}</button>
   <button class="clickable" (click)="updateDateUiOpacity()">Date: {{ dateUiOpacity === 100 ? 'visible' : dateUiOpacity === 0 ? 'hidden' : dateUiOpacity + '%' }}</button>
+</div>
+<div class="overlay ui" [class.hidden]="menu !== 'info'">
+  <h1>Days & Weeks</h1>
+  <p>The six days of the week are, in order:</p>
+  <ol>
+    <li><em>Dolgos</em>, day of stone</li>
+    <li><em>Naugos</em>, day of water</li>
+    <li><em>Brogos</em>, day of beasts</li>
+    <li><em>Śyrgos</em>, the people's day</li>
+    <li><em>Draxigos</em>, the King's day</li>
+    <li><em>Telugos</em>, the Gods' day</li>
+  </ol>
+  <p>
+    The date is given by the number of occurrences of the current day (including the current day),
+    e.g. today is the <b>{{today.date.week | ordinal}} {{today.date.day.name}}</b> of the year so far.
+  </p>
+  <h1>Years & Epochs</h1>
+  <p>
+    There are 56 weeks (336 days) in a normal year, though the concept of a week starting and ending is not familiar to the users of this calendar. The phrase 'next week' typically means 'exactly 6 days from now'.
+    This calendar also has no months (in our calendar, months are derived from the phases of the moon, but this world has two), but a typical year is split into 4 <em>vutalan</em> (quarters) of 14 weeks (84 days) each.
+  </p>
+  <p>
+    To account for calendrical drift, every 20th year is called a '<em>long year</em>' and has a fifth vutalan, for a total of 70 weeks (420 days).
+    This marks the end of the current 20-year <em>period</em>.
+  </p>
+  <p>
+    Every 10th long year is one week shorter than normal (69 weeks; 414 days) and concludes the 200-year <em>epoch</em>, after which the epoch number is incremented, and the year number resets to 1.
+    Such '<em>terminus years</em>' consist of four regular vutalan followed by a shorter 13-week vutalan, which causes many arguments about payment schedules.
+  </p>
+  <p>
+    The current year is given by the epoch followed the the year, separated by a comma, e.g. <b>{{today.date.year.epoch}},{{today.date.year.year}}</b>.
+  </p>
+  <h1>Seasons</h1>
+  <p>
+    Due to the severity of the calendar's drift, the start date of each season varies dramatically over the course of each 20-year period,
+    but each of those periods consistently start in early summer, and the last year of each period starts in early spring.
+  </p>
 </div>
 <span class="footer ui">
   <a href="http://github.com/lawfulstupid/thyrannic-calendar">v{{environment.appVersion}}</a>

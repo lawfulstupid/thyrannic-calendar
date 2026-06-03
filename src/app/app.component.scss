@@ -76,16 +76,21 @@ app-celestial-bg {
   }
 }
 
-.menu {
+.overlay {
   background-color: rgba(100, 100, 100, 0.5);
-  display: flex;
-  flex-direction: column;
   padding: 1ch;
   margin-left: 1ch;
   margin-top: -1ch;
   gap: 1ch;
   border-radius: 1vmin;
   width: fit-content;
+  max-width: 100vmin;
+}
+
+.menu {
+  @extend .overlay;
+  display: flex;
+  flex-direction: column;
   >* {
     height: 4ch;
   }

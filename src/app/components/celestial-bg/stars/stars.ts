@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { MathUtil } from 'src/app/util/math-util';
 import { Random } from 'src/app/util/random';
 import { Vector } from 'src/app/util/vector';
@@ -24,6 +24,7 @@ export class Stars {
 
   protected stars: Array<Star> = [];
 
+  @HostBinding('style.opacity')
   public get opacity() {
     return MathUtil.tween(Earth.SUNRISE_SUNSET_START, CelestialBg.sun.altitude, Earth.SUNRISE_SUNSET);
   }

@@ -1,5 +1,5 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBars, faClose, faInfoCircle, faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
@@ -160,6 +160,7 @@ export class AppComponent {
     }
   }
 
+  @HostBinding('style.color')
   protected get defaultTextColor(): string {
     return CelestialBg.sun.altitude > Earth.HORIZON ? 'black' : 'whitesmoke';
   }

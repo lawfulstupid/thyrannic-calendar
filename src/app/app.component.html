@@ -1,4 +1,3 @@
-<div [style.color]="defaultTextColor">
 <app-celestial-bg></app-celestial-bg>
 <div class="date ui" [style.opacity]="dateUiOpacity + '%'">
   <app-time-unit [unit]="units.WEEK" [value]="datetime.date.week" (change)="changeDateTime($event)">{{datetime.date.week | ordinal}}</app-time-unit>
@@ -91,4 +90,3 @@
   (pointermove)="drag($event)"
   (pointerup)="dragEnd()"
 ></div>
-</div>

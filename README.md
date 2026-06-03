@@ -1,4 +1,4 @@
-# Śyrannic Calendar
+# Śyrannic Calendar
 
 Hosted at http://lawfulstupid.github.io/thyrannic-calendar.
 

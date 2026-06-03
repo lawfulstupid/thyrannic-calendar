@@ -8,7 +8,7 @@ export class TDay {
   public static readonly DOLGOS: TDay = new TDay(1, 'Dolgos');
   public static readonly NAUGOS: TDay = new TDay(2, 'Naugos');
   public static readonly BROGOS: TDay = new TDay(3, 'Brogos');
-  public static readonly THYRGOS: TDay = new TDay(4, 'Śyrgos');
+  public static readonly THYRGOS: TDay = new TDay(4, 'Śyrgos');
   public static readonly DRAXIGOS: TDay = new TDay(5, 'Draxigos');
   public static readonly TELUGOS: TDay = new TDay(6, 'Telugos');
 
@@ -25,7 +25,7 @@ export class TDay {
   public static parse(str: string): TDay {
     const id = /^[0-9]+$/.test(str) ? Number.parseInt(str) : -1;
     for (const day of this.values) {
-      const regex = new RegExp('^' + day.name.replace('Ś', '(Ś|S|TH)').replace('gos', '(gos)?') + '$', 'i');
+      const regex = new RegExp('^' + day.name.replace('Ś', '(Ś|S|TH)').replace('gos', '(gos)?') + '$', 'i');
       if (regex.test(str) || day.id === id) return day;
     }
     throw new Error('Failed to parse');

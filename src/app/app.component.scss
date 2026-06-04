@@ -1,5 +1,6 @@
 :host {
   user-select: none;
+  overflow: hidden;
 }
 
 app-celestial-bg {
@@ -85,7 +86,7 @@ app-celestial-bg {
   border-radius: 1vmin;
   width: fit-content;
   max-width: 100vmin;
-  max-height: 90vh;
+  max-height: 80vh;
   overflow-y: scroll;
   color: whitesmoke;
 }

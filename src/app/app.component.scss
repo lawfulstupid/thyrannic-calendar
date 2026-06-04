@@ -85,7 +85,7 @@ app-celestial-bg {
   border-radius: 1vmin;
   width: fit-content;
   max-width: 100vmin;
-  max-height: 100vh;
+  max-height: calc(100vh - 4ch);
   overflow-y: scroll;
   color: whitesmoke;
 }

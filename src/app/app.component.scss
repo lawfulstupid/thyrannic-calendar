@@ -79,12 +79,14 @@ app-celestial-bg {
 .overlay {
   background-color: rgba(100, 100, 100, 0.5);
   padding: 1ch;
-  margin-left: 1ch;
+  margin: 1ch;
   margin-top: -1ch;
   gap: 1ch;
   border-radius: 1vmin;
   width: fit-content;
   max-width: 100vmin;
+  max-height: 100vh;
+  overflow-y: scroll;
   color: whitesmoke;
 }
 

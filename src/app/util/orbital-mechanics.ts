@@ -138,4 +138,8 @@ export class OrbitalMechanics {
     return (sunset - sunrise) / 15;
   }
 
+  public static findNextEclipse(datetime: TDateTime, body1: IntrasolarBody, body2: IntrasolarBody): TDateTime {
+    throw new Error('not implemented');
+  }
+
 }

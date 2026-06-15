@@ -98,6 +98,18 @@ app-celestial-bg {
   >* {
     height: 4ch;
   }
+  div {
+    display: flex;
+    flex-direction: row;
+    gap: 1ch;
+    width: 100%;
+    >* {
+      height: 100%;
+      &:not(:first-child) {
+        margin-left: auto;
+      }
+    }
+  }
 }
 
 .menu,.menubar {

@@ -44,6 +44,14 @@
   <button class="clickable" (click)="latLongEnabled = !latLongEnabled">Lat/Long lines: {{latLongEnabled ? 'on' : 'off'}}</button>
   <button class="clickable" (click)="dragToLookEnabled = !dragToLookEnabled">Drag to look: {{dragToLookEnabled ? 'on' : 'off'}}</button>
   <button class="clickable" (click)="updateDateUiOpacity()">Date: {{ dateUiOpacity === 100 ? 'visible' : dateUiOpacity === 0 ? 'hidden' : dateUiOpacity + '%' }}</button>
+  <div>
+    <button class="clickable" (click)="findNextEvent()">Find next</button>
+    <select class="clickable" [(ngModel)]="targetEvent">
+      <option value="arukman">Arukman eclipse</option>
+      <option value="interlunar">interlunar eclipse</option>
+      <option value="lositian">Lositian eclipse</option>
+    </select>
+  </div>
 </div>
 <div class="overlay ui" [class.hidden]="menu !== 'info'">
   <h1>Days & Weeks</h1>

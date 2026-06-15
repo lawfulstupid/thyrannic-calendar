@@ -12,6 +12,12 @@ import { GeocentricBody, IntrasolarBody } from '../celestial-body/intrasolar-bod
 export class Arukma extends GeocentricBody {
 
   public static readonly ID = 'arukma';
+  public static instance: Arukma;
+
+  constructor() {
+    super();
+    Arukma.instance = this;
+  }
 
   override color = 'rgb(32, 33, 35)';
   override brightness = 2.4;

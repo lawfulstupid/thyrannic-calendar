@@ -21,6 +21,10 @@ import { LocalValue } from './util/local-value';
 import { MathUtil } from './util/math-util';
 import { angle } from './util/units';
 import { Viewport } from './util/viewport';
+import { OrbitalMechanics } from './util/orbital-mechanics';
+import { Arukma } from './components/celestial-bg/moons/arukma';
+import { Losit } from './components/celestial-bg/moons/losit';
+import { Sun } from './components/celestial-bg/sun/sun';
 
 @Component({
   selector: 'app-root',
@@ -214,6 +218,30 @@ export class AppComponent {
   protected drag(event: MouseEvent | PointerEvent) {
     if (!this.dragToLookEnabled || !this.dragOrigin) return; //ignore
     this.dragLatest = event;
+  }
+
+  // Event finder
+  protected targetEvent: 'interlunar' | 'arukman' | 'lositian' = 'interlunar';
+
+  protected findNextEvent() {
+    let body1, body2;
+    switch (this.targetEvent) {
+      case 'interlunar':
+        body1 = Arukma.instance;
+        body2 = Losit.instance;
+        break;
+      case 'arukman':
+        body1 = Arukma.instance;
+        body2 = Sun.instance;
+        break;
+      case 'lositian':
+        body1 = Losit.instance;
+        body2 = Sun.instance;
+        break;
+      default:
+        throw new Error('unknown event');
+    }
+    this.datetime = OrbitalMechanics.findNextEclipse(this.datetime, body1, body2);
   }
 
 }

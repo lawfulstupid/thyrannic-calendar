@@ -83,7 +83,9 @@ export abstract class IntrasolarBody extends CelestialBody implements DistLong {
   // centre-to-centre distance (km) along semi-major axis of ellipse
   get meanDistance(): distance {
     const GM = OrbitalMechanics.G * (this.mass + (this.heliocentric ? CelestialBg.sun.mass : Earth.MASS));
+    // near constant: 1.989E30 * 6.6743015E-11 = 1.3275E20
     return ((GM * (this.orbitalPeriod * 60 * 60 * 24 / (2 * Math.PI)) ** 2) ** (1/3)) / 1000;
+    // prop. to `orbitalPeriod ** (2/3) * 2927975.4162677884`
   }
 
   // centre-to-centre (km)

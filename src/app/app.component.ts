@@ -95,7 +95,10 @@ export class AppComponent {
   public elevation = {
     angle: this.environment.mobile ? 15 : 40,
     min: 0,
-    max: 90
+    max: 90,
+    set: function (newAngle: angle) {
+      this.angle = MathUtil.clamp(this.min, newAngle, this.max);
+    }
   };
 
   constructor() {
@@ -146,11 +149,7 @@ export class AppComponent {
   }
 
   public changeElevation(dir: 1 | -1) {
-    this.elevation.angle = MathUtil.clamp(
-      this.elevation.min,
-      this.changeAngle(this.elevation.angle, dir),
-      this.elevation.max
-    );
+    this.elevation.set(this.changeAngle(this.elevation.angle, dir));
     this.focusLock = false;
     Viewport.update();
     CelestialBg.updateScreenPositions();
@@ -215,7 +214,7 @@ export class AppComponent {
       if (this.dragLatest === undefined) return; // wait
 
       this.bearing = Bearing.custom(this.dragOrigin.bearing + (this.dragLatest.clientX - this.dragOrigin.clientX) / AppComponent.DRAG_REDUCTION_FACTOR);
-      this.elevation.angle = MathUtil.clamp(this.elevation.min, this.dragOrigin.elevation + (this.dragLatest.clientY - this.dragOrigin.clientY) / AppComponent.DRAG_REDUCTION_FACTOR, this.elevation.max);
+      this.elevation.set(this.dragOrigin.elevation + (this.dragLatest.clientY - this.dragOrigin.clientY) / AppComponent.DRAG_REDUCTION_FACTOR);
       this.focusLock = false;
       Viewport.update();
       CelestialBg.updateScreenPositions();
@@ -264,7 +263,7 @@ export class AppComponent {
   protected focus(coords: AzAlt) {
     if (coords === undefined) return;
     this.bearing = Bearing.custom(MathUtil.fixAngle(360 - coords.azimuth));
-    this.elevation.angle = coords.altitude;
+    this.elevation.set(coords.altitude);
     Viewport.update();
     CelestialBg.updateScreenPositions();
   }

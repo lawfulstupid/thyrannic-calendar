@@ -2,7 +2,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component, HostBinding } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faBars, faClose, faInfoCircle, faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faClose, faInfoCircle, faLock, faLockOpen, faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { environment } from 'src/environments/environment';
 import { CelestialBg } from './components/celestial-bg/celestial-bg.component';
 import { CelestialBgModule } from './components/celestial-bg/celestial-bg.module';
@@ -43,7 +43,9 @@ export class AppComponent {
     pause: faPause,
     menu: faBars,
     close: faClose,
-    info: faInfoCircle
+    info: faInfoCircle,
+    lock: faLock,
+    lockOpen: faLockOpen
   }
 
   protected _menu?: 'options' | 'info' = undefined;
@@ -74,6 +76,9 @@ export class AppComponent {
     this._datetime = datetime;
     LocalValue.CURRENT_DATETIME.put(datetime);
     CelestialBg.updatePositions();
+    if (this.focusLock) {
+      this.focus(this.focusTarget);
+    }
   }
 
   protected _city: City = LocalValue.CITY.get() || City.THYRANNOS;
@@ -135,6 +140,7 @@ export class AppComponent {
         this.bearing = Bearing.custom(targetAngle);
       }
     }
+    this.focusLock = false;
     Viewport.update();
     CelestialBg.updateScreenPositions();
   }
@@ -145,6 +151,7 @@ export class AppComponent {
       this.changeAngle(this.elevation.angle, dir),
       this.elevation.max
     );
+    this.focusLock = false;
     Viewport.update();
     CelestialBg.updateScreenPositions();
   }
@@ -209,6 +216,7 @@ export class AppComponent {
 
       this.bearing = Bearing.custom(this.dragOrigin.bearing + (this.dragLatest.clientX - this.dragOrigin.clientX) / AppComponent.DRAG_REDUCTION_FACTOR);
       this.elevation.angle = MathUtil.clamp(this.elevation.min, this.dragOrigin.elevation + (this.dragLatest.clientY - this.dragOrigin.clientY) / AppComponent.DRAG_REDUCTION_FACTOR, this.elevation.max);
+      this.focusLock = false;
       Viewport.update();
       CelestialBg.updateScreenPositions();
     }, AppComponent.DRAG_UPDATE_MS);
@@ -251,6 +259,7 @@ export class AppComponent {
   }
 
   protected focusTarget!: IntrasolarBody;
+  protected focusLock: boolean = false;
 
   protected focus(coords: AzAlt) {
     if (coords === undefined) return;

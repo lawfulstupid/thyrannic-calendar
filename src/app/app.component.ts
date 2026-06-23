@@ -254,6 +254,7 @@ export class AppComponent {
     }
     const result = OrbitalMechanics.findNextEclipse(this.datetime, body1, body2);
     this.datetime = result.datetime;
+    this.focusLock = false;
     this.focus(result);
   }
 

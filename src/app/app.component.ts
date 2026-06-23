@@ -2,11 +2,15 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component, HostBinding } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faBars, faClose, faInfoCircle, faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faClose, faInfoCircle, faLock, faLockOpen, faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { environment } from 'src/environments/environment';
 import { CelestialBg } from './components/celestial-bg/celestial-bg.component';
 import { CelestialBgModule } from './components/celestial-bg/celestial-bg.module';
+import { IntrasolarBody } from './components/celestial-bg/celestial-body/intrasolar-body';
 import { Earth } from './components/celestial-bg/earth/earth';
+import { Arukma } from './components/celestial-bg/moons/arukma';
+import { Losit } from './components/celestial-bg/moons/losit';
+import { Sun } from './components/celestial-bg/sun/sun';
 import { HoldableButtonComponent } from './components/holdable-button/holdable-button.component';
 import { PinnedDateComponent } from "./components/pinned-date/pinned-date.component";
 import { TimeUnitComponent } from './components/time-unit/time-unit.component';
@@ -19,7 +23,8 @@ import { DegreesPipe } from './pipes/degrees.pipe';
 import { OrdinalPipe } from './pipes/ordinal.pipe';
 import { LocalValue } from './util/local-value';
 import { MathUtil } from './util/math-util';
-import { angle } from './util/units';
+import { OrbitalMechanics } from './util/orbital-mechanics';
+import { angle, AzAlt } from './util/units';
 import { Viewport } from './util/viewport';
 
 @Component({
@@ -38,7 +43,9 @@ export class AppComponent {
     pause: faPause,
     menu: faBars,
     close: faClose,
-    info: faInfoCircle
+    info: faInfoCircle,
+    lock: faLock,
+    lockOpen: faLockOpen
   }
 
   protected _menu?: 'options' | 'info' = undefined;
@@ -52,6 +59,7 @@ export class AppComponent {
   protected readonly units = TemporalUnit;
   protected readonly cities: Array<City> = City.values;
   protected readonly bearings: Array<Bearing> = Bearing.values;
+  protected readonly celestialBg = CelestialBg;
   protected dateUiOpacity: 0 | 50 | 100 = 100;
   public latLongEnabled: boolean = false;
 
@@ -68,6 +76,9 @@ export class AppComponent {
     this._datetime = datetime;
     LocalValue.CURRENT_DATETIME.put(datetime);
     CelestialBg.updatePositions();
+    if (this.focusLock) {
+      this.focus(this.focusTarget);
+    }
   }
 
   protected _city: City = LocalValue.CITY.get() || City.THYRANNOS;
@@ -84,13 +95,18 @@ export class AppComponent {
   public elevation = {
     angle: this.environment.mobile ? 15 : 40,
     min: 0,
-    max: 90
+    max: 90,
+    set: function (newAngle: angle) {
+      this.angle = MathUtil.clamp(this.min, newAngle, this.max);
+    }
   };
 
   constructor() {
     AppComponent.instance = this;
     Viewport.update();
-    CelestialBg.init();
+    CelestialBg.init().then(() => {
+      this.focusTarget = CelestialBg.sun;
+    });
     if (environment.mobile) {
       setTimeout(() => this.moveToMenu(), 0);
     }
@@ -127,16 +143,14 @@ export class AppComponent {
         this.bearing = Bearing.custom(targetAngle);
       }
     }
+    this.focusLock = false;
     Viewport.update();
     CelestialBg.updateScreenPositions();
   }
 
   public changeElevation(dir: 1 | -1) {
-    this.elevation.angle = MathUtil.clamp(
-      this.elevation.min,
-      this.changeAngle(this.elevation.angle, dir),
-      this.elevation.max
-    );
+    this.elevation.set(this.changeAngle(this.elevation.angle, dir));
+    this.focusLock = false;
     Viewport.update();
     CelestialBg.updateScreenPositions();
   }
@@ -200,7 +214,8 @@ export class AppComponent {
       if (this.dragLatest === undefined) return; // wait
 
       this.bearing = Bearing.custom(this.dragOrigin.bearing + (this.dragLatest.clientX - this.dragOrigin.clientX) / AppComponent.DRAG_REDUCTION_FACTOR);
-      this.elevation.angle = MathUtil.clamp(this.elevation.min, this.dragOrigin.elevation + (this.dragLatest.clientY - this.dragOrigin.clientY) / AppComponent.DRAG_REDUCTION_FACTOR, this.elevation.max);
+      this.elevation.set(this.dragOrigin.elevation + (this.dragLatest.clientY - this.dragOrigin.clientY) / AppComponent.DRAG_REDUCTION_FACTOR);
+      this.focusLock = false;
       Viewport.update();
       CelestialBg.updateScreenPositions();
     }, AppComponent.DRAG_UPDATE_MS);
@@ -214,6 +229,44 @@ export class AppComponent {
   protected drag(event: MouseEvent | PointerEvent) {
     if (!this.dragToLookEnabled || !this.dragOrigin) return; //ignore
     this.dragLatest = event;
+  }
+
+  // Event finder
+  protected targetEvent: 'interlunar' | 'arukman' | 'lositian' = 'interlunar';
+
+  protected findNextEvent() {
+    let body1, body2;
+    switch (this.targetEvent) {
+      case 'interlunar':
+        body1 = Arukma.instance;
+        body2 = Losit.instance;
+        break;
+      case 'arukman':
+        body1 = Arukma.instance;
+        body2 = Sun.instance;
+        break;
+      case 'lositian':
+        body1 = Losit.instance;
+        body2 = Sun.instance;
+        break;
+      default:
+        throw new Error('unknown event');
+    }
+    const result = OrbitalMechanics.findNextEclipse(this.datetime, body1, body2);
+    this.datetime = result.datetime;
+    this.focusLock = false;
+    this.focus(result);
+  }
+
+  protected focusTarget!: IntrasolarBody;
+  protected focusLock: boolean = false;
+
+  protected focus(coords: AzAlt) {
+    if (coords === undefined) return;
+    this.bearing = Bearing.custom(MathUtil.fixAngle(360 - coords.azimuth));
+    this.elevation.set(coords.altitude);
+    Viewport.update();
+    CelestialBg.updateScreenPositions();
   }
 
 }

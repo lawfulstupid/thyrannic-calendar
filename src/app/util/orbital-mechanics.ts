@@ -2,9 +2,12 @@ import { AppComponent } from "../app.component";
 import { CelestialBg } from "../components/celestial-bg/celestial-bg.component";
 import { IntrasolarBody } from "../components/celestial-bg/celestial-body/intrasolar-body";
 import { Earth } from "../components/celestial-bg/earth/earth";
+import { TemporalUnit } from "../model/temporal-unit";
 import { TDateTime } from "../model/thyrannic-date-time";
 import { MathUtil } from "./math-util";
 import { angle, AzAlt, distance, DistLong, minutes, Orbital, RaDec, time } from "./units";
+
+type EclipseEvent = { datetime: TDateTime, centralAngle: angle } & AzAlt;
 
 export class OrbitalMechanics {
 
@@ -36,7 +39,7 @@ export class OrbitalMechanics {
   }
 
   // Converts distance + true longitude + inclination to right ascension + declination
-  public static DistLong2RaDec(body: Orbital): RaDec & { distance: distance } {
+  public static DistLong2RaDec(body: Orbital, sun: DistLong = CelestialBg.sun): RaDec & { distance: distance } {
     // Compute ecliptic rectangular geocentric coordinates
     let xg, yg, zg;
     xg = body.distance * (
@@ -55,8 +58,8 @@ export class OrbitalMechanics {
 
     // Adjust coordinates for heliocentrism
     if (body.heliocentric) {
-      xg += CelestialBg.sun.distance * MathUtil.cos(CelestialBg.sun.trueLongitude);
-      yg += CelestialBg.sun.distance * MathUtil.sin(CelestialBg.sun.trueLongitude);
+      xg += sun.distance * MathUtil.cos(sun.trueLongitude);
+      yg += sun.distance * MathUtil.sin(sun.trueLongitude);
     }
 
     // Compute equatorial rectangular geocentric coordinates
@@ -73,23 +76,23 @@ export class OrbitalMechanics {
   }
 
   // Computes right ascension + declination for an object
-  public static computeRaDec(body: IntrasolarBody, datetime: TDateTime): RaDec {
+  public static computeRaDec(body: IntrasolarBody, datetime: TDateTime, sun: DistLong = CelestialBg.sun): RaDec {
     const distLong = this.computeDistLong(body, datetime);
     return this.DistLong2RaDec({
       ...distLong,
       heliocentric: body.heliocentric,
       ascendingNodeLongitude: body.ascendingNodeLongitude,
       inclination: body.inclination
-    });
+    }, sun);
   }
 
   // Converts right ascension + declination to azimuth + altitude
-  public static RaDec2AzAlt(body: RaDec, datetime: TDateTime = AppComponent.instance.datetime): AzAlt {
+  public static RaDec2AzAlt(body: RaDec, datetime: TDateTime = AppComponent.instance.datetime, sun: RaDec = CelestialBg.sun): AzAlt {
     const fractionalDay = (12 + datetime.hour + datetime.minute / 60) / 24;
     // 12PM -> solar right ascension
     // 06PM -> SRA + 90
     // 12AM -> SRA + 180
-    const lmst = MathUtil.fixAngle2(fractionalDay * 360 + CelestialBg.sun.rightAscension);
+    const lmst = MathUtil.fixAngle2(fractionalDay * 360 + sun.rightAscension);
     const localHourAngle = MathUtil.fixAngle2(lmst - body.rightAscension);
     const latitude = AppComponent.instance.city.latitude;
 
@@ -104,6 +107,11 @@ export class OrbitalMechanics {
     ));
 
     return { azimuth, altitude };
+  }
+
+  public static computeAzAlt(body: IntrasolarBody, datetime: TDateTime = AppComponent.instance.datetime, sun: DistLong & RaDec = CelestialBg.sun): AzAlt {
+    const radec = OrbitalMechanics.computeRaDec(body, datetime, sun);
+    return OrbitalMechanics.RaDec2AzAlt(radec, datetime, sun);
   }
 
   public static updateOcclusion(body: IntrasolarBody) {
@@ -136,6 +144,70 @@ export class OrbitalMechanics {
     const sunrise = MathUtil.acos(cos); // this only works because acos is clamped
     const sunset = 360 - sunrise;
     return (sunset - sunrise) / 15;
+  }
+
+  public static findNextEclipse(now: TDateTime, body1: IntrasolarBody, body2: IntrasolarBody): EclipseEvent {
+    const margin = body1.meanAngularDiameter * body1.embiggenmentFactor / 2 + body2.meanAngularDiameter * body2.embiggenmentFactor / 2;
+    const incidencePeriod: number = body1.orbitalPeriod * body2.orbitalPeriod / Math.abs(body1.orbitalPeriod - body2.orbitalPeriod);
+    const periodMins = TemporalUnit.DAY.as(TemporalUnit.MINUTE) * incidencePeriod;
+
+    function getSample(datetime: TDateTime): EclipseEvent {
+      const dummySun: Orbital = {
+        ...OrbitalMechanics.computeDistLong(CelestialBg.sun, datetime),
+        heliocentric: false,
+        ascendingNodeLongitude: CelestialBg.sun.ascendingNodeLongitude,
+        inclination: CelestialBg.sun.inclination
+      }
+      const radec1 = OrbitalMechanics.computeRaDec(body1, datetime, dummySun);
+      const radec2 = OrbitalMechanics.computeRaDec(body2, datetime, dummySun);
+      const midpoint = {
+        rightAscension: (radec1.rightAscension + radec2.rightAscension) / 2,
+        declination: (radec1.declination + radec2.declination) / 2
+      }
+      return {
+        datetime,
+        centralAngle: OrbitalMechanics.angularDistance(radec1, radec2),
+        ...OrbitalMechanics.RaDec2AzAlt(midpoint, datetime, OrbitalMechanics.DistLong2RaDec(dummySun))
+      }
+    }
+
+    function findMinima(start: TDateTime, end: TDateTime, samples: number = 4): EclipseEvent {
+      const diff = end.diff(start, TemporalUnit.MINUTE);
+      const finalIteration = diff <= samples;
+      const increment = diff / samples;
+      const samplePoints = Array.from(new Array(samples + 1))
+        .map((_, idx) => start.add(Math.round(idx * increment), TemporalUnit.MINUTE))
+        .map(point => getSample(point));
+
+      for (let i = 1; i < samplePoints.length - 1; i++) {
+        if (samplePoints[i].centralAngle > samplePoints[i-1].centralAngle) continue;
+        if (samplePoints[i].centralAngle > samplePoints[i+1].centralAngle) continue;
+        return finalIteration ? samplePoints[i] : findMinima(samplePoints[i-1].datetime, samplePoints[i+1].datetime);
+      }
+
+      throw new Error('Unable to compute minimum');
+    }
+
+    // 1. find a local minimum inside period
+    for (let i = 0; i < 1000; i++) { // arbitrary loop limit
+      const minima = findMinima(now, now.add(Math.ceil(periodMins * 1.5), TemporalUnit.MINUTE), 6);
+      if (minima.centralAngle <= margin && minima.altitude > 10) {
+        return minima;
+      }
+
+      now = minima.datetime;
+    }
+
+    throw new Error('No event found');
+  }
+
+  // Computes central angle between two spherical points
+  private static angularDistance(p1: RaDec, p2: RaDec): angle {
+    const longDiff = Math.abs(p1.rightAscension - p2.rightAscension);
+    return MathUtil.acos(
+      MathUtil.sin(p1.declination) * MathUtil.sin(p2.declination) +
+      MathUtil.cos(p1.declination) * MathUtil.cos(p2.declination) * MathUtil.cos(longDiff)
+    );
   }
 
 }

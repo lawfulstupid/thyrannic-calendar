@@ -12,6 +12,12 @@ import { GeocentricBody, IntrasolarBody } from '../celestial-body/intrasolar-bod
 export class Sun extends GeocentricBody {
 
   public static readonly ID = 'sun';
+  public static instance: Sun;
+
+  constructor() {
+    super();
+    Sun.instance = this;
+  }
 
   override color = 'yellow';
   override brightness = 1;

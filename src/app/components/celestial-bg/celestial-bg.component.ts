@@ -25,14 +25,17 @@ export class CelestialBg {
 
   get latLongEnabled() { return AppComponent.instance.latLongEnabled; }
 
-  public static init() {
-    const loop = setInterval(() => {
-      if (this.sun && this.earth && this.stars && this.sky) {
-        clearInterval(loop);
-        this.updatePositions();
-        this.initialized = true;
-      }
-    }, 1);
+  public static init(): Promise<void> {
+    return new Promise((resolve) => {
+      const loop = setInterval(() => {
+        if (this.sun && this.earth && this.stars && this.sky) {
+          clearInterval(loop);
+          this.updatePositions();
+          this.initialized = true;
+          resolve();
+        }
+      }, 1);
+    });
   }
 
   public static register(body: any & { constructor: { ID: string } }) {

@@ -12,6 +12,12 @@ import { GeocentricBody, IntrasolarBody } from '../celestial-body/intrasolar-bod
 export class Losit extends GeocentricBody {
 
   public static readonly ID = 'losit';
+  public static instance: Losit;
+
+  constructor() {
+    super();
+    Losit.instance = this;
+  }
 
   override color = 'rgb(63, 21, 16)';
   override brightness = 0.92;

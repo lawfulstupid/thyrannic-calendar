@@ -6,7 +6,11 @@ import { faBars, faClose, faInfoCircle, faPause, faPlay } from '@fortawesome/fre
 import { environment } from 'src/environments/environment';
 import { CelestialBg } from './components/celestial-bg/celestial-bg.component';
 import { CelestialBgModule } from './components/celestial-bg/celestial-bg.module';
+import { IntrasolarBody } from './components/celestial-bg/celestial-body/intrasolar-body';
 import { Earth } from './components/celestial-bg/earth/earth';
+import { Arukma } from './components/celestial-bg/moons/arukma';
+import { Losit } from './components/celestial-bg/moons/losit';
+import { Sun } from './components/celestial-bg/sun/sun';
 import { HoldableButtonComponent } from './components/holdable-button/holdable-button.component';
 import { PinnedDateComponent } from "./components/pinned-date/pinned-date.component";
 import { TimeUnitComponent } from './components/time-unit/time-unit.component';
@@ -19,12 +23,9 @@ import { DegreesPipe } from './pipes/degrees.pipe';
 import { OrdinalPipe } from './pipes/ordinal.pipe';
 import { LocalValue } from './util/local-value';
 import { MathUtil } from './util/math-util';
+import { OrbitalMechanics } from './util/orbital-mechanics';
 import { angle, AzAlt } from './util/units';
 import { Viewport } from './util/viewport';
-import { OrbitalMechanics } from './util/orbital-mechanics';
-import { Arukma } from './components/celestial-bg/moons/arukma';
-import { Losit } from './components/celestial-bg/moons/losit';
-import { Sun } from './components/celestial-bg/sun/sun';
 
 @Component({
   selector: 'app-root',
@@ -56,6 +57,7 @@ export class AppComponent {
   protected readonly units = TemporalUnit;
   protected readonly cities: Array<City> = City.values;
   protected readonly bearings: Array<Bearing> = Bearing.values;
+  protected readonly celestialBg = CelestialBg;
   protected dateUiOpacity: 0 | 50 | 100 = 100;
   public latLongEnabled: boolean = false;
 
@@ -94,7 +96,9 @@ export class AppComponent {
   constructor() {
     AppComponent.instance = this;
     Viewport.update();
-    CelestialBg.init();
+    CelestialBg.init().then(() => {
+      this.focusTarget = CelestialBg.sun;
+    });
     if (environment.mobile) {
       setTimeout(() => this.moveToMenu(), 0);
     }
@@ -246,7 +250,10 @@ export class AppComponent {
     this.focus(result);
   }
 
+  protected focusTarget!: IntrasolarBody;
+
   protected focus(coords: AzAlt) {
+    if (coords === undefined) return;
     this.bearing = Bearing.custom(MathUtil.fixAngle(360 - coords.azimuth));
     this.elevation.angle = coords.altitude;
     Viewport.update();

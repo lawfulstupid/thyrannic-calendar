@@ -45,6 +45,12 @@
   <button class="clickable" (click)="dragToLookEnabled = !dragToLookEnabled">Drag to look: {{dragToLookEnabled ? 'on' : 'off'}}</button>
   <button class="clickable" (click)="updateDateUiOpacity()">Date: {{ dateUiOpacity === 100 ? 'visible' : dateUiOpacity === 0 ? 'hidden' : dateUiOpacity + '%' }}</button>
   <div>
+    <button class="clickable" (click)="focus(focusTarget)">Find</button>
+    <select class="clickable" [(ngModel)]="focusTarget">
+      <option *ngFor="let body of celestialBg.bodies" [ngValue]="body">{{body.constructor.name}}</option>
+    </select>
+  </div>
+  <div>
     <button class="clickable" (click)="findNextEvent()">Find next</button>
     <select class="clickable" [(ngModel)]="targetEvent">
       <option value="arukman">Arukman eclipse</option>

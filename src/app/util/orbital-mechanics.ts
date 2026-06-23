@@ -37,7 +37,7 @@ export class OrbitalMechanics {
   }
 
   // Converts distance + true longitude + inclination to right ascension + declination
-  public static DistLong2RaDec(body: Orbital): RaDec & { distance: distance } {
+  public static DistLong2RaDec(body: Orbital, sun: DistLong = CelestialBg.sun): RaDec & { distance: distance } {
     // Compute ecliptic rectangular geocentric coordinates
     let xg, yg, zg;
     xg = body.distance * (
@@ -56,8 +56,8 @@ export class OrbitalMechanics {
 
     // Adjust coordinates for heliocentrism
     if (body.heliocentric) {
-      xg += CelestialBg.sun.distance * MathUtil.cos(CelestialBg.sun.trueLongitude);
-      yg += CelestialBg.sun.distance * MathUtil.sin(CelestialBg.sun.trueLongitude);
+      xg += sun.distance * MathUtil.cos(sun.trueLongitude);
+      yg += sun.distance * MathUtil.sin(sun.trueLongitude);
     }
 
     // Compute equatorial rectangular geocentric coordinates
@@ -74,23 +74,23 @@ export class OrbitalMechanics {
   }
 
   // Computes right ascension + declination for an object
-  public static computeRaDec(body: IntrasolarBody, datetime: TDateTime): RaDec {
+  public static computeRaDec(body: IntrasolarBody, datetime: TDateTime, sun: DistLong = CelestialBg.sun): RaDec {
     const distLong = this.computeDistLong(body, datetime);
     return this.DistLong2RaDec({
       ...distLong,
       heliocentric: body.heliocentric,
       ascendingNodeLongitude: body.ascendingNodeLongitude,
       inclination: body.inclination
-    });
+    }, sun);
   }
 
   // Converts right ascension + declination to azimuth + altitude
-  public static RaDec2AzAlt(body: RaDec, datetime: TDateTime = AppComponent.instance.datetime): AzAlt {
+  public static RaDec2AzAlt(body: RaDec, datetime: TDateTime = AppComponent.instance.datetime, sun: RaDec = CelestialBg.sun): AzAlt {
     const fractionalDay = (12 + datetime.hour + datetime.minute / 60) / 24;
     // 12PM -> solar right ascension
     // 06PM -> SRA + 90
     // 12AM -> SRA + 180
-    const lmst = MathUtil.fixAngle2(fractionalDay * 360 + CelestialBg.sun.rightAscension);
+    const lmst = MathUtil.fixAngle2(fractionalDay * 360 + sun.rightAscension);
     const localHourAngle = MathUtil.fixAngle2(lmst - body.rightAscension);
     const latitude = AppComponent.instance.city.latitude;
 
@@ -107,8 +107,9 @@ export class OrbitalMechanics {
     return { azimuth, altitude };
   }
 
-  public static computeAzAlt(body: IntrasolarBody, datetime: TDateTime = AppComponent.instance.datetime): AzAlt {
-    return OrbitalMechanics.RaDec2AzAlt(OrbitalMechanics.computeRaDec(body, datetime), datetime);
+  public static computeAzAlt(body: IntrasolarBody, datetime: TDateTime = AppComponent.instance.datetime, sun: DistLong & RaDec = CelestialBg.sun): AzAlt {
+    const radec = OrbitalMechanics.computeRaDec(body, datetime, sun);
+    return OrbitalMechanics.RaDec2AzAlt(radec, datetime, sun);
   }
 
   public static updateOcclusion(body: IntrasolarBody) {
@@ -148,14 +149,24 @@ export class OrbitalMechanics {
     const incidencePeriod: number = body1.orbitalPeriod * body2.orbitalPeriod / Math.abs(body1.orbitalPeriod - body2.orbitalPeriod);
     const periodMins = TemporalUnit.DAY.as(TemporalUnit.MINUTE) * incidencePeriod;
 
-    type Sample = { datetime: TDateTime, centralAngle: angle, minDec: angle };
+    type Sample = { datetime: TDateTime, centralAngle: angle, altitude: angle };
     function getSample(datetime: TDateTime): Sample {
-      const radec1 = OrbitalMechanics.computeRaDec(body1, datetime);
-      const radec2 = OrbitalMechanics.computeRaDec(body2, datetime);
+      const dummySun: Orbital = {
+        ...OrbitalMechanics.computeDistLong(CelestialBg.sun, datetime),
+        heliocentric: false,
+        ascendingNodeLongitude: CelestialBg.sun.ascendingNodeLongitude,
+        inclination: CelestialBg.sun.inclination
+      }
+      const radec1 = OrbitalMechanics.computeRaDec(body1, datetime, dummySun);
+      const radec2 = OrbitalMechanics.computeRaDec(body2, datetime, dummySun);
+      const midpoint = {
+        rightAscension: (radec1.rightAscension + radec2.rightAscension) / 2,
+        declination: (radec1.declination + radec2.declination) / 2
+      }
       return {
         datetime,
         centralAngle: OrbitalMechanics.angularDistance(radec1, radec2),
-        minDec: Math.min(radec1.declination, radec2.declination)
+        altitude: OrbitalMechanics.RaDec2AzAlt(midpoint, datetime, OrbitalMechanics.DistLong2RaDec(dummySun)).altitude
       }
     }
 
@@ -177,17 +188,10 @@ export class OrbitalMechanics {
     }
 
     // 1. find a local minimum inside period
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 1000; i++) { // arbitrary loop limit
       const minima = findMinima(now, now.add(Math.ceil(periodMins * 1.5), TemporalUnit.MINUTE), 6);
-      if (minima.centralAngle <= margin) {
-        console.log('minima', minima);
-        const pos = OrbitalMechanics.computeAzAlt(body1, minima.datetime);
-        console.log('body1', pos);
-        const pos2 = OrbitalMechanics.computeAzAlt(body2, minima.datetime);
-        console.log('body2', pos2);
-        if (pos.altitude > 10) {
-          return minima.datetime;
-        }
+      if (minima.centralAngle <= margin && minima.altitude > 10) {
+        return minima.datetime;
       }
 
       now = minima.datetime;

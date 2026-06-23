@@ -243,7 +243,7 @@ export class AppComponent {
     }
     this.datetime = OrbitalMechanics.findNextEclipse(this.datetime, body1, body2);
     this.elevation.angle = body1.altitude;
-    this.bearing = Bearing.custom(body1.azimuth);
+    this.bearing = Bearing.custom(MathUtil.fixAngle(360 - body1.azimuth));
     setTimeout(() => {
       Viewport.update();
       CelestialBg.updateScreenPositions();

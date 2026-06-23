@@ -84,6 +84,10 @@ export abstract class IntrasolarBody extends CelestialBody implements DistLong {
     return MathUtil.acos(1 - 2 * (this.radius / this.distance) ** 2);
   }
 
+  get meanAngularDiameter(): angle {
+    return MathUtil.acos(1 - 2 * (this.radius / this.meanDistance) ** 2);
+  }
+
   get embiggenmentFactor(): number {
     return IntrasolarBody.EMBIGGENMENT_FACTOR;
   }

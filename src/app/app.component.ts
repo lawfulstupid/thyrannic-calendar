@@ -242,6 +242,12 @@ export class AppComponent {
         throw new Error('unknown event');
     }
     this.datetime = OrbitalMechanics.findNextEclipse(this.datetime, body1, body2);
+    this.elevation.angle = body1.altitude;
+    this.bearing = Bearing.custom(body1.azimuth);
+    setTimeout(() => {
+      Viewport.update();
+      CelestialBg.updateScreenPositions();
+    }, 0);
   }
 
 }

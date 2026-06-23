@@ -19,7 +19,7 @@ import { DegreesPipe } from './pipes/degrees.pipe';
 import { OrdinalPipe } from './pipes/ordinal.pipe';
 import { LocalValue } from './util/local-value';
 import { MathUtil } from './util/math-util';
-import { angle } from './util/units';
+import { angle, AzAlt } from './util/units';
 import { Viewport } from './util/viewport';
 import { OrbitalMechanics } from './util/orbital-mechanics';
 import { Arukma } from './components/celestial-bg/moons/arukma';
@@ -241,13 +241,16 @@ export class AppComponent {
       default:
         throw new Error('unknown event');
     }
-    this.datetime = OrbitalMechanics.findNextEclipse(this.datetime, body1, body2);
-    this.elevation.angle = body1.altitude;
-    this.bearing = Bearing.custom(MathUtil.fixAngle(360 - body1.azimuth));
-    setTimeout(() => {
-      Viewport.update();
-      CelestialBg.updateScreenPositions();
-    }, 0);
+    const result = OrbitalMechanics.findNextEclipse(this.datetime, body1, body2);
+    this.datetime = result.datetime;
+    this.focus(result);
+  }
+
+  protected focus(coords: AzAlt) {
+    this.bearing = Bearing.custom(MathUtil.fixAngle(360 - coords.azimuth));
+    this.elevation.angle = coords.altitude;
+    Viewport.update();
+    CelestialBg.updateScreenPositions();
   }
 
 }

@@ -7,6 +7,8 @@ import { TDateTime } from "../model/thyrannic-date-time";
 import { MathUtil } from "./math-util";
 import { angle, AzAlt, distance, DistLong, minutes, Orbital, RaDec, time } from "./units";
 
+type Sample = { datetime: TDateTime, centralAngle: angle } & AzAlt;
+
 export class OrbitalMechanics {
 
   private constructor() { }
@@ -144,12 +146,11 @@ export class OrbitalMechanics {
     return (sunset - sunrise) / 15;
   }
 
-  public static findNextEclipse(now: TDateTime, body1: IntrasolarBody, body2: IntrasolarBody): TDateTime {
+  public static findNextEclipse(now: TDateTime, body1: IntrasolarBody, body2: IntrasolarBody): Sample {
     const margin = body1.meanAngularDiameter * body1.embiggenmentFactor / 2 + body2.meanAngularDiameter * body2.embiggenmentFactor / 2;
     const incidencePeriod: number = body1.orbitalPeriod * body2.orbitalPeriod / Math.abs(body1.orbitalPeriod - body2.orbitalPeriod);
     const periodMins = TemporalUnit.DAY.as(TemporalUnit.MINUTE) * incidencePeriod;
 
-    type Sample = { datetime: TDateTime, centralAngle: angle, altitude: angle };
     function getSample(datetime: TDateTime): Sample {
       const dummySun: Orbital = {
         ...OrbitalMechanics.computeDistLong(CelestialBg.sun, datetime),
@@ -166,7 +167,7 @@ export class OrbitalMechanics {
       return {
         datetime,
         centralAngle: OrbitalMechanics.angularDistance(radec1, radec2),
-        altitude: OrbitalMechanics.RaDec2AzAlt(midpoint, datetime, OrbitalMechanics.DistLong2RaDec(dummySun)).altitude
+        ...OrbitalMechanics.RaDec2AzAlt(midpoint, datetime, OrbitalMechanics.DistLong2RaDec(dummySun))
       }
     }
 
@@ -191,7 +192,7 @@ export class OrbitalMechanics {
     for (let i = 0; i < 1000; i++) { // arbitrary loop limit
       const minima = findMinima(now, now.add(Math.ceil(periodMins * 1.5), TemporalUnit.MINUTE), 6);
       if (minima.centralAngle <= margin && minima.altitude > 10) {
-        return minima.datetime;
+        return minima;
       }
 
       now = minima.datetime;

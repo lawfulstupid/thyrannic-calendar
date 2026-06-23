@@ -7,7 +7,7 @@ import { TDateTime } from "../model/thyrannic-date-time";
 import { MathUtil } from "./math-util";
 import { angle, AzAlt, distance, DistLong, minutes, Orbital, RaDec, time } from "./units";
 
-type Sample = { datetime: TDateTime, centralAngle: angle } & AzAlt;
+type EclipseEvent = { datetime: TDateTime, centralAngle: angle } & AzAlt;
 
 export class OrbitalMechanics {
 
@@ -146,12 +146,12 @@ export class OrbitalMechanics {
     return (sunset - sunrise) / 15;
   }
 
-  public static findNextEclipse(now: TDateTime, body1: IntrasolarBody, body2: IntrasolarBody): Sample {
+  public static findNextEclipse(now: TDateTime, body1: IntrasolarBody, body2: IntrasolarBody): EclipseEvent {
     const margin = body1.meanAngularDiameter * body1.embiggenmentFactor / 2 + body2.meanAngularDiameter * body2.embiggenmentFactor / 2;
     const incidencePeriod: number = body1.orbitalPeriod * body2.orbitalPeriod / Math.abs(body1.orbitalPeriod - body2.orbitalPeriod);
     const periodMins = TemporalUnit.DAY.as(TemporalUnit.MINUTE) * incidencePeriod;
 
-    function getSample(datetime: TDateTime): Sample {
+    function getSample(datetime: TDateTime): EclipseEvent {
       const dummySun: Orbital = {
         ...OrbitalMechanics.computeDistLong(CelestialBg.sun, datetime),
         heliocentric: false,
@@ -171,7 +171,7 @@ export class OrbitalMechanics {
       }
     }
 
-    function findMinima(start: TDateTime, end: TDateTime, samples: number = 4): Sample {
+    function findMinima(start: TDateTime, end: TDateTime, samples: number = 4): EclipseEvent {
       const diff = end.diff(start, TemporalUnit.MINUTE);
       const finalIteration = diff <= samples;
       const increment = diff / samples;

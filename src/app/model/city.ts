@@ -1,13 +1,18 @@
 export class City {
 
-  private static entries: number = 0;
-  public readonly id: number = ++City.entries;
+  public static values: City[] = [];
+
+  public readonly id: number;
 
   private constructor(
     readonly name: string,
     readonly latitude: number,
     readonly longitude: number = 0
-  ) { }
+  ) {
+    City.values.push(this);
+    City.values = City.values.sort((a, b) => b.latitude - a.latitude); // sort by highest latitude first
+    this.id = City.values.length;
+  }
 
   public static readonly THYRANNOS = new City('Śyrannos', 25.29, 83.565);
   public static readonly MORA = new City('Mora', 35.19, 83.07);
@@ -22,21 +27,7 @@ export class City {
   public static readonly DEDKA = new City('Dedka', 48.60, 91.80);
   public static readonly RANIL = new City('Ranil', 26.56, 69.48);
 
-  public static selected: City = this.THYRANNOS;
-  public static values: City[] = [
-    this.THYRANNOS,
-    this.MORA,
-    this.CERIN,
-    this.DASENEM,
-    this.EXULOR,
-    this.FADIRA,
-    this.THYRIS,
-    this.ELDUMAN,
-    this.TAZENDOR,
-    this.MAZOKHODRAK,
-    this.DEDKA,
-    this.RANIL
-  ].sort((a, b) => b.latitude - a.latitude); // sort by highest latitude first
+  public static selected: City = this.ELDUMAN;
 
   public static fromId(id: number): City | undefined {
     return this.values.find(city => city.id === id);

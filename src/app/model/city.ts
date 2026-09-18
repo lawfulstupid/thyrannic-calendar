@@ -20,6 +20,7 @@ export class City {
   public static readonly TAZENDOR = new City('Taźendor', 48.465, 67.05);
   public static readonly MAZOKHODRAK = new City('Mazokhodrak', 57.195, 129.15);
   public static readonly DEDKA = new City('Dedka', 48.60, 91.80);
+  public static readonly RANIL = new City('Ranil', 26.56, 69.48);
 
   public static selected: City = this.THYRANNOS;
   public static values: City[] = [
@@ -33,7 +34,8 @@ export class City {
     this.ELDUMAN,
     this.TAZENDOR,
     this.MAZOKHODRAK,
-    this.DEDKA
+    this.DEDKA,
+    this.RANIL
   ].sort((a, b) => b.latitude - a.latitude); // sort by highest latitude first
 
   public static fromId(id: number): City | undefined {

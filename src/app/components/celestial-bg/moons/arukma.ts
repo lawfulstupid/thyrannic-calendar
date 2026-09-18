@@ -13,6 +13,7 @@ export class Arukma extends GeocentricBody {
 
   public static readonly ID = 'arukma';
   public static instance: Arukma;
+  override name = 'Arukma';
 
   constructor() {
     super();

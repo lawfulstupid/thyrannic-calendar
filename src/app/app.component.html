@@ -52,7 +52,7 @@
     </button>
     <div class="separator"></div>
     <select class="clickable" [(ngModel)]="focusTarget" (ngModelChange)="focusLock ? focus(focusTarget) : undefined">
-      <option *ngFor="let body of celestialBg.bodies" [ngValue]="body">{{body.constructor.name}}</option>
+      <option *ngFor="let body of celestialBg.bodies" [ngValue]="body">{{body.name}}</option>
     </select>
   </div>
   <div>

@@ -13,6 +13,7 @@ export class Losit extends GeocentricBody {
 
   public static readonly ID = 'losit';
   public static instance: Losit;
+  override name = 'Losit';
 
   constructor() {
     super();

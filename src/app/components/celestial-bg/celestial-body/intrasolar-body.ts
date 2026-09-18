@@ -15,6 +15,8 @@ export abstract class IntrasolarBody extends CelestialBody implements DistLong {
   public static readonly templateUrl = '../celestial-body/intrasolar-body.html';
   public static readonly styleUrl = '../celestial-body/intrasolar-body.scss';
 
+  abstract readonly name: string;
+
   get id(): string {
     return (<any>this.constructor).ID;
   }

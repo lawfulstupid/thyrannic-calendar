@@ -13,6 +13,7 @@ export class Sun extends GeocentricBody {
 
   public static readonly ID = 'sun';
   public static instance: Sun;
+  override name = 'Sun';
 
   constructor() {
     super();
